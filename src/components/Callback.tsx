@@ -13,6 +13,11 @@ const Callback = () => {
       .get(`http://localhost:3000/api/v1/callback/${location.search}`)
       .then((response) => {
         console.log(response);
+        // we need to set the access token in our state
+        window.localStorage.setItem(
+          "access_token",
+          response.data.user.access_token
+        );
         history.push("/app");
       })
       .catch((error) => {

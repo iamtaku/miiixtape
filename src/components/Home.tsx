@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router";
 import axios from "axios";
 import styled, { keyframes } from "styled-components";
+import Player from "./players";
+
 const rotote = keyframes`{
     0%,
     80%,
@@ -59,6 +61,12 @@ const Home = ({ location }: any) => {
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true);
   const history = useHistory();
+  const [accessToken, setAccessToken] = useState("");
+
+  useEffect(() => {
+    const token = window.localStorage.getItem("access_token");
+    if (token) setAccessToken(token);
+  }, []);
 
   console.log(history);
   return (
@@ -69,6 +77,7 @@ const Home = ({ location }: any) => {
       <Loading>
         <div className="loader"></div>
       </Loading>
+      {accessToken && <Player token={accessToken} />}
     </div>
   );
 };
