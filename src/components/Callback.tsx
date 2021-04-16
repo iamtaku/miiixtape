@@ -14,6 +14,13 @@ const Callback = () => {
       .then((response) => {
         console.log(response);
         history.push("/app");
+      })
+      .catch((error) => {
+        console.log(error);
+        if (location.search === "?error=access_denied") {
+          console.error("You need to authorize spotify for this App to work");
+          history.push("/error");
+        }
       });
   }, [location, history]);
   return (
