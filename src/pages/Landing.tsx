@@ -1,5 +1,5 @@
 import React from "react";
-import { HomeBtn } from "./Buttons";
+import { HomeBtn } from "../components/Buttons";
 const Landing = () => {
   const handleClick = () => {
     console.log("i was clicked!");

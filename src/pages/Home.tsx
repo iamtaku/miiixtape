@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router";
 import axios from "axios";
 import styled, { keyframes } from "styled-components";
-import Player from "./players";
+import Player from "../components/players";
 
 const rotote = keyframes`{
     0%,
