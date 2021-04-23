@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router";
 import axios from "axios";
+import { useQuery } from "react-query";
+import { GetUser } from "../queries";
+
 import styled, { keyframes } from "styled-components";
 import Player from "../components/players";
 
@@ -58,19 +61,23 @@ const Loading = styled.div`
 `;
 
 const Home = ({ location }: any) => {
+  const { isLoading, error, data } = useQuery("authenticateUser", () =>
+    GetUser(location.search)
+  );
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true);
   const history = useHistory();
   const [accessToken, setAccessToken] = useState("");
 
-  useEffect(() => {
-    const token = window.localStorage.getItem("access_token");
-    if (token) setAccessToken(token);
-  }, []);
+  // useEffect(() => {
+  //   const token = window.localStorage.getItem("access_token");
+  //   if (token) setAccessToken(token);
+  // }, []);
 
   console.log(history);
   return (
     <div>
+      <p>{JSON.stringify(data)}</p>
       <h1>this is the home app</h1>
       <p>{loading ? "loading" : "finished!"}</p>
       {user}

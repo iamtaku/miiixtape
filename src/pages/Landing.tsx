@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HomeBtn } from "../components/Buttons";
+import styled from "styled-components";
+
+const LandingWrapper = styled.div`
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Landing = () => {
-  const handleClick = () => {
-    console.log("i was clicked!");
-  };
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    token && setToken(token);
+  }, []);
+
   return (
-    <div>
-      <h1>this is the landing component!</h1>
-      <HomeBtn onClick={handleClick} />
-    </div>
+    <LandingWrapper>
+      <h1>this is the landing page!</h1>
+      <HomeBtn>{token ? "Open Playlist" : "Login with Spotify"}</HomeBtn>
+    </LandingWrapper>
   );
 };
 
