@@ -6,6 +6,11 @@ import { GetUser } from "../queries";
 
 import styled, { keyframes } from "styled-components";
 import Player from "../components/players";
+import { Navbar } from "../components/Navbar";
+import { Main } from "../components/Main";
+import { Sidebar } from "../components/Sidebar";
+
+import { LoginButton } from "../components/Buttons";
 
 const rotote = keyframes`{
     0%,
@@ -61,30 +66,39 @@ const Loading = styled.div`
 `;
 
 const Home = ({ location }: any) => {
-  const { isLoading, error, data } = useQuery("authenticateUser", () =>
-    GetUser(location.search)
-  );
-  const [user, setUser] = useState("");
-  const [loading, setLoading] = useState(true);
+  // const { isLoading, error, data } = GetUser();
+  const { search } = useLocation();
   const history = useHistory();
-  const [accessToken, setAccessToken] = useState("");
+  const { isLoading, error, data } = GetUser(search);
 
-  // useEffect(() => {
-  //   const token = window.localStorage.getItem("access_token");
-  //   if (token) setAccessToken(token);
-  // }, []);
+  if (search === "?error=access_denied") {
+    console.error("You need to authorize spotify for this App to work");
+    history.push("/error");
+  }
 
-  console.log(history);
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    token && setToken(token);
+  }, []);
+
+  window.history.replaceState(null, "new page title", "/app");
+
+  if (!token) {
+    return (
+      <div>
+        <LoginButton>Please login with Spotify</LoginButton>
+      </div>
+    );
+  }
   return (
     <div>
-      <p>{JSON.stringify(data)}</p>
-      <h1>this is the home app</h1>
-      <p>{loading ? "loading" : "finished!"}</p>
-      {user}
-      <Loading>
-        <div className="loader"></div>
-      </Loading>
-      {accessToken && <Player token={accessToken} />}
+      {/* <p>{data}</p> */}
+      <h1>this is the app app</h1>
+      <Navbar />
+      <Sidebar />
+      <Main />
+      {/* <Player /> */}
     </div>
   );
 };

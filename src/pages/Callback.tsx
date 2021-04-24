@@ -28,39 +28,18 @@ const Callback = () => {
   const history = useHistory();
   const { isLoading, error, data } = GetUser(search);
 
-  // useEffect(() => {
-  //   console.log(data?.data);
-  //   data && setTokens(data.data.data);
-  //   // history.push("/app");
-  // }, [data]);
-  // useEffect(() => {
-  //   // return () => {
-  //   // cleanup
-  //   console.log(location);
-  //   axios
-  //     .get(`http://localhost:3000/api/v1/callback/${location.search}`)
-  //     .then((response) => {
-  //       console.log(response);
-  //       // we need to set the access token in our state
-  //       window.localStorage.setItem(
-  //         "access_token",
-  //         response.data.user.access_token
-  //       );
-  //       history.push("/app");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, [location, history]);
-
   if (search === "?error=access_denied") {
     console.error("You need to authorize spotify for this App to work");
     history.push("/error");
   }
+
+  window.history.replaceState(null, "new page title", "/app");
   return (
     <div>
       {search}
       <h2>this is the callback component!</h2>
+      {error}
+      {isLoading ? "loading" : "finished"}
     </div>
   );
 };

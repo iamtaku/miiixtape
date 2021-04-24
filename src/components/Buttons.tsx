@@ -10,7 +10,7 @@ const LoginBtn = styled.a`
   padding: 8px 16px;
 `;
 
-export const HomeBtn: React.FC = ({ children }) => {
+export const LoginButton: React.FC = ({ children }) => {
   const URL = "http://localhost:3000/api/v1/auth";
 
   return <LoginBtn href={URL}>{children}</LoginBtn>;

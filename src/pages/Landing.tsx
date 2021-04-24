@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { HomeBtn } from "../components/Buttons";
+import { LoginButton } from "../components/Buttons";
 import styled from "styled-components";
 
 const LandingWrapper = styled.div`
@@ -10,16 +10,13 @@ const LandingWrapper = styled.div`
 `;
 
 const Landing = () => {
-  const [token, setToken] = useState("");
-  useEffect(() => {
-    const token = window.localStorage.getItem("token");
-    token && setToken(token);
-  }, []);
-
   return (
     <LandingWrapper>
       <h1>this is the landing page!</h1>
-      <HomeBtn>{token ? "Open Playlist" : "Login with Spotify"}</HomeBtn>
+      <LoginButton>Login with Spotify</LoginButton>
+      {/* <LoginButton>
+        {token ? "Open Playlist" : "Login with Spotify"}
+      </LoginButton> */}
     </LandingWrapper>
   );
 };

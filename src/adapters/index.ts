@@ -19,10 +19,9 @@ const getUserInfo = async (token: string) => {
   });
 };
 
-export const getUser = async (callbackCode: string) => {
+export const getUser = async (callbackCode?: string) => {
   const token = window.localStorage.getItem("token");
-
-  if (!token) {
+  if (!token && callbackCode) {
     const token = await getToken(callbackCode);
     window.localStorage.setItem("token", token);
   }
@@ -30,4 +29,5 @@ export const getUser = async (callbackCode: string) => {
   const data = token && (await getUserInfo(token));
 
   console.log(data);
+  return data;
 };
