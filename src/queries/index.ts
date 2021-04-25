@@ -1,5 +1,10 @@
 import { useQuery } from "react-query";
 import { getUser } from "../adapters";
+import { UserAttributes } from "../adapters/types";
 
-export const GetUser = (search?: string) =>
-  useQuery("authenticateUser", () => getUser(search));
+export const GetUser = () =>
+  useQuery<UserAttributes, Error>("userInfo", getUser, {
+    // staleTime: 3600000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: "always",
+  });

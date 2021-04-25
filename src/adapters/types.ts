@@ -1,9 +1,12 @@
 export interface ServerResponse {
-  token: string;
-  data?: UserData;
+  data: UserData;
 }
 
-interface UserAttributes {
+export interface ServerTokenResponse {
+  token: string;
+}
+
+export interface UserAttributes {
   username: string;
   spotify_id?: string;
   refresh_token: string;
