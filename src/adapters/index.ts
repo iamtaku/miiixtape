@@ -1,6 +1,8 @@
 import axios from "axios";
 import { ServerResponse, ServerTokenResponse, UserAttributes } from "./types";
 import { useLocation } from "react-router";
+import { Spotify } from "../components/players/Spotify";
+import SpotifyWebApi from "spotify-web-api-js";
 
 const BASE = "http://localhost:3000/api/v1";
 
@@ -37,3 +39,9 @@ const getUserInfo = async () => {
 export const getUser = async () => {
   return await getUserInfo();
 };
+
+// export const getProfile = async() => {
+//   const client = new SpotifyWebApi;
+//   client.setAccessToken()
+
+// }

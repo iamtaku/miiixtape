@@ -18,38 +18,17 @@ const Home = () => {
   const history = useHistory();
   // useE
   const { isLoading, error, data } = GetUser();
-  const client = useRef<any>();
 
   if (search === "?error=access_denied") {
     console.error("You need to authorize spotify for this App to work");
     history.push("/error");
   }
 
-  useEffect(() => {
-    const spotifyClient = new SpotifyWebApi();
-    // console.log(isLoading, data);
-    if (!isLoading && data) {
-      spotifyClient.setAccessToken(data.access_token);
-      client.current = spotifyClient;
-    }
-  });
-
-  // if (!isLoading && data) {
-  //   const spotifyClient = new SpotifyWebApi();
-  //   spotifyClient.setAccessToken(data.access_token);
-
-  //   client.current = spotifyClient;
-  // }
-
-  // console.log(data);
-  // console.log(search);
-
   window.history.replaceState(null, "new page title", "/app");
 
   return (
     <div>
-      <h1>this is the app app</h1>
-      <Navbar ref={client} />
+      <Navbar />
       <Sidebar />
       <Main />
     </div>
