@@ -1,21 +1,22 @@
-import { GetUser } from "../queries";
-// import { User } from
 import styled from "styled-components";
 import SpotifyWebApi from "spotify-web-api-js";
 import { useQueryClient, useQuery } from "react-query";
 import { Profile } from "./Profile";
 
-interface NavbarProps {
-  // spotifyInfo?: SpotifyApi.UserProfileResponse;
-  spotifyData: {
-    token?: string;
-    spotifyId?: string;
-  };
-}
-
 const NavBar = styled.nav`
-  display: flex;
-  justify-content: space-around;
+  /* display: flex; */
+  /* width: 100%; */
+
+  ul {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  li {
+    margin: 0 16px;
+  }
 `;
 
 const getSpotifyInfo = async ({ access_token, spotify_id }: UserInfo) => {
@@ -37,9 +38,10 @@ export const Navbar: React.FC = () => {
   console.log(userInfo);
   const { data, isLoading, error } = useQuery(
     "spotifyInfo",
-    async () => await getSpotifyInfo(userInfo),
+    () => getSpotifyInfo(userInfo),
     {
       enabled: !!userInfo,
+      staleTime: Infinity,
     }
   );
   console.log(data);
@@ -49,7 +51,9 @@ export const Navbar: React.FC = () => {
   return (
     <NavBar>
       <ul>
-        <li>{data?.display_name}</li>
+        <li>
+          <h1>Plaaaylist</h1>
+        </li>
         <li>
           {data && data.images && (
             <Profile uri={data.images[0].url} displayName={data.display_name} />

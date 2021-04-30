@@ -43,6 +43,8 @@ a {
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
 ul, ol {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* Set core root defaults */

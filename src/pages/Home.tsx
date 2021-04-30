@@ -13,6 +13,8 @@ import { Sidebar } from "../components/Sidebar";
 import { LoginButton } from "../components/Buttons";
 import SpotifyWebApi from "spotify-web-api-js";
 
+
+
 const Home = () => {
   const { search } = useLocation();
   const history = useHistory();
