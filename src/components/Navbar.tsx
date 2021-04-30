@@ -2,6 +2,10 @@ import styled from "styled-components";
 import SpotifyWebApi from "spotify-web-api-js";
 import { useQueryClient, useQuery } from "react-query";
 import { Profile } from "./Profile";
+import { SearchBar } from "./SearchBar";
+import { GetSpotifyUser, GetUser } from "../queries";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const NavBar = styled.nav`
   /* display: flex; */
@@ -19,10 +23,14 @@ const NavBar = styled.nav`
   }
 `;
 
-const getSpotifyInfo = async ({ access_token, spotify_id }: UserInfo) => {
-  const client = new SpotifyWebApi();
-  client.setAccessToken(access_token);
-  return await client.getUser(spotify_id);
+const getSpotifyInfo = async (access_token?: string, spotify_id?: string) => {
+  console.log("called");
+  if (access_token && spotify_id) {
+    const client = new SpotifyWebApi();
+    client.setAccessToken(access_token);
+    console.log(access_token, spotify_id, client);
+    return await client.getUser(spotify_id);
+  }
 };
 
 interface UserInfo {
@@ -33,18 +41,19 @@ interface UserInfo {
 }
 
 export const Navbar: React.FC = () => {
-  const queryClient = useQueryClient();
-  const userInfo = queryClient.getQueryData<UserInfo>("userInfo")!;
+  const { data: userInfo } = GetUser();
   console.log(userInfo);
-  const { data, isLoading, error } = useQuery(
-    "spotifyInfo",
-    () => getSpotifyInfo(userInfo),
-    {
-      enabled: !!userInfo,
-      staleTime: Infinity,
+  const { data, isLoading, error } = GetSpotifyUser(userInfo);
+
+  useEffect(() => {
+    if (typeof data != undefined && data?.images) {
+      const img = data.images[0].url;
+      window.localStorage.setItem("profileImg", img);
     }
-  );
-  console.log(data);
+  }, [data]);
+
+  //store img url in local storage so we don't fetch it each time and re-render the navbar;
+
   if (error) {
     return <h2>there is an error</h2>;
   }
@@ -52,7 +61,12 @@ export const Navbar: React.FC = () => {
     <NavBar>
       <ul>
         <li>
-          <h1>Plaaaylist</h1>
+          <Link to="/app">
+            <h1>Plaaaylist</h1>
+          </Link>
+        </li>
+        <li>
+          <SearchBar />
         </li>
         <li>
           {data && data.images && (

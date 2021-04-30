@@ -3,7 +3,6 @@ import { useLocation, useHistory } from "react-router";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { GetUser } from "../queries";
-import { getToken } from "../adapters";
 import styled, { keyframes } from "styled-components";
 import Player from "../components/players";
 import { Navbar } from "../components/Navbar";
@@ -12,8 +11,6 @@ import { Sidebar } from "../components/Sidebar";
 
 import { LoginButton } from "../components/Buttons";
 import SpotifyWebApi from "spotify-web-api-js";
-
-
 
 const Home = () => {
   const { search } = useLocation();
@@ -27,12 +24,11 @@ const Home = () => {
   }
 
   window.history.replaceState(null, "new page title", "/app");
-
+  console.log(data);
   return (
     <div>
-      <Navbar />
-      <Sidebar />
       <Main />
+      {data?.username}
     </div>
   );
 };
