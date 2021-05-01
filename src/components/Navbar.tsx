@@ -3,14 +3,13 @@ import SpotifyWebApi from "spotify-web-api-js";
 import { useQueryClient, useQuery } from "react-query";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
+import { ProfilePlaceholder } from "./Placeholder";
 import { GetSpotifyUser, GetUser } from "../queries";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const NavBar = styled.nav`
-  /* display: flex; */
-  /* width: 100%; */
-
+  margin-top: 8px;
   ul {
     display: flex;
     width: 100%;
@@ -23,34 +22,10 @@ const NavBar = styled.nav`
   }
 `;
 
-const getSpotifyInfo = async (access_token?: string, spotify_id?: string) => {
-  console.log("called");
-  if (access_token && spotify_id) {
-    const client = new SpotifyWebApi();
-    client.setAccessToken(access_token);
-    console.log(access_token, spotify_id, client);
-    return await client.getUser(spotify_id);
-  }
-};
-
-interface UserInfo {
-  access_token: string;
-  refresh_token: string;
-  username: string;
-  spotify_id: string;
-}
-
 export const Navbar: React.FC = () => {
   const { data: userInfo } = GetUser();
-  console.log(userInfo);
+  // console.log(userInfo);
   const { data, isLoading, error } = GetSpotifyUser(userInfo);
-
-  useEffect(() => {
-    if (typeof data != undefined && data?.images) {
-      const img = data.images[0].url;
-      window.localStorage.setItem("profileImg", img);
-    }
-  }, [data]);
 
   //store img url in local storage so we don't fetch it each time and re-render the navbar;
 
@@ -69,8 +44,16 @@ export const Navbar: React.FC = () => {
           <SearchBar />
         </li>
         <li>
-          {data && data.images && (
-            <Profile uri={data.images[0].url} displayName={data.display_name} />
+          {isLoading ? (
+            <ProfilePlaceholder />
+          ) : (
+            data &&
+            data.images && (
+              <Profile
+                uri={data?.images[0].url}
+                displayName={data?.display_name}
+              />
+            )
           )}
         </li>
       </ul>

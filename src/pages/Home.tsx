@@ -15,7 +15,6 @@ import SpotifyWebApi from "spotify-web-api-js";
 const Home = () => {
   const { search } = useLocation();
   const history = useHistory();
-  // useE
   const { isLoading, error, data } = GetUser();
 
   if (search === "?error=access_denied") {
@@ -24,7 +23,7 @@ const Home = () => {
   }
 
   window.history.replaceState(null, "new page title", "/app");
-  console.log(data);
+  console.log(data, error);
   return (
     <div>
       <Main />

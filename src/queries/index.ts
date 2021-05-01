@@ -29,16 +29,17 @@ const getUser = async () => {
   const data = await axios.get<ServerResponse>(`${BASE}/users`, {
     headers,
   });
+  // console.log(data);
 
   return data.data.data.attributes;
 };
 
 const getSpotifyInfo = async (access_token?: string, spotify_id?: string) => {
-  console.log("called");
+  // console.log("called");
   if (access_token && spotify_id) {
     const client = new SpotifyWebApi();
     client.setAccessToken(access_token);
-    console.log(access_token, spotify_id, client);
+    // console.log(access_token, spotify_id, client);
     return await client.getUser(spotify_id);
   }
 };
