@@ -11,6 +11,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import Search from "./components/grid/Search";
 import Player from "./components/grid/players";
 import { LayoutWrapper as LayoutGrid } from "./components/Layout";
+import { Playlist } from "./components/grid/Playlist";
 const queryClient = new QueryClient();
 
 function App() {
@@ -27,6 +28,11 @@ function App() {
               <Switch>
                 <Route exact path="/app" component={Main} />
                 <Route exact path="/app/search/:search" component={Search} />
+                <Route
+                  exact
+                  path="/app/playlist/:playlist"
+                  component={Playlist}
+                />
               </Switch>
               <Player />
             </LayoutGrid>

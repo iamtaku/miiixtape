@@ -10,7 +10,7 @@ const Search = () => {
   const location = useParams<SearchParam>();
   console.log(location);
   const queryClient = new QueryClient();
-  const data = queryClient.getQueryData("userInfo");
+  const data = queryClient.getQueryData(["userInfo"]);
   console.log(data);
   //   console.log(queryClient.getQueryData(["userInfo"]));
   return (

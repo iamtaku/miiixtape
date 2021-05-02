@@ -22,8 +22,8 @@ const Main = () => {
   const { search } = useLocation();
   const history = useHistory();
 
-  const { data: code } = GetToken();
-  const { isLoading, error, data } = GetUser(code);
+  // const { data: code } = GetToken();
+  const { isLoading, error, data } = GetUser();
   if (search === "?error=access_denied") {
     console.error("You need to authorize spotify for this App to work");
     history.push("/error");

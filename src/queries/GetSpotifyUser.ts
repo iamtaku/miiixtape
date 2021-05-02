@@ -19,5 +19,6 @@ export const GetSpotifyUser = (userInfo?: UserAttributes) =>
     {
       enabled: !!userInfo,
       staleTime: Infinity,
+      refetchOnWindowFocus: false,
     }
   );
