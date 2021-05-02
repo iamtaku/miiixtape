@@ -1,7 +1,7 @@
 import React from "react";
 import { useQueryClient } from "react-query";
 import styled from "styled-components";
-import { GetUser } from "../queries";
+import { GetUser } from "../queries/GetUser";
 
 export const Sidebar = () => {
   // const queryClient = useQueryClient();

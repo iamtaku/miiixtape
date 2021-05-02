@@ -3,10 +3,11 @@ import SpotifyWebApi from "spotify-web-api-js";
 import { useQueryClient, useQuery } from "react-query";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
-import { ProfilePlaceholder } from "./Placeholder";
-import { GetSpotifyUser, GetUser } from "../queries";
+import { GetUser } from "../queries/GetUser";
+import { GetSpotifyUser } from "../queries/GetSpotifyUser";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ProfilePlaceholder } from "./Placeholder";
 
 const NavBar = styled.nav`
   margin-top: 8px;
@@ -29,9 +30,9 @@ export const Navbar: React.FC = () => {
 
   //store img url in local storage so we don't fetch it each time and re-render the navbar;
 
-  if (error) {
-    return <h2>there is an error</h2>;
-  }
+  // if (error) {
+  //   return <h2>there is an error</h2>;
+  // }
   return (
     <NavBar>
       <ul>
@@ -52,6 +53,7 @@ export const Navbar: React.FC = () => {
               <Profile
                 uri={data?.images[0].url}
                 displayName={data?.display_name}
+                isLoading={isLoading}
               />
             )
           )}
