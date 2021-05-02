@@ -9,9 +9,9 @@ import { QueryClientProvider, QueryClient } from "react-query";
 
 import { ReactQueryDevtools } from "react-query/devtools";
 import Search from "./components/grid/Search";
+import Player from "./components/grid/players";
+import { LayoutWrapper as LayoutGrid } from "./components/Layout";
 const queryClient = new QueryClient();
-
-const token = window.localStorage.getItem("token");
 
 function App() {
   // if (!token) return <Landing />;
@@ -20,13 +20,16 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Route exact path="/" component={Landing} />
-          <Route exact path="/app">
-            <Navbar />
-            <Sidebar />
-            <Switch>
-              <Route exact path="/app" component={Main} />
-              <Route exact path="/search/:search" component={Search} />
-            </Switch>
+          <Route path="/app">
+            <LayoutGrid>
+              <Navbar />
+              <Sidebar />
+              <Switch>
+                <Route exact path="/app" component={Main} />
+                <Route exact path="/app/search/:search" component={Search} />
+              </Switch>
+              <Player />
+            </LayoutGrid>
           </Route>
           {/* work on 404 page */}
         </Router>

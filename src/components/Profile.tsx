@@ -8,6 +8,7 @@ interface ProfileProps {
   displayName?: string;
   uri?: string;
   isLoading?: boolean;
+  href?: string;
 }
 
 const ProfileWrapper = styled.div`
@@ -42,6 +43,7 @@ export const Profile: React.FC<ProfileProps> = ({
   displayName,
   uri,
   isLoading,
+  href,
 }) => {
   const history = useHistory();
   const logOut = () => {
@@ -64,9 +66,13 @@ export const Profile: React.FC<ProfileProps> = ({
       {profileOpen ? (
         <ProfileModal>
           <ul>
-            <li>
-              SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
-            </li>
+            {href ? (
+              <li>
+                <a href={href}>
+                  SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
+                </a>
+              </li>
+            ) : null}
             <li>SETTINGS</li>
             <li onClick={logOut}>LOGOUT</li>
           </ul>

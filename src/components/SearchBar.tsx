@@ -7,7 +7,7 @@ export const SearchBar = () => {
 
   const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    history.push(`/search/${search}`);
+    history.push(`/app/search/${search}`);
   };
   return (
     <div>

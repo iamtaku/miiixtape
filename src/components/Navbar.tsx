@@ -8,8 +8,10 @@ import { GetSpotifyUser } from "../queries/GetSpotifyUser";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ProfilePlaceholder } from "./Placeholder";
+import { GetToken } from "../queries/GetToken";
 
 const NavBar = styled.nav`
+  grid-area: nav;
   margin-top: 8px;
   ul {
     display: flex;
@@ -24,15 +26,12 @@ const NavBar = styled.nav`
 `;
 
 export const Navbar: React.FC = () => {
-  const { data: userInfo } = GetUser();
+  const { data: token } = GetToken();
+  const { data: userInfo } = GetUser(token);
   // console.log(userInfo);
   const { data, isLoading, error } = GetSpotifyUser(userInfo);
 
-  //store img url in local storage so we don't fetch it each time and re-render the navbar;
-
-  // if (error) {
-  //   return <h2>there is an error</h2>;
-  // }
+  console.log(data);
   return (
     <NavBar>
       <ul>
@@ -54,6 +53,7 @@ export const Navbar: React.FC = () => {
                 uri={data?.images[0].url}
                 displayName={data?.display_name}
                 isLoading={isLoading}
+                href={data.external_urls.spotify}
               />
             )
           )}

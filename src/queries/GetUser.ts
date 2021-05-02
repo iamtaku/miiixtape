@@ -18,9 +18,6 @@ const getUser = async () => {
   let token = window.localStorage.getItem("token");
   //if no token, fetch a new one
   if (!token) {
-    // token = await getToken();
-    // console.log("no token... fetching...");
-    // token && window.localStorage.setItem("token", token);
     throw new Error("No token");
   }
   const headers = {
