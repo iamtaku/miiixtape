@@ -9,6 +9,12 @@ const SidebarWrapper = styled.div`
   grid-area: sidebar;
   display: flex;
   flex-direction: column;
+  border-right: 1px solid white;
+  span {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
 `;
 export const Sidebar = () => {
   // const queryClient = useQueryClient();
@@ -18,7 +24,9 @@ export const Sidebar = () => {
   // console.log(data);
   return (
     <SidebarWrapper>
-      <h2>this is the sidebar</h2>
+      <p>
+        <span>Spotify Playlists</span>
+      </p>
       {data?.items.map((item) => {
         return <Link to={`/app/playlist/${item.id}`}>{item.name}</Link>;
       })}

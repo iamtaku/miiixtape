@@ -6,9 +6,7 @@ const getSpotifyPlaylist = async (
   playlistId: string,
   access_token?: string
 ) => {
-  console.log("getting playlist...", access_token, playlistId);
   if (access_token && playlistId) {
-    console.log("fetch single spotify playlist...", playlistId);
     const client = new SpotifyWebApi();
     client.setAccessToken(access_token);
     return await client.getPlaylist(playlistId);
