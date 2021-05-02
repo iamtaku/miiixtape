@@ -15,7 +15,7 @@ export const Sidebar = () => {
   // const something = queryClient.getQueryData(["userInfo"])!;
   const { data: userInfo } = GetUser();
   const { data, error, isLoading } = GetAllSpotifyPlaylist(userInfo);
-  console.log(data);
+  // console.log(data);
   return (
     <SidebarWrapper>
       <h2>this is the sidebar</h2>

@@ -7,10 +7,12 @@ interface PlaylistParam {
 }
 export const Playlist = () => {
   const { playlist } = useParams<PlaylistParam>();
-  console.log(playlist);
   const { data: userInfo } = GetUser();
+  // console.log(userInfo);
+  // console.log(playlist);
   const { data, isLoading, error } = GetSpotifyPlaylist(playlist, userInfo);
-  console.log(data);
+  // console.log(data);
+
   return (
     <div>
       <h1>this is the playlist page!</h1>

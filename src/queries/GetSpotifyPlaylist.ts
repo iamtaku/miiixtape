@@ -6,8 +6,9 @@ const getSpotifyPlaylist = async (
   playlistId: string,
   access_token?: string
 ) => {
-  console.log(access_token, playlistId);
+  console.log("getting playlist...", access_token, playlistId);
   if (access_token && playlistId) {
+    console.log("fetch single spotify playlist...", playlistId);
     const client = new SpotifyWebApi();
     client.setAccessToken(access_token);
     return await client.getPlaylist(playlistId);
@@ -19,10 +20,10 @@ export const GetSpotifyPlaylist = (
   userInfo?: UserAttributes
 ) =>
   useQuery(
-    "spotifyPlaylist",
+    `spotifyPlaylist-${playlistId}`,
     () => getSpotifyPlaylist(playlistId, userInfo?.access_token),
     {
-      enabled: !!playlistId,
+      enabled: !!userInfo,
       staleTime: Infinity,
     }
   );

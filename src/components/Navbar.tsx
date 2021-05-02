@@ -31,7 +31,6 @@ export const Navbar: React.FC = () => {
   // console.log(userInfo);
   const { data, isLoading, error } = GetSpotifyUser(userInfo);
 
-  console.log(data);
   return (
     <NavBar>
       <ul>
