@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const InnerGridWrapper = styled.div`
   display: grid;
-  grid-template-rows: 15% 85%;
+  grid-template-rows: 30% 70%;
   grid-template-areas:
     "top"
     "bottom";

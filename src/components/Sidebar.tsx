@@ -20,14 +20,16 @@ export const Sidebar = () => {
   // const queryClient = useQueryClient();
   // const something = queryClient.getQueryData(["userInfo"])!;
   const { data: userInfo } = GetUser();
-  const { data, error, isLoading } = GetAllSpotifyPlaylist(userInfo);
+  const { data: spotifyPlaylists, error, isLoading } = GetAllSpotifyPlaylist(
+    userInfo
+  );
   // console.log(data);
   return (
     <SidebarWrapper>
       <p>
         <span>Spotify Playlists</span>
       </p>
-      {data?.items.map((item) => {
+      {spotifyPlaylists?.items.map((item) => {
         return <Link to={`/app/playlist/${item.id}`}>{item.name}</Link>;
       })}
     </SidebarWrapper>

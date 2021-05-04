@@ -5,7 +5,6 @@ import { useQuery } from "react-query";
 import { GetUser } from "../queries/GetUser";
 import { GetToken } from "../queries/GetToken";
 import styled, { keyframes } from "styled-components";
-import Player from "../components/grid/players";
 import { Home } from "../components/grid/Home";
 
 import SpotifyWebApi from "spotify-web-api-js";

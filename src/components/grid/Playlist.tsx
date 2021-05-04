@@ -2,9 +2,9 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { GetSpotifyPlaylist } from "../../queries/GetSpotifyPlaylist";
 import { GetUser } from "../../queries/GetUser";
-import { InnerGridBottom } from "../InnerGridBottom";
-import { InnerGridLayout } from "../InnerGridLayout";
-import { InnerGridTop } from "../InnerGridTop";
+import { InnerGridBottom } from "./InnerGridBottom";
+import { InnerGridLayout } from "./InnerGridLayout";
+import { InnerGridTop } from "./InnerGridTop";
 interface PlaylistParam {
   playlist: string;
 }
@@ -16,12 +16,8 @@ export const Playlist = () => {
 
   return (
     <InnerGridLayout>
-      <InnerGridTop />
-      <p>this is the playlist page!</p>
+      <InnerGridTop data={data} pageType={playlist} />
       <InnerGridBottom data={data} />
-      {data?.tracks.items.map((item, index) => {
-        return <p key={index}>{item.track.name}</p>;
-      })}
     </InnerGridLayout>
   );
 };

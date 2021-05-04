@@ -9,7 +9,7 @@ import { QueryClientProvider, QueryClient } from "react-query";
 
 import { ReactQueryDevtools } from "react-query/devtools";
 import Search from "./components/grid/Search";
-import Player from "./components/grid/players";
+import Player from "./components/players";
 import { LayoutWrapper as LayoutGrid } from "./components/Layout";
 import { Playlist } from "./components/grid/Playlist";
 const queryClient = new QueryClient();

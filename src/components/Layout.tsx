@@ -8,4 +8,5 @@ export const LayoutWrapper = styled.div`
     "nav nav nav nav"
     "sidebar main main main"
     "player player player player";
+  grid-column-gap: 24px;
 `;
