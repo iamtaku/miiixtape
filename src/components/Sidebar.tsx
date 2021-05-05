@@ -2,6 +2,7 @@ import React from "react";
 import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { GetPlaylists } from "../queries/GetAllPlaylist";
 import { GetAllSpotifyPlaylist } from "../queries/GetAllSpotifyPlaylist";
 import { GetUser } from "../queries/GetUser";
 
@@ -17,13 +18,11 @@ const SidebarWrapper = styled.div`
   }
 `;
 export const Sidebar = () => {
-  // const queryClient = useQueryClient();
-  // const something = queryClient.getQueryData(["userInfo"])!;
   const { data: userInfo } = GetUser();
-  const { data: spotifyPlaylists, error, isLoading } = GetAllSpotifyPlaylist(
-    userInfo
-  );
-  // console.log(data);
+  const { data: spotifyPlaylists } = GetAllSpotifyPlaylist(userInfo);
+  const { data, isLoading, error } = GetPlaylists();
+  console.log(data);
+  data?.forEach((item) => console.log(item.id));
   return (
     <SidebarWrapper>
       <p>
@@ -32,6 +31,9 @@ export const Sidebar = () => {
       {spotifyPlaylists?.items.map((item) => {
         return <Link to={`/app/playlist/${item.id}`}>{item.name}</Link>;
       })}
+      <p>
+        <span>Plaaaylist Playlists</span>
+      </p>
     </SidebarWrapper>
   );
 };

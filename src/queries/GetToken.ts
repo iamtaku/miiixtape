@@ -1,8 +1,9 @@
 import axios from "axios";
+import { Server } from "node:http";
 import { useQuery } from "react-query";
 import { ServerTokenResponse } from "./types";
 
-const BASE = "http://localhost:3000/api/v1";
+const BASE = process.env.REACT_APP_BASE_URL;
 
 const getToken = async () => {
   //if we have a token in localstorage return it
@@ -13,13 +14,17 @@ const getToken = async () => {
 
   const code = window.location.search;
   if (code) {
-    const {
-      data: { token },
-    } = await axios.get<ServerTokenResponse>(`${BASE}/callback/${code}`);
-    window.localStorage.setItem("token", token);
-    window.history.replaceState(null, "new page title", "/app");
-    return token;
+    try {
+      const {
+        data: { token },
+      } = await axios.get<ServerTokenResponse>(`${BASE}/callback/${code}`);
+      window.localStorage.setItem("token", token);
+      window.history.replaceState(null, "new page title", "/app");
+      return token;
+    } catch (err) {
+      return err;
+    }
   }
 };
-
-export const GetToken = () => useQuery("token", getToken);
+export const GetToken = () =>
+  useQuery<ServerTokenResponse | undefined>("token", getToken);
