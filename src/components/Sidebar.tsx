@@ -2,8 +2,9 @@ import React from "react";
 import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { GetPlaylists } from "../queries/GetAllPlaylist";
-import { GetAllSpotifyPlaylist } from "../queries/GetAllSpotifyPlaylist";
+import { isTemplateTail } from "typescript";
+import { GetPlaylists } from "../queries/GetAllPlaylists";
+import { GetAllSpotifyPlaylist } from "../queries/GetAllSpotifyPlaylists";
 import { GetUser } from "../queries/GetUser";
 
 const SidebarWrapper = styled.div`
@@ -20,20 +21,25 @@ const SidebarWrapper = styled.div`
 export const Sidebar = () => {
   const { data: userInfo } = GetUser();
   const { data: spotifyPlaylists } = GetAllSpotifyPlaylist(userInfo);
-  const { data, isLoading, error } = GetPlaylists();
-  console.log(data);
-  data?.forEach((item) => console.log(item.id));
+  const { data: playlists, isLoading, error } = GetPlaylists();
+  // console.log(data);
+  //  : playlists data?.forEach((item) => console.log(item.attributes.name));
   return (
     <SidebarWrapper>
       <p>
         <span>Spotify Playlists</span>
       </p>
       {spotifyPlaylists?.items.map((item) => {
-        return <Link to={`/app/playlist/${item.id}`}>{item.name}</Link>;
+        return <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>;
       })}
       <p>
         <span>Plaaaylist Playlists</span>
       </p>
+      {playlists?.map((item) => (
+        <Link to={`/app/playlist/plaaaylist/${item.id}`}>
+          {item.attributes.name}
+        </Link>
+      ))}
     </SidebarWrapper>
   );
 };

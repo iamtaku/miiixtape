@@ -1,8 +1,8 @@
-import { Playlists, Playlist } from "./types";
+import { Playlists, ServerPlaylist } from "./types";
 import { useQuery } from "react-query";
 import axios from "axios";
 
-const getPlaylist = async (): Promise<Playlist[]> => {
+const getPlaylist = async (): Promise<ServerPlaylist[]> => {
   const token = window.localStorage.getItem("token");
   if (token) {
     // return await axios.get();
@@ -27,6 +27,6 @@ const getPlaylist = async (): Promise<Playlist[]> => {
 };
 
 export const GetPlaylists = () =>
-  useQuery<Playlist[], Error>("plaaaylistAll", getPlaylist, {
+  useQuery<ServerPlaylist[], Error>("plaaaylistAll", getPlaylist, {
     staleTime: Infinity,
   });

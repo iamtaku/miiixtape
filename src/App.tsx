@@ -30,7 +30,7 @@ function App() {
                 <Route exact path="/app/search/:search" component={Search} />
                 <Route
                   exact
-                  path="/app/playlist/:playlist"
+                  path="/app/playlist/:service/:playlistId"
                   component={Playlist}
                 />
               </Switch>

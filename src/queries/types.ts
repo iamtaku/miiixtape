@@ -14,13 +14,31 @@ export interface UserAttributes {
 }
 
 export interface Playlists {
-  data: Playlist[];
+  data: ServerPlaylist[];
 }
 
-export interface Playlist {
+export interface SongAttributes {
+  name: string;
+  service: Service;
+  uri: string;
+}
+
+export interface PlaylistItemRelationship {
+  playlist_id: string;
+}
+
+export interface ServerSong {
+  id: string;
+  type: "song";
+  attributes: SongAttributes;
+  relationships: PlaylistItemRelationship;
+}
+
+export interface ServerPlaylist {
   attributes: PlaylistAttributes;
   id: string;
   relationships: PlaylistRelationships;
+  included: ServerSong[];
 }
 
 interface PlaylistRelationships {
@@ -57,10 +75,32 @@ interface UserData {
   relationships: PlaylistAttributes;
 }
 
-// export interface
+export type Service = "plaaaylist" | "spotify";
 
-export interface ResponseDataType<T, F> {
+export interface PlaylistInfo {
+  external_urls?: string;
   id: string;
-  attributes: T;
-  relationships: F[];
+  coverImg?: string;
+  name: string;
+  description: string;
+}
+
+export interface Song {
+  name: string;
+  service: string;
+  uri: string;
+  id: string;
+  img?: string;
+}
+
+export interface PlaylistTracks {
+  total: number;
+  next?: string;
+  previous?: string;
+  tracks: Song[];
+}
+
+export interface Playlist {
+  info: PlaylistInfo;
+  tracks: PlaylistTracks;
 }

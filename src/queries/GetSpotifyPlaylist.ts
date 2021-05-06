@@ -2,14 +2,18 @@ import SpotifyWebApi from "spotify-web-api-js";
 import { UserAttributes } from "./types";
 import { useQuery } from "react-query";
 
-const getSpotifyPlaylist = async (
+export const getSpotifyPlaylist = async (
   playlistId: string,
   access_token?: string
 ) => {
-  if (access_token && playlistId) {
-    const client = new SpotifyWebApi();
-    client.setAccessToken(access_token);
-    return await client.getPlaylist(playlistId);
+  try {
+    if (access_token && playlistId) {
+      const client = new SpotifyWebApi();
+      client.setAccessToken(access_token);
+      return await client.getPlaylist(playlistId);
+    }
+  } catch (error) {
+    return new Error(error);
   }
 };
 
