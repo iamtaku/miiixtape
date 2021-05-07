@@ -7,7 +7,7 @@ export type ActionMap<M extends { [index: string]: any }> = {
       }
     : {
         type: Key;
-        payload?: M[Key];
+        payload: M[Key];
       };
 };
 
@@ -15,8 +15,12 @@ export type Types = "PLAY_PLAYLIST";
 
 export type PlaybackPayload = {
   PLAY_PLAYLIST: {
+    id: string;
+    tracks: Song[];
+  };
+  SET_CURRENT_PLAYING: {
     id: number;
-    name: string;
+    tracks: Song[];
   };
 };
 

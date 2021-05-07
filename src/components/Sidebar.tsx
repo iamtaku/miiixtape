@@ -6,6 +6,7 @@ import { isTemplateTail } from "typescript";
 import { GetPlaylists } from "../queries/GetAllPlaylists";
 import { GetAllSpotifyPlaylist } from "../queries/GetAllSpotifyPlaylists";
 import { GetUser } from "../queries/GetUser";
+import { Song } from "../queries/types";
 import { useGlobalContext } from "../state/context";
 
 const SidebarWrapper = styled.div`
@@ -23,9 +24,22 @@ export const Sidebar = () => {
   const { data: userInfo } = GetUser();
   const { data: spotifyPlaylists } = GetAllSpotifyPlaylist(userInfo);
   const { data: playlists, isLoading, error } = GetPlaylists();
-  // console.log(data);
-  //  : playlists data?.forEach((item) => console.log(item.attributes.name));
   const { state, dispatch } = useGlobalContext();
+  const test: Song[] = [
+    {
+      id: "1",
+      name: "test song",
+      service: "spotify",
+      uri: "spotify:track:5RtbColbiZvNPRqYeSdf1o",
+    },
+    {
+      id: "2",
+      name: "test 2 song",
+      service: "youtube",
+      uri: "FBuQDijUme4",
+    },
+  ];
+
   return (
     <SidebarWrapper>
       <p>
@@ -39,6 +53,7 @@ export const Sidebar = () => {
               onClick={() =>
                 dispatch({
                   type: "PLAY_PLAYLIST",
+                  payload: { id: "1", tracks: test },
                 })
               }
             >
