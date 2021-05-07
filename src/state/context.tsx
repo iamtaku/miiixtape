@@ -1,12 +1,13 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useReducer, Dispatch } from "react";
 import { Song } from "../queries/types";
+import { playbackReducer, PlaybackActions } from "./reducers";
 
 interface Playlist {
   name: string;
   description: string;
 }
 
-type InitialStateType = {
+type PlaybackType = {
   currentPlaylist: Playlist;
   playlistSongs: Song[];
   previousSong: Song;
@@ -15,6 +16,11 @@ type InitialStateType = {
   nextSong: Song;
   nextService: string;
   isPlaying: boolean;
+  isFinished: boolean;
+};
+
+type InitialStateType = {
+  player: PlaybackType;
 };
 
 const song = {
@@ -26,24 +32,40 @@ const song = {
 };
 
 const initialState = {
-  currentPlaylist: {
-    name: "",
-    description: "",
+  player: {
+    currentPlaylist: {
+      name: "",
+      description: "",
+    },
+    playlistSongs: [],
+    previousSong: song,
+    currentSong: song,
+    currentService: "",
+    nextSong: song,
+    nextService: "",
+    isPlaying: false,
+    isFinished: false,
   },
-  playlistSongs: [],
-  previousSong: song,
-  currentSong: song,
-  currentService: "",
-  nextSong: song,
-  nextService: "",
-  isPlaying: false,
 };
 
-const mainReducer = ({ player }: InitialStateType, action: PlayerActions) => ({
-  player: playerReducer(player, action),
+// const initialState = {
+// player: {},
+// };
+
+const mainReducer = (
+  { player }: InitialStateType,
+  action: PlaybackActions
+) => ({
+  player: playbackReducer(player, action),
 });
 
-const AppContext = createContext<InitialStateType>(initialState);
+const AppContext = createContext<{
+  state: InitialStateType;
+  dispatch: Dispatch<PlaybackActions>;
+}>({
+  state: initialState,
+  dispatch: () => null,
+});
 
 const AppProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(mainReducer, initialState);
@@ -56,4 +78,4 @@ const AppProvider: React.FC = ({ children }) => {
 
 export const useGlobalContext = () => useContext(AppContext);
 
-// export { AppContext, AppProvider };
+export { AppContext, AppProvider };

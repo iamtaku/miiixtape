@@ -6,6 +6,7 @@ import { isTemplateTail } from "typescript";
 import { GetPlaylists } from "../queries/GetAllPlaylists";
 import { GetAllSpotifyPlaylist } from "../queries/GetAllSpotifyPlaylists";
 import { GetUser } from "../queries/GetUser";
+import { useGlobalContext } from "../state/context";
 
 const SidebarWrapper = styled.div`
   grid-area: sidebar;
@@ -24,13 +25,27 @@ export const Sidebar = () => {
   const { data: playlists, isLoading, error } = GetPlaylists();
   // console.log(data);
   //  : playlists data?.forEach((item) => console.log(item.attributes.name));
+  const { state, dispatch } = useGlobalContext();
   return (
     <SidebarWrapper>
       <p>
         <span>Spotify Playlists</span>
       </p>
       {spotifyPlaylists?.items.map((item) => {
-        return <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>;
+        return (
+          <>
+            <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>;
+            <button
+              onClick={() =>
+                dispatch({
+                  type: "PLAY_PLAYLIST",
+                })
+              }
+            >
+              Play
+            </button>
+          </>
+        );
       })}
       <p>
         <span>Plaaaylist Playlists</span>

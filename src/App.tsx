@@ -12,6 +12,7 @@ import Search from "./components/grid/Search";
 import Player from "./components/players";
 import { LayoutWrapper as LayoutGrid } from "./components/Layout";
 import { Playlist } from "./components/grid/Playlist";
+import { AppProvider } from "./state/context";
 const queryClient = new QueryClient();
 
 function App() {
@@ -22,20 +23,22 @@ function App() {
         <Router>
           <Route exact path="/" component={Landing} />
           <Route path="/app">
-            <LayoutGrid>
-              <Navbar />
-              <Sidebar />
-              <Switch>
-                <Route exact path="/app" component={Main} />
-                <Route exact path="/app/search/:search" component={Search} />
-                <Route
-                  exact
-                  path="/app/playlist/:service/:playlistId"
-                  component={Playlist}
-                />
-              </Switch>
-              <Player />
-            </LayoutGrid>
+            <AppProvider>
+              <LayoutGrid>
+                <Navbar />
+                <Sidebar />
+                <Switch>
+                  <Route exact path="/app" component={Main} />
+                  <Route exact path="/app/search/:search" component={Search} />
+                  <Route
+                    exact
+                    path="/app/playlist/:service/:playlistId"
+                    component={Playlist}
+                  />
+                </Switch>
+                <Player />
+              </LayoutGrid>
+            </AppProvider>
           </Route>
           {/* work on 404 page */}
         </Router>
