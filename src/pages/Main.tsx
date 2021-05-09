@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useHistory } from "react-router";
-import { GetUser } from "../queries/GetUser";
+import { GetUser } from "../queries/hooks/GetUser";
 import styled, { keyframes } from "styled-components";
 import { Home } from "../components/grid/Home";
 

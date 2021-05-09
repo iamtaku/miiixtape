@@ -1,6 +1,4 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { UserAttributes } from "./types";
-import { useQuery } from "react-query";
 import { Playlist, PlaylistInfo, Song } from "../types/types";
 
 const mapSpotifyPlaylistToPlaylist = (
@@ -48,17 +46,3 @@ export const getSingleSpotifyPlaylist = async (
   }
   throw new Error();
 };
-
-// export const GetSingleSpotifyPlaylist = (
-//   playlistId: string,
-//   userInfo?: UserAttributes
-// ) =>{
-//   return useQuery(<Playlist, Error>(
-//     `spotifyPlaylist-${playlistId}`,
-//     () => getSpotifyPlaylist(playlistId, userInfo?.access_token),
-//     {
-//       enabled: !!userInfo,
-//       staleTime: Infinity,
-//     })
-//   );
-//   }

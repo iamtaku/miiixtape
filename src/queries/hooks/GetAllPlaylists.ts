@@ -1,8 +1,8 @@
-import { ServerPlaylists } from "./types";
+import { ServerPlaylists } from "../types";
 import { useQuery } from "react-query";
 import axios, { AxiosResponse } from "axios";
-import { mapToPlaylist } from "../helpers/helpers";
-import { Playlist } from "../types/types";
+import { mapToPlaylist } from "../../helpers/helpers";
+import { Playlist } from "../../types/types";
 import { Server } from "node:http";
 
 const mapServerPlaylist = (

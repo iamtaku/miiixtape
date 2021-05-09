@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { GetSinglePlaylist } from "../../queries/GetSinglePlaylist";
+import React, { useState } from "react";
+import { GetSinglePlaylist } from "../../queries/hooks/GetSinglePlaylist";
 import { InnerGridBottom } from "./InnerGridBottom";
 import { InnerGridLayout } from "./InnerGridLayout";
 import { InnerGridTop } from "./InnerGridTop";
@@ -9,8 +9,8 @@ export const Playlist = () => {
   console.log("playlist", data);
   return (
     <InnerGridLayout>
-      <InnerGridTop data={data} />
-      <InnerGridBottom data={data} />
+      <InnerGridTop data={data?.playlistInfo} tracks={data?.tracks} />
+      <InnerGridBottom data={data?.tracks} />
     </InnerGridLayout>
   );
 };

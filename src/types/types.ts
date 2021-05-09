@@ -7,9 +7,11 @@ export type Song = {
   playlistPosition?: number;
 };
 
+export type Tracks = Song[];
+
 export type Playlist = {
   playlistInfo: PlaylistInfo;
-  tracks?: Song[];
+  tracks?: Tracks;
 };
 
 export type PlaylistInfo = {

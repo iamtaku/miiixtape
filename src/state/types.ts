@@ -1,4 +1,4 @@
-import { Song } from "../types/types";
+import { Song, Tracks } from "../types/types";
 import { Service } from "../types/types";
 
 export type ActionMap<M extends { [index: string]: any }> = {
@@ -17,12 +17,10 @@ export type Types = "PLAY_PLAYLIST";
 export type PlaybackPayload = {
   PLAY_PLAYLIST: {
     id: string;
-    tracks: Song[];
+    tracks: Tracks;
   };
-  SET_CURRENT_PLAYING: {
-    id: number;
-    tracks: Song[];
-  };
+  SONG_END: {};
+  PLAY_NEXT: {};
   PAUSE_CURRENT: {};
 };
 

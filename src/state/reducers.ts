@@ -11,8 +11,8 @@ export const playbackReducer = (
 ) => {
   switch (action.type) {
     case "PLAY_PLAYLIST":
-      console.log("reducer was called, play_playlist");
-
+      // console.log(useQuery)
+      console.log(action.payload);
       return {
         ...state,
         playlistSongs: action.payload.tracks,
@@ -22,9 +22,19 @@ export const playbackReducer = (
         nextService: action.payload.tracks[1].service,
         isPlaying: true,
       };
-    case "SET_CURRENT_PLAYING":
+    case "SONG_END":
+      console.log("song has ended, called from reducer");
       return {
         ...state,
+      };
+    case "PLAY_NEXT":
+      console.log("playing next song");
+      console.log(state);
+      return {
+        ...state,
+        currentSong: state.nextSong,
+        nextSong: "",
+        isPlaying: true,
       };
     default:
       return state;

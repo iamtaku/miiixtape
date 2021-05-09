@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { useGlobalContext } from "../../state/context";
+import { PlaylistInfo, Tracks } from "../../types/types";
 
 const InnerGridTopWrapper = styled.div`
   grid-area: "top";
@@ -13,30 +15,33 @@ const InnerGridTopWrapper = styled.div`
   }
 `;
 
-type ServiceType = "spotify" | "youtube";
-
-interface Data {
-  coverImg?: string;
-  coverImgAlt?: string;
-  services: ServiceType[];
-  type: "album" | "playlist" | "artist";
-  description?: string;
-  name: string;
-}
-
 interface PropTypes {
-  data?: any;
+  data?: PlaylistInfo;
+  tracks?: Tracks;
   // pageType: string;
 }
 
-export const InnerGridTop: React.FC<PropTypes> = ({ data }) => {
+export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
   // const { images, description, href, owner } = data;
-  if (!data) return <h1>loading...</h1>;
+  const { dispatch, state } = useGlobalContext();
+
+  const handleClick = (id: string, tracks: Tracks) => {
+    console.log("i was clicked/played", tracks);
+    dispatch({
+      type: "PLAY_PLAYLIST",
+      payload: {
+        id,
+        tracks,
+      },
+    });
+  };
+  if (!data || !tracks) return <h1>loading...</h1>;
   return (
     <InnerGridTopWrapper>
       <h2>{data.name}</h2>
-      <img src={data.coverImg} alt={data.coverImgAlt} />
+      <img src={data.img} alt={data.description} />
       <p>{data.description}</p>
+      <button onClick={() => handleClick(data.id, tracks)}>Play</button>
     </InnerGridTopWrapper>
   );
 };

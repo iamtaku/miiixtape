@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
-import axios, { AxiosResponse } from "axios";
-import { ServerPlaylist, ServerSong, UserAttributes } from "./types";
-import { Service, Playlist, Song, PlaylistInfo } from "../types/types";
-import { getSingleSpotifyPlaylist } from "./GetSingleSpotifyPlaylist";
+import axios from "axios";
+import { ServerPlaylist, UserAttributes } from "../types";
+import { Service, Playlist } from "../../types/types";
+import { getSingleSpotifyPlaylist } from "../getSingleSpotifyPlaylist";
 import { useParams } from "react-router";
 import { GetUser } from "./GetUser";
-import { mapToPlaylist } from "../helpers/helpers";
+import { mapToPlaylist } from "../../helpers/helpers";
 
 const getPlaaaylist = async (
   playlistId: string,
@@ -38,8 +38,6 @@ const getPlaylist = async (
   //if we have a token, call corresponding function to fetch and return data
   const token = window.localStorage.getItem("token");
   if (token) {
-    // let data;
-    // console.log(service);
     switch (service) {
       case "plaaaylist":
         return await getPlaaaylist(playlistId, token);
@@ -51,26 +49,22 @@ const getPlaylist = async (
       default:
         break;
     }
-    // return data;
-
-    //we want to return the common playlist structure
-    //check service to see if it is spotify/etc
-    //fetch appropriate resource
-    //convert data returned
-    // return mapToPlaylist(data);
   }
   throw new Error("No token");
 };
 
-//fetch correct resource based on parameters
-//return a Data proptype for the inner grids
 interface PlaylistParam {
   playlistId: string;
   service: Service;
 }
-export const GetSinglePlaylist = () => {
-  const { playlistId, service } = useParams<PlaylistParam>();
+
+export const GetSinglePlaylist = (id?: string) => {
+  let { playlistId, service } = useParams<PlaylistParam>();
   const { data: userInfo } = GetUser();
+  // if we have an id, pass it along , else use params
+  if (id) {
+    playlistId = id;
+  }
 
   return useQuery<Playlist, Error>(
     `playlist-${service}-${playlistId}`,

@@ -1,16 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { GetAllPlaylists } from "../queries/GetAllPlaylists";
-import { GetAllSpotifyPlaylist } from "../queries/GetAllSpotifyPlaylists";
-import { GetUser } from "../queries/GetUser";
+import { GetAllPlaylists } from "../queries/hooks/GetAllPlaylists";
+import { GetAllSpotifyPlaylist } from "../queries/hooks/GetAllSpotifyPlaylists";
+import { GetSinglePlaylist } from "../queries/hooks/GetSinglePlaylist";
+import { GetUser } from "../queries/hooks/GetUser";
 import { useGlobalContext } from "../state/context";
 import { Song } from "../types/types";
 
 const SidebarWrapper = styled.div`
   grid-area: sidebar;
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  /* flex-direction: column; */
   border-right: 1px solid white;
   span {
     font-size: 1.2rem;
@@ -18,6 +19,16 @@ const SidebarWrapper = styled.div`
     opacity: 0.8;
   }
 `;
+
+const PlaylistItem = styled.div`
+  width: inherit;
+  /* display: grid; */
+  /* grid-template-columns: 0.7fr 0.3fr; */
+  /* grid-template-columns: 1fr 1fr; */
+  /* display: flex; */
+  /* justify-content: space-between; */
+`;
+
 export const Sidebar = () => {
   const { data: userInfo } = GetUser();
   const { data: spotifyPlaylists } = GetAllSpotifyPlaylist(userInfo);
@@ -37,7 +48,21 @@ export const Sidebar = () => {
       uri: "FBuQDijUme4",
     },
   ];
+  const handleClick = (id: string) => {
+    // event?.preventDefault();
+    // console.log(event);
+    // const { data: playlist } = GetSinglePlaylist(id);
+    console.log(id);
 
+    // const payload = {
+    //   id,
+    //   tracks,
+    // };
+    // dispatch({
+    //   type: "PLAY_PLAYLIST",
+    //   payload,
+    // });
+  };
   return (
     <SidebarWrapper>
       <p>
@@ -45,28 +70,31 @@ export const Sidebar = () => {
       </p>
       {spotifyPlaylists?.items.map((item) => {
         return (
-          <>
+          <PlaylistItem>
             <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>
-            <button
+            {/* <button
               onClick={() =>
                 dispatch({
                   type: "PLAY_PLAYLIST",
                   payload: { id: "1", tracks: test },
                 })
               }
-            >
-              Play
-            </button>
-          </>
+            > */}
+            {/* Play */}
+            {/* </button>
+            <button onClick={() => handleClick(item.id)}>Play</button> */}
+          </PlaylistItem>
         );
       })}
       <p>
         <span>Plaaaylist Playlists</span>
       </p>
       {playlists?.map((item) => (
-        <Link to={`/app/playlist/plaaaylist/${item.playlistInfo.id}`}>
-          {item.playlistInfo.name}
-        </Link>
+        <PlaylistItem>
+          <Link to={`/app/playlist/plaaaylist/${item.playlistInfo.id}`}>
+            {item.playlistInfo.name}
+          </Link>
+        </PlaylistItem>
       ))}
     </SidebarWrapper>
   );

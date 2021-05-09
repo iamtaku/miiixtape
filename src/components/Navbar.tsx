@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
-import { GetUser } from "../queries/GetUser";
-import { GetSpotifyUser } from "../queries/GetSpotifyUser";
+import { GetUser } from "../queries/hooks/GetUser";
+import { GetSpotifyUser } from "../queries/hooks/GetSpotifyUser";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ProfilePlaceholder } from "./placeholders/Placeholder";
-import { GetToken } from "../queries/GetToken";
+import { GetToken } from "../queries/hooks/GetToken";
 
 const NavBar = styled.nav`
   grid-area: nav;

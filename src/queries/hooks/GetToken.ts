@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Server } from "node:http";
 import { useQuery } from "react-query";
-import { ServerTokenResponse } from "./types";
+import { ServerTokenResponse } from "../types";
 
 const BASE = process.env.REACT_APP_BASE_URL;
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Spotify } from "./Spotify";
 import styled from "styled-components";
 import { useQuery } from "react-query";
-import { GetUser } from "../../queries/GetUser";
+import { GetUser } from "../../queries/hooks/GetUser";
 import { useGlobalContext } from "../../state/context";
 
 const PlayerWrapper = styled.div`

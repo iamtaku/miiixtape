@@ -6,7 +6,6 @@ export const mapToPlaylist = (data: ServerPlaylist): Playlist => {
     name: data.data.attributes.name,
     description: data.data.attributes.description,
   };
-  console.log("mapTOPlaylist", data);
 
   const filteredTracks: ServerSong[] = data.included.filter(
     (item): item is ServerSong => item.type === "song"

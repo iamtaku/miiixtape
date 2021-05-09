@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { UserAttributes } from "./types";
+import { UserAttributes } from "../types";
 import { useQuery } from "react-query";
 
 const getPlaylist = async (access_token?: string) => {
