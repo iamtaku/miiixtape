@@ -2,12 +2,20 @@ import { useQuery } from "react-query";
 import axios, { AxiosResponse } from "axios";
 import { ServerPlaylist, ServerSong, UserAttributes } from "./types";
 import { Service, Playlist, Song, PlaylistInfo } from "../types/types";
-import { getSpotifyPlaylist } from "./GetSpotifyPlaylist";
+import { getSingleSpotifyPlaylist } from "./GetSingleSpotifyPlaylist";
 import { useParams } from "react-router";
 import { GetUser } from "./GetUser";
 import { mapToPlaylist } from "../helpers/helpers";
 
-const getPlaaaylist = async (url: string, headers: any): Promise<Playlist> => {
+const getPlaaaylist = async (
+  playlistId: string,
+  token: string
+): Promise<Playlist> => {
+  const url = `${process.env.REACT_APP_BASE_URL}/playlists/${playlistId}`;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
   try {
     const data = await axios.get<ServerPlaylist>(url, {
       headers,
@@ -30,17 +38,16 @@ const getPlaylist = async (
   //if we have a token, call corresponding function to fetch and return data
   const token = window.localStorage.getItem("token");
   if (token) {
-    const url = `${process.env.REACT_APP_BASE_URL}/playlists/${playlistId}`;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
     // let data;
     // console.log(service);
     switch (service) {
       case "plaaaylist":
-        return await getPlaaaylist(url, headers);
-      // case "spotify":
-      //   return await getSpotifyPlaylist(playlistId, userInfo?.access_token);
+        return await getPlaaaylist(playlistId, token);
+      case "spotify":
+        return await getSingleSpotifyPlaylist(
+          playlistId,
+          userInfo?.access_token
+        );
       default:
         break;
     }
