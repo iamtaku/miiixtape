@@ -1,8 +1,25 @@
-import { Playlists, ServerPlaylist } from "./types";
+import { ServerPlaylists } from "./types";
 import { useQuery } from "react-query";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { mapToPlaylist } from "../helpers/helpers";
+import { Playlist } from "../types/types";
+import { Server } from "node:http";
 
-const getPlaylist = async (): Promise<ServerPlaylist[]> => {
+const mapServerPlaylist = (
+  data: AxiosResponse<ServerPlaylists>
+): Playlist[] => {
+  const mappedData: Playlist[] = data.data.data.map((item) => {
+    return {
+      playlistInfo: {
+        id: item.id,
+        name: item.attributes.name,
+      },
+    };
+  });
+  return mappedData;
+};
+
+const getPlaylist = async (): Promise<Playlist[]> => {
   const token = window.localStorage.getItem("token");
   if (token) {
     // return await axios.get();
@@ -12,21 +29,22 @@ const getPlaylist = async (): Promise<ServerPlaylist[]> => {
       Authorization: `Bearer ${token}`,
     };
     try {
-      const data = await axios.get<Playlists>(url, {
+      const data = await axios.get<ServerPlaylists>(url, {
         headers,
       });
       //   return data.data.;
       if (data.status === 200) {
-        return data.data.data;
+        const mappedData = mapServerPlaylist(data);
+        return mappedData;
       }
     } catch (error) {
-      return error.message;
+      throw new Error(error);
     }
   }
   throw new Error("No token");
 };
 
-export const GetPlaylists = () =>
-  useQuery<ServerPlaylist[], Error>("plaaaylistAll", getPlaylist, {
+export const GetAllPlaylists = () =>
+  useQuery<Playlist[], Error>("plaaaylistAll", getPlaylist, {
     staleTime: Infinity,
   });

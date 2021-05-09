@@ -1,13 +1,11 @@
 import React from "react";
-import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { isTemplateTail } from "typescript";
-import { GetPlaylists } from "../queries/GetAllPlaylists";
+import { GetAllPlaylists } from "../queries/GetAllPlaylists";
 import { GetAllSpotifyPlaylist } from "../queries/GetAllSpotifyPlaylists";
 import { GetUser } from "../queries/GetUser";
-import { Song } from "../queries/types";
 import { useGlobalContext } from "../state/context";
+import { Song } from "../types/types";
 
 const SidebarWrapper = styled.div`
   grid-area: sidebar;
@@ -23,7 +21,7 @@ const SidebarWrapper = styled.div`
 export const Sidebar = () => {
   const { data: userInfo } = GetUser();
   const { data: spotifyPlaylists } = GetAllSpotifyPlaylist(userInfo);
-  const { data: playlists, isLoading, error } = GetPlaylists();
+  const { data: playlists, isLoading, error } = GetAllPlaylists();
   const { state, dispatch } = useGlobalContext();
   const test: Song[] = [
     {
@@ -48,7 +46,7 @@ export const Sidebar = () => {
       {spotifyPlaylists?.items.map((item) => {
         return (
           <>
-            <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>;
+            <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>
             <button
               onClick={() =>
                 dispatch({
@@ -66,8 +64,8 @@ export const Sidebar = () => {
         <span>Plaaaylist Playlists</span>
       </p>
       {playlists?.map((item) => (
-        <Link to={`/app/playlist/plaaaylist/${item.id}`}>
-          {item.attributes.name}
+        <Link to={`/app/playlist/plaaaylist/${item.playlistInfo.id}`}>
+          {item.playlistInfo.name}
         </Link>
       ))}
     </SidebarWrapper>

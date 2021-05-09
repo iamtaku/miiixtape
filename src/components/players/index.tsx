@@ -18,6 +18,7 @@ const Player = () => {
       <Spotify
         token={data?.access_token}
         uris={[state.player.currentSong.uri]}
+        play={state.player.isPlaying}
       />
     </PlayerWrapper>
   );

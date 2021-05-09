@@ -1,18 +1,13 @@
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
-import { Song } from "../queries/types";
+import { Song, Service } from "../types/types";
 import { playbackReducer, PlaybackActions } from "./reducers";
 import { PlaybackType } from "./types";
-
-interface Playlist {
-  name: string;
-  description: string;
-}
 
 type InitialStateType = {
   player: PlaybackType;
 };
 
-const song = {
+const song: Song = {
   name: "",
   service: "",
   uri: "",
@@ -20,23 +15,27 @@ const song = {
   img: "",
 };
 
+const service: Service = "";
+
+const player = {
+  currentPlaylist: {
+    name: "",
+    description: "",
+  },
+  playlistSongs: [],
+  previousSong: song,
+  currentSong: song,
+  currentService: service,
+  nextSong: song,
+  nextService: service,
+  isPlaying: false,
+  isFinished: false,
+};
+
 // const playlist: Playlist[] = [];
 
 const initialState = {
-  player: {
-    currentPlaylist: {
-      name: "",
-      description: "",
-    },
-    playlistSongs: [],
-    previousSong: song,
-    currentSong: song,
-    currentService: "",
-    nextSong: song,
-    nextService: "",
-    isPlaying: false,
-    isFinished: false,
-  },
+  player,
 };
 
 const AppContext = createContext<{

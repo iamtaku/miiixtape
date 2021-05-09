@@ -1,3 +1,4 @@
+import { Service, Song } from "../types/types";
 export interface ServerResponse {
   data: UserData;
 }
@@ -13,33 +14,80 @@ export interface UserAttributes {
   access_token: string;
 }
 
-export interface Playlists {
-  data: ServerPlaylist[];
+interface SingleDataItem {
+  id: string;
 }
 
-export interface SongAttributes {
+interface PlaylistItemItem extends SingleDataItem {
+  type: "playlist_item";
+}
+
+interface UserItem extends SingleDataItem {
+  type: "user";
+}
+
+interface SongItem extends SingleDataItem {
+  type: "song";
+}
+
+interface PlaylistItem extends SingleDataItem {
+  type: "playlist";
+}
+
+interface ServerPlaylistsItem extends PlaylistItem {
+  attributes: {
+    name: string;
+  };
+  relationships: {
+    user: {
+      data: UserItem;
+    };
+    playlist_items?: {
+      data: PlaylistItemItem[];
+    };
+    songs?: {
+      data: SongItem[];
+    };
+  };
+}
+
+export interface ServerPlaylists {
+  data: ServerPlaylistsItem[];
+}
+
+export type SongAttributes = {
   name: string;
   service: Service;
   uri: string;
-}
+};
 
 export interface PlaylistItemRelationship {
   playlist_id: string;
 }
 
-export interface ServerSong {
+export type ServerSong = {
   id: string;
   type: "song";
   attributes: SongAttributes;
   relationships: PlaylistItemRelationship;
-}
+};
 
-export interface ServerPlaylist {
-  attributes: PlaylistAttributes;
+export type ServerPlaylist = {
+  data: {
+    attributes: PlaylistAttributes;
+    id: string;
+    relationships: PlaylistRelationships;
+  };
+  included: (ServerSong | PlaylistItemPosition)[];
+};
+
+export type PlaylistItemPosition = {
+  attributes: {
+    position: number;
+  };
   id: string;
-  relationships: PlaylistRelationships;
-  included: ServerSong[];
-}
+  type: "playlist_item";
+};
 
 interface PlaylistRelationships {
   playlist_items: RelationshipDataMultiple;
@@ -75,32 +123,9 @@ interface UserData {
   relationships: PlaylistAttributes;
 }
 
-export type Service = "plaaaylist" | "spotify";
-
-export interface PlaylistInfo {
-  external_urls?: string;
-  id: string;
-  coverImg?: string;
-  name: string;
-  description: string;
-}
-
-export interface Song {
-  name: string;
-  service: string;
-  uri: string;
-  id: string;
-  img?: string;
-}
-
 export interface PlaylistTracks {
   total: number;
   next?: string;
   previous?: string;
   tracks: Song[];
-}
-
-export interface Playlist {
-  info: PlaylistInfo;
-  tracks: PlaylistTracks;
 }

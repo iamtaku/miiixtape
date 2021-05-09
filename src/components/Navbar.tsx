@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import SpotifyWebApi from "spotify-web-api-js";
-import { useQueryClient, useQuery } from "react-query";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
 import { GetUser } from "../queries/GetUser";
