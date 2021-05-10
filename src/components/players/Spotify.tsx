@@ -3,7 +3,7 @@ import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import { useGlobalContext } from "../../state/context";
 interface SpotifyProps {
   token?: string;
-  uris: string[];
+  uris: string;
   play: boolean;
 }
 

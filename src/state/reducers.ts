@@ -28,14 +28,12 @@ export const playbackReducer = (
         ...state,
       };
     case "PLAY_NEXT":
-      console.log("playing next song");
-      console.log(state);
+      console.log("playing next song...", state.nextSong);
       return {
         ...state,
         currentSong: state.nextSong,
-        nextSong: "",
-        isPlaying: true,
-      };
+        nextService: "youtube",
+      } as PlaybackType;
     default:
       return state;
   }

@@ -17,12 +17,14 @@ const song: Song = {
 
 const service: Service = "";
 
+const playlistSongs: Song[] = [];
+
 const player = {
   currentPlaylist: {
     name: "",
     description: "",
   },
-  playlistSongs: [],
+  playlistSongs,
   previousSong: song,
   currentSong: song,
   currentService: service,
