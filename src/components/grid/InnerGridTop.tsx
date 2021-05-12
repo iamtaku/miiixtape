@@ -18,15 +18,12 @@ const InnerGridTopWrapper = styled.div`
 interface PropTypes {
   data?: PlaylistInfo;
   tracks?: Tracks;
-  // pageType: string;
 }
 
 export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
-  // const { images, description, href, owner } = data;
   const { dispatch, state } = useGlobalContext();
 
   const handleClick = (id: string, tracks: Tracks) => {
-    console.log("i was clicked/played", tracks);
     dispatch({
       type: "PLAY_PLAYLIST",
       payload: {

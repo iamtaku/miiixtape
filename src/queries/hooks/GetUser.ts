@@ -16,11 +16,9 @@ const getUser = async () => {
   };
 
   const url = `${BASE}/users`;
-  // console.log(url, headers);
   const data = await axios.get<ServerResponse>(url, {
     headers,
   });
-  console.log(headers);
 
   return data.data.data.attributes;
 };

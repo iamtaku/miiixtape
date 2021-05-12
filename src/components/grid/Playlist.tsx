@@ -6,7 +6,7 @@ import { InnerGridTop } from "./InnerGridTop";
 export const Playlist = () => {
   const { data, isLoading, error } = GetSinglePlaylist();
 
-  console.log("playlist", data);
+  // console.log("playlist", data);
   return (
     <InnerGridLayout>
       <InnerGridTop data={data?.playlistInfo} tracks={data?.tracks} />

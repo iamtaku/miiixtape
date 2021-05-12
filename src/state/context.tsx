@@ -17,14 +17,13 @@ const song: Song = {
 
 const service: Service = "";
 
-const playlistSongs: Song[] = [];
-
-const player = {
+export const player = {
   currentPlaylist: {
     name: "",
     description: "",
   },
-  playlistSongs,
+  playlistTracks: [],
+  playbackPosition: 0,
   previousSong: song,
   currentSong: song,
   currentService: service,
@@ -36,7 +35,7 @@ const player = {
 
 // const playlist: Playlist[] = [];
 
-const initialState = {
+export const initialState = {
   player,
 };
 
