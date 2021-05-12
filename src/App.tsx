@@ -6,8 +6,7 @@ import { Navbar } from "./components/Navbar";
 import { Sidebar } from "./components/Sidebar";
 import Error from "./pages/Error";
 import { QueryClientProvider, QueryClient } from "react-query";
-
-import { ReactQueryDevtools } from "react-query/devtools";
+import { ReactQueryDevtoolsPanel } from "react-query/devtools";
 import Search from "./components/grid/Search";
 import Player from "./components/players/Player";
 import { LayoutWrapper as LayoutGrid } from "./components/Layout";
@@ -42,7 +41,7 @@ function App() {
           </Route>
           {/* work on 404 page */}
         </Router>
-        <ReactQueryDevtools />
+        <ReactQueryDevtoolsPanel />
       </QueryClientProvider>
     </div>
   );

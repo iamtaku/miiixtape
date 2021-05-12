@@ -3,18 +3,15 @@ import YouTube from "react-youtube";
 import { useGlobalContext } from "../../state/context";
 
 interface YoutubeProps {
-  id?: string | false;
   play: boolean;
   setYoutube: Dispatch<SetStateAction<any>>;
 }
 
-export const Youtube: React.FC<YoutubeProps> = ({ id, play, setYoutube }) => {
-  const { dispatch } = useGlobalContext();
+export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
+  const { dispatch, state } = useGlobalContext();
 
   const handleOnReady = (event: any) => {
-    console.log("read!", event);
     setYoutube(event.target);
-    // !play && event.target.pauseVideo();
   };
   const opts = {
     height: "390",
@@ -33,20 +30,20 @@ export const Youtube: React.FC<YoutubeProps> = ({ id, play, setYoutube }) => {
   };
 
   const handleOnPause = () => dispatch({ type: "PAUSE_CURRENT", payload: {} });
-  const handleOnPlay = () => dispatch({ type: "PLAY", payload: {} });
+  // const handleOnPlay = () => dispatch({ type: "PLAY", payload: {} });
   return (
     <div>
-      this is the youtube player
-      {id && (
-        <YouTube
-          videoId={id}
-          onReady={handleOnReady}
-          opts={opts}
-          onEnd={handleOnEnd}
-          onPause={handleOnPause}
-          onPlay={handleOnPlay}
-        />
-      )}
+      {state.player.currentService === "youtube" &&
+        state.player.currentSong?.uri && (
+          <YouTube
+            videoId={state.player.currentSong.uri}
+            onReady={handleOnReady}
+            opts={opts}
+            onEnd={handleOnEnd}
+            onPause={handleOnPause}
+            // onPlay={handleOnPlay}
+          />
+        )}
     </div>
   );
 };

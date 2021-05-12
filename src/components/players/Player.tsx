@@ -6,53 +6,39 @@ import { useGlobalContext } from "../../state/context";
 import { Youtube } from "./Youtube";
 import { Controls } from "./Controls";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
-import { SSL_OP_NO_TLSv1_1 } from "node:constants";
 
 const PlayerWrapper = styled.div`
   grid-area: player;
 `;
+
+const TestDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const Player = () => {
-  const { data, isLoading, error } = GetUser();
   const { state, dispatch } = useGlobalContext();
   const [youtube, setYoutube] = useState<any>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer | undefined>();
 
   return (
     <PlayerWrapper>
-      {state.player.isPlaying ? (
-        <h2>Playing {state.player.currentService}</h2>
-      ) : (
-        <h2>paused...</h2>
-      )}
+      <TestDiv>
+        {state.player.isPlaying ? (
+          <h2>Playing {state.player.currentService}</h2>
+        ) : (
+          <h2>paused...</h2>
+        )}
+        <h2>: {state.player.currentSong?.name}</h2>
+        <p>{state.player.playbackPosition}</p>
+      </TestDiv>
       <Controls youtube={youtube} spotify={spotify} />
       <Youtube
-        id={
-          state.player.currentService === "youtube" &&
-          state.player.currentSong.uri
-        }
         play={
           state.player.isPlaying && state.player.currentService === "youtube"
         }
         setYoutube={setYoutube}
       />
-      {/* <button onClick={() => {
-        dispatch({type: 'PLAY_PLAYLIST', payload: {id: '1', tracks: [{id: '2', name: 'high and dry', service: 'spotify', uri: }] }})
-      }}>Play</button> */}
-      <Spotify
-        token={data?.access_token}
-        // uris={state.player.playlistTracks
-        //   .filter((item) => item.service === "spotify")
-        //   .map((item) => item.uri)}
-        uris={
-          state.player.currentService === "spotify"
-            ? state.player.currentSong.uri
-            : ""
-        }
-        play={
-          state.player.isPlaying && state.player.currentService === "spotify"
-        }
-        setSpotify={setSpotify}
-      />
+      <Spotify setSpotify={setSpotify} />
     </PlayerWrapper>
   );
 };

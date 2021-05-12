@@ -3,7 +3,6 @@ import axios from "axios";
 import { ServerPlaylist, UserAttributes } from "../types";
 import { Service, Playlist } from "../../types/types";
 import { getSingleSpotifyPlaylist } from "../getSingleSpotifyPlaylist";
-import { useParams } from "react-router";
 import { GetUser } from "./GetUser";
 import { mapToPlaylist } from "../../helpers/helpers";
 
@@ -51,25 +50,19 @@ const getPlaylist = async (
   }
   throw new Error("No token");
 };
-
 interface PlaylistParam {
   playlistId: string;
   service: Service;
 }
 
-export const GetSinglePlaylist = (id?: string) => {
-  let { playlistId, service } = useParams<PlaylistParam>();
+export const GetSinglePlaylist = (params: PlaylistParam) => {
   const { data: userInfo } = GetUser();
-  // if we have an id, pass it along , else use params
-  if (id) {
-    playlistId = id;
-  }
 
   return useQuery<Playlist, Error>(
-    `playlist-${service}-${playlistId}`,
-    () => getPlaylist(playlistId, service, userInfo),
+    `playlist-${params.service}-${params.playlistId}`,
+    () => getPlaylist(params.playlistId, params.service, userInfo),
     {
-      enabled: !!userInfo && !!playlistId,
+      enabled: !!userInfo && !!params.playlistId,
       staleTime: Infinity,
     }
   );

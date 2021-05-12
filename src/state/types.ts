@@ -25,11 +25,11 @@ export type PlaybackPayload = {
 
 export type PlaybackType = {
   currentPlaylist: Playlist;
-  playlistTracks: Tracks;
+  playlistTracks?: Tracks;
   playbackPosition: number;
   previousSong?: Song;
-  currentSong: Song;
-  currentService: Service;
+  currentSong?: Song;
+  currentService?: Service;
   nextSong?: Song;
   nextService?: Service;
   isPlaying: boolean;

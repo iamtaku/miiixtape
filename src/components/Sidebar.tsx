@@ -72,17 +72,6 @@ export const Sidebar = () => {
         return (
           <PlaylistItem>
             <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>
-            {/* <button
-              onClick={() =>
-                dispatch({
-                  type: "PLAY_PLAYLIST",
-                  payload: { id: "1", tracks: test },
-                })
-              }
-            > */}
-            {/* Play */}
-            {/* </button>
-            <button onClick={() => handleClick(item.id)}>Play</button> */}
           </PlaylistItem>
         );
       })}

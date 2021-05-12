@@ -6,62 +6,47 @@ import { ActionMap, PlaybackPayload, PlaybackType } from "./types";
 export type PlaybackActions =
   ActionMap<PlaybackPayload>[keyof ActionMap<PlaybackPayload>];
 
-const nextTrack = (tracks: Tracks, playbackPosition: number) => {
-  return tracks[playbackPosition + 1];
+const nextTrack = (state: PlaybackType) => {
+  if (state.playlistTracks) {
+    console.log(state.playlistTracks[state.playbackPosition + 1]);
+
+    return state.playlistTracks[state.playbackPosition + 1];
+  }
+  return undefined;
 };
 
 export const playbackReducer = (
   state: PlaybackType,
   action: PlaybackActions
 ) => {
+  let newState: PlaybackType;
   switch (action.type) {
     case "PLAY_PLAYLIST":
-      console.log(action.type);
-      return {
-        ...state,
+      newState = {
+        ...initialState.player,
         playlistTracks: action.payload.tracks,
         currentSong: action.payload.tracks[0],
-        nextSong: nextTrack(action.payload.tracks, state.playbackPosition),
+        nextSong: action.payload.tracks[1],
         currentService: action.payload.tracks[0].service,
-        nextService: nextTrack(action.payload.tracks, state.playbackPosition)
-          ?.service,
+        nextService: action.payload.tracks[1]?.service,
         isPlaying: true,
       };
+      return newState;
     case "PLAY_NEXT":
-      console.log(action.type);
-      // if (!state.nextSong) {
-      //   console.log("no more songs");
-      //   // return player as PlaybackType;
-      //   return {
-      //     ...player,
-      //     current
-      //   }
-      // }
-
-      const newState = {
+      newState = {
         ...state,
         playbackPosition: (state.playbackPosition += 1),
         currentSong: state.nextSong,
         currentService: state.nextService,
         isPlaying: true,
-        nextSong: nextTrack(state.playlistTracks, state.playbackPosition),
-        nextService: nextTrack(state.playlistTracks, state.playbackPosition)
-          ?.service,
+        nextSong: nextTrack(state),
+        nextService: nextTrack(state)?.service,
       };
-      return newState as PlaybackType;
-
-    // return {
-    //   ...state,
-    //   playbackPosition: (state.playbackPosition += 1),
-    //   currentSong: state.nextSong,
-    //   currentService: state.nextService,
-    //   nextSong: nextTrack(state.playlistTracks, state.playbackPosition),
-    //   nextService: nextTrack(state.playlistTracks, state.playbackPosition)
-    //     ?.service,
-    // } as PlaybackType;
+      console.log(newState);
+      return newState;
 
     case "SONG_END":
-      console.log(action.type, state.nextSong);
+      console.log(action.type);
       return {
         ...state,
         currentSong: state.nextSong,
@@ -75,6 +60,7 @@ export const playbackReducer = (
         isPlaying: true,
       };
     case "PAUSE_CURRENT":
+      console.log("pausing");
       return {
         ...state,
         isPlaying: false,

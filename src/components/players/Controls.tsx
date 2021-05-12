@@ -30,14 +30,24 @@ export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
   };
 
   const handlePlayPause = () => {
-    if (state.player.isPlaying) {
-      handlePause();
-    }
-    handlePlay();
+    state.player.isPlaying ? handlePause() : handlePlay();
+  };
+
+  const handleNext = () => {
+    dispatch({
+      type: "PLAY_NEXT",
+      payload: {},
+    });
+  };
+
+  const handlePrevious = () => {
+    console.log("go back!");
   };
   return (
     <ControllerWrapper>
-      <h2>these are the controlls </h2>
+      <h2>current: {state.player.currentSong?.name}</h2>
+      <h2>next: {state.player.nextSong?.name}</h2>
+      <button onClick={handlePrevious}>Previous</button>
       <button onClick={handlePlayPause}>
         {state.player.isPlaying ? (
           <FontAwesomeIcon icon={faPause} />
@@ -45,6 +55,7 @@ export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
           <FontAwesomeIcon icon={faPlay} />
         )}
       </button>
+      <button onClick={handleNext}>Next</button>
     </ControllerWrapper>
   );
 };
