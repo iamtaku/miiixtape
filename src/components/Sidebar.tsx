@@ -70,7 +70,7 @@ export const Sidebar = () => {
       </p>
       {spotifyPlaylists?.items.map((item) => {
         return (
-          <PlaylistItem>
+          <PlaylistItem key={item.id}>
             <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>
           </PlaylistItem>
         );
@@ -79,7 +79,7 @@ export const Sidebar = () => {
         <span>Plaaaylist Playlists</span>
       </p>
       {playlists?.map((item) => (
-        <PlaylistItem>
+        <PlaylistItem key={item.playlistInfo.id}>
           <Link to={`/app/playlist/plaaaylist/${item.playlistInfo.id}`}>
             {item.playlistInfo.name}
           </Link>

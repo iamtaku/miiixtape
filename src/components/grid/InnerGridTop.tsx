@@ -24,6 +24,7 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
   const { dispatch, state } = useGlobalContext();
 
   const handleClick = (id: string, tracks: Tracks) => {
+    console.log(tracks);
     dispatch({
       type: "PLAY_PLAYLIST",
       payload: {

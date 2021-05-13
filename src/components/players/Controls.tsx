@@ -34,19 +34,23 @@ export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
   };
 
   const handleNext = () => {
-    dispatch({
+    return dispatch({
       type: "PLAY_NEXT",
       payload: {},
     });
   };
 
   const handlePrevious = () => {
-    console.log("go back!");
+    dispatch({
+      type: "PLAY_PREVIOUS",
+      payload: {},
+    });
   };
   return (
     <ControllerWrapper>
-      <h2>current: {state.player.currentSong?.name}</h2>
-      <h2>next: {state.player.nextSong?.name}</h2>
+      <p>previous: {state.player.previousSong?.name}</p>
+      <p>current: {state.player.currentSong?.name}</p>
+      <p>next: {state.player.nextSong?.name}</p>
       <button onClick={handlePrevious}>Previous</button>
       <button onClick={handlePlayPause}>
         {state.player.isPlaying ? (

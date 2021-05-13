@@ -32,13 +32,13 @@ const Player = () => {
         <p>{state.player.playbackPosition}</p>
       </TestDiv>
       <Controls youtube={youtube} spotify={spotify} />
-      <Youtube
+      {/* <Youtube
         play={
           state.player.isPlaying && state.player.currentService === "youtube"
         }
         setYoutube={setYoutube}
       />
-      <Spotify setSpotify={setSpotify} />
+      <Spotify setSpotify={setSpotify} /> */}
     </PlayerWrapper>
   );
 };

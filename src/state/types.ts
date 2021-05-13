@@ -21,6 +21,7 @@ export type PlaybackPayload = {
   PLAY_NEXT: {};
   PAUSE_CURRENT: {};
   PLAY: {};
+  PLAY_PREVIOUS: {};
 };
 
 export type PlaybackType = {

@@ -6,14 +6,82 @@ import { ActionMap, PlaybackPayload, PlaybackType } from "./types";
 export type PlaybackActions =
   ActionMap<PlaybackPayload>[keyof ActionMap<PlaybackPayload>];
 
-const nextTrack = (state: PlaybackType) => {
-  if (state.playlistTracks) {
-    console.log(state.playlistTracks[state.playbackPosition + 1]);
-
-    return state.playlistTracks[state.playbackPosition + 1];
+const currentIndex = (tracks?: Tracks, currentSong?: Song) => {
+  if (currentSong && tracks) {
+    return currentSong && tracks?.indexOf(currentSong);
   }
+  return -1;
+};
+
+const nextTrack = (tracks?: Tracks, currentSong?: Song) => {
+  // debugger;
+  // debugger;
+  if (tracks && currentSong) {
+    const index = currentIndex(tracks, currentSong);
+    if (index >= 0) return tracks[index + 1];
+  }
+
   return undefined;
 };
+
+const previousTrack = (tracks?: Tracks, currentSong?: Song) => {
+  const index = currentIndex(tracks, currentSong);
+  if (index && tracks) {
+    return tracks[index - 1];
+  }
+};
+
+const handlePlayPrevious = (state: PlaybackType) => {
+  if (!state.previousSong) return state;
+  const currentSong = state.previousSong;
+  const nextSong = nextTrack(state.playlistTracks, currentSong);
+  const previousSong = previousTrack(state.playlistTracks, currentSong);
+  console.log("previous song, ", previousSong);
+  if (currentIndex(state.playlistTracks, currentSong) === 0) {
+    console.log("no more previous songs");
+    // debugger;
+    console.log(currentSong, nextSong);
+    return {
+      ...state,
+      currentSong,
+      currentService: currentSong?.service,
+      nextSong,
+      nextService: nextSong?.service,
+      previousSong: undefined,
+    };
+  } //return song of previous position
+  return {
+    ...state,
+    currentSong,
+    currentService: currentSong?.service,
+    nextSong,
+    nextService: nextSong?.service,
+    previousSong,
+  };
+};
+
+const handlePlayNext = (state: PlaybackType) => {
+  if (!state.nextSong) return state;
+
+  const currentSong = state.nextSong;
+  const nextSong = nextTrack(state.playlistTracks, currentSong);
+  const previousSong = previousTrack(state.playlistTracks, currentSong);
+
+  return {
+    ...state,
+    // playbackPosition: currentIndex(state),
+    currentSong,
+    currentService: currentSong.service,
+    isPlaying: true,
+    nextSong,
+    nextService: nextSong?.service,
+    previousSong,
+  };
+};
+
+const handlePlay = (state: PlaybackType) => ({ ...state, isPlaying: true });
+
+const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
 
 export const playbackReducer = (
   state: PlaybackType,
@@ -22,6 +90,7 @@ export const playbackReducer = (
   let newState: PlaybackType;
   switch (action.type) {
     case "PLAY_PLAYLIST":
+      console.group(action.type);
       newState = {
         ...initialState.player,
         playlistTracks: action.payload.tracks,
@@ -31,22 +100,17 @@ export const playbackReducer = (
         nextService: action.payload.tracks[1]?.service,
         isPlaying: true,
       };
+      console.log(newState);
+      console.groupEnd();
       return newState;
     case "PLAY_NEXT":
-      newState = {
-        ...state,
-        playbackPosition: (state.playbackPosition += 1),
-        currentSong: state.nextSong,
-        currentService: state.nextService,
-        isPlaying: true,
-        nextSong: nextTrack(state),
-        nextService: nextTrack(state)?.service,
-      };
+      console.group(action.type);
+      newState = handlePlayNext(state);
       console.log(newState);
+      console.groupEnd();
       return newState;
 
     case "SONG_END":
-      console.log(action.type);
       return {
         ...state,
         currentSong: state.nextSong,
@@ -55,16 +119,18 @@ export const playbackReducer = (
       } as PlaybackType;
     case "PLAY":
       console.log("play");
-      return {
-        ...state,
-        isPlaying: true,
-      };
+      return handlePlay(state);
     case "PAUSE_CURRENT":
       console.log("pausing");
-      return {
-        ...state,
-        isPlaying: false,
-      };
+      return handlePause(state);
+
+    case "PLAY_PREVIOUS":
+      console.group(action.type);
+      console.log(state);
+      newState = handlePlayPrevious(state);
+      console.log(newState);
+      console.groupEnd();
+      return newState;
     default:
       return state;
   }
