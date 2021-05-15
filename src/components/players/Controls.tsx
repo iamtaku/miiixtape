@@ -19,14 +19,18 @@ const ControllerWrapper = styled.div`
 export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
   const { state, dispatch } = useGlobalContext();
 
-  const handlePause = () => dispatch({ type: "PAUSE_CURRENT", payload: {} });
+  const handlePause = () => {
+    dispatch({ type: "PAUSE_CURRENT", payload: {} });
+    youtube.pauseVideo();
+  };
   const handlePlay = () => {
     dispatch({ type: "PLAY", payload: {} });
-    youtube &&
-    state.player.isPlaying &&
-    state.player.currentService === "youtube"
-      ? youtube?.pauseVideo()
-      : youtube?.playVideo();
+    // youtube &&
+    // state.player.isPlaying &&
+    // state.player.currentService === "youtube"
+    // ? youtube?.pauseVideo()
+    // : youtube?.playVideo();
+    youtube.playVideo();
   };
 
   const handlePlayPause = () => {
@@ -34,10 +38,12 @@ export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
   };
 
   const handleNext = () => {
-    return dispatch({
+    console.log("playing next");
+    dispatch({
       type: "PLAY_NEXT",
       payload: {},
     });
+    youtube.stopVideo();
   };
 
   const handlePrevious = () => {

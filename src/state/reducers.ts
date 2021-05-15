@@ -14,8 +14,6 @@ const currentIndex = (tracks?: Tracks, currentSong?: Song) => {
 };
 
 const nextTrack = (tracks?: Tracks, currentSong?: Song) => {
-  // debugger;
-  // debugger;
   if (tracks && currentSong) {
     const index = currentIndex(tracks, currentSong);
     if (index >= 0) return tracks[index + 1];
@@ -36,11 +34,7 @@ const handlePlayPrevious = (state: PlaybackType) => {
   const currentSong = state.previousSong;
   const nextSong = nextTrack(state.playlistTracks, currentSong);
   const previousSong = previousTrack(state.playlistTracks, currentSong);
-  console.log("previous song, ", previousSong);
   if (currentIndex(state.playlistTracks, currentSong) === 0) {
-    console.log("no more previous songs");
-    // debugger;
-    console.log(currentSong, nextSong);
     return {
       ...state,
       currentSong,
@@ -60,23 +54,36 @@ const handlePlayPrevious = (state: PlaybackType) => {
   };
 };
 
+// const calcSpotifyPosition
+
 const handlePlayNext = (state: PlaybackType) => {
+  console.group("playing next...");
+  console.log("before update,", state);
   if (!state.nextSong) return state;
 
   const currentSong = state.nextSong;
   const nextSong = nextTrack(state.playlistTracks, currentSong);
   const previousSong = previousTrack(state.playlistTracks, currentSong);
+  const playBackPosition =
+    currentSong.service === "spotify"
+      ? (state.playbackPosition += 1)
+      : state.playbackPosition;
 
-  return {
+  const newState = {
     ...state,
-    // playbackPosition: currentIndex(state),
     currentSong,
     currentService: currentSong.service,
     isPlaying: true,
     nextSong,
     nextService: nextSong?.service,
     previousSong,
+    playBackPosition,
   };
+
+  console.log("new state...: ", newState);
+  console.groupEnd();
+
+  return newState;
 };
 
 const handlePlay = (state: PlaybackType) => ({ ...state, isPlaying: true });
@@ -90,7 +97,6 @@ export const playbackReducer = (
   let newState: PlaybackType;
   switch (action.type) {
     case "PLAY_PLAYLIST":
-      console.group(action.type);
       newState = {
         ...initialState.player,
         playlistTracks: action.payload.tracks,
@@ -100,15 +106,9 @@ export const playbackReducer = (
         nextService: action.payload.tracks[1]?.service,
         isPlaying: true,
       };
-      console.log(newState);
-      console.groupEnd();
       return newState;
     case "PLAY_NEXT":
-      console.group(action.type);
-      newState = handlePlayNext(state);
-      console.log(newState);
-      console.groupEnd();
-      return newState;
+      return handlePlayNext(state);
 
     case "SONG_END":
       return {
@@ -118,19 +118,12 @@ export const playbackReducer = (
         playbackPosition: (state.playbackPosition += 1),
       } as PlaybackType;
     case "PLAY":
-      console.log("play");
       return handlePlay(state);
     case "PAUSE_CURRENT":
-      console.log("pausing");
       return handlePause(state);
 
     case "PLAY_PREVIOUS":
-      console.group(action.type);
-      console.log(state);
-      newState = handlePlayPrevious(state);
-      console.log(newState);
-      console.groupEnd();
-      return newState;
+      return handlePlayPrevious(state);
     default:
       return state;
   }

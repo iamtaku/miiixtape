@@ -23,22 +23,20 @@ const Player = () => {
   return (
     <PlayerWrapper>
       <TestDiv>
-        {state.player.isPlaying ? (
-          <h2>Playing {state.player.currentService}</h2>
-        ) : (
-          <h2>paused...</h2>
-        )}
-        <h2>: {state.player.currentSong?.name}</h2>
+        {state.player.isPlaying ? <h2>Playing </h2> : <h2>paused... </h2>}
+        <h2>
+          : {state.player.currentSong?.name} on {state.player.currentService}
+        </h2>
         <p>{state.player.playbackPosition}</p>
       </TestDiv>
       <Controls youtube={youtube} spotify={spotify} />
-      {/* <Youtube
+      <Youtube
         play={
           state.player.isPlaying && state.player.currentService === "youtube"
         }
         setYoutube={setYoutube}
       />
-      <Spotify setSpotify={setSpotify} /> */}
+      <Spotify setSpotify={setSpotify} />
     </PlayerWrapper>
   );
 };

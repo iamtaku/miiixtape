@@ -14,7 +14,6 @@ interface PropTypes {
 export const InnerGridBottom: React.FC<PropTypes> = ({ data }) => {
   return (
     <InnerGridBottomWrapper>
-      <h2>this is the inner bottom grid</h2>
       <ol>
         {data?.map((track) => (
           <li key={track.id}>

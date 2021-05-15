@@ -29,21 +29,30 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
     });
   };
 
-  const handleOnPause = () => dispatch({ type: "PAUSE_CURRENT", payload: {} });
-  // const handleOnPlay = () => dispatch({ type: "PLAY", payload: {} });
+  const handleOnPause = (event: any) => {
+    console.log(event);
+    dispatch({ type: "PAUSE_CURRENT", payload: {} });
+    // if (state.player.currentSong?.service === "spotify") {
+    //   dispatch({ type: "PLAY", payload: {} });
+    // }
+  };
   return (
     <div>
-      {state.player.currentService === "youtube" &&
-        state.player.currentSong?.uri && (
-          <YouTube
-            videoId={state.player.currentSong.uri}
-            onReady={handleOnReady}
-            opts={opts}
-            onEnd={handleOnEnd}
-            onPause={handleOnPause}
-            // onPlay={handleOnPlay}
-          />
-        )}
+      {/* {state.player.currentService === "youtube" &&
+        state.player.currentSong?.uri && ( */}
+      <YouTube
+        videoId={
+          state.player.currentService === "youtube"
+            ? state.player.currentSong?.uri
+            : ""
+        }
+        onReady={handleOnReady}
+        opts={opts}
+        onEnd={handleOnEnd}
+        onPause={handleOnPause}
+        // onPlay={handleOnPlay}
+      />
+      {/* )} */}
     </div>
   );
 };

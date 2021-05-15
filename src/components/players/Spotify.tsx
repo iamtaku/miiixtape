@@ -18,18 +18,32 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
 
-  const handleCallback = (state: CallbackState) => {
+  const handleCallback = (callbackState: CallbackState) => {
+    console.log(callbackState);
     if (
-      state.type === "player_update" &&
-      state.isPlaying === false &&
-      state.position === 0
+      callbackState.type === "player_update" &&
+      callbackState.isPlaying === false &&
+      callbackState.position === 0
     ) {
       dispatch({
         type: "PLAY_NEXT",
         payload: {},
       });
     }
+    if (state.player.currentService !== "spotify") {
+      console.log("not spotify");
+      ref.current?.forceUpdate();
+      ref.current?.setState({ needsUpdate: true });
+    }
+    // console.log(state);
   };
+  // ref  const calcOffSet = () => {};
+
+  const uri =
+    state.player.currentService === "spotify"
+      ? state.player.currentSong?.uri
+      : undefined;
+  console.log(uri);
 
   if (userInfo?.access_token) {
     return (
@@ -37,12 +51,11 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
         <SpotifyPlayer
           token={userInfo.access_token}
           name="plaaaylist player"
-          uris={
-            state.player.currentService === "spotify" &&
-            state.player.currentSong
-              ? state.player.currentSong.uri
-              : ""
-          }
+          // uris={state.player.playlistTracks
+          //   ?.filter((song) => song.service === "spotify")
+          //   .map((song) => song.uri)}
+          uris={uri}
+          // offset={state.player.playbackPosition}
           callback={handleCallback}
           autoPlay={true}
           play={
