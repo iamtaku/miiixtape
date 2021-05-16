@@ -30,6 +30,8 @@ const previousTrack = (tracks?: Tracks, currentSong?: Song) => {
 };
 
 const handlePlayPrevious = (state: PlaybackType) => {
+  console.group("playing previous...");
+  console.log("prev state: ", state);
   if (!state.previousSong) return state;
   const currentSong = state.previousSong;
   const nextSong = nextTrack(state.playlistTracks, currentSong);
@@ -44,7 +46,8 @@ const handlePlayPrevious = (state: PlaybackType) => {
       previousSong: undefined,
     };
   } //return song of previous position
-  return {
+
+  const newState = {
     ...state,
     currentSong,
     currentService: currentSong?.service,
@@ -52,6 +55,9 @@ const handlePlayPrevious = (state: PlaybackType) => {
     nextService: nextSong?.service,
     previousSong,
   };
+  console.log("new state... : ", newState);
+  console.groupEnd();
+  return newState;
 };
 
 // const calcSpotifyPosition

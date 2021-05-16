@@ -32,12 +32,18 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
     }
     if (state.player.currentService !== "spotify") {
       console.log("not spotify");
-      ref.current?.forceUpdate();
       ref.current?.setState({ needsUpdate: true });
     }
-    // console.log(state);
+    if (ref.current?.state.isPlaying) {
+      console.log("spotify playing");
+      dispatch({ type: "PLAY", payload: {} });
+    }
+
+    if (callbackState.error) {
+      // console.error()
+      console.error(callbackState);
+    }
   };
-  // ref  const calcOffSet = () => {};
 
   const uri =
     state.player.currentService === "spotify"
@@ -57,7 +63,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
           uris={uri}
           // offset={state.player.playbackPosition}
           callback={handleCallback}
-          autoPlay={true}
+          // autoPlay={true}
           play={
             state.player.isPlaying && state.player.currentService === "spotify"
           }
