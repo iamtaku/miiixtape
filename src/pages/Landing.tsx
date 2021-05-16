@@ -14,9 +14,6 @@ const Landing = () => {
     <LandingWrapper>
       <h1>this is the landing page!</h1>
       <LoginButton>Login with Spotify</LoginButton>
-      {/* <LoginButton>
-        {token ? "Open Playlist" : "Login with Spotify"}
-      </LoginButton> */}
     </LandingWrapper>
   );
 };

@@ -1,15 +1,19 @@
 import styled from "styled-components";
-import SpotifyWebApi from "spotify-web-api-js";
-import { useQueryClient, useQuery } from "react-query";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
-import { ProfilePlaceholder } from "./Placeholder";
-import { GetSpotifyUser, GetUser } from "../queries";
+import { GetUser } from "../queries/hooks/GetUser";
+import { GetSpotifyUser } from "../queries/hooks/GetSpotifyUser";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { ProfilePlaceholder } from "./placeholders/Placeholder";
+import { GetToken } from "../queries/hooks/GetToken";
 
 const NavBar = styled.nav`
+  grid-area: nav;
   margin-top: 8px;
+  h1 {
+    color: var(--primary);
+  }
   ul {
     display: flex;
     width: 100%;
@@ -23,15 +27,10 @@ const NavBar = styled.nav`
 `;
 
 export const Navbar: React.FC = () => {
-  const { data: userInfo } = GetUser();
-  // console.log(userInfo);
+  const { data: token } = GetToken();
+  const { data: userInfo } = GetUser(token);
   const { data, isLoading, error } = GetSpotifyUser(userInfo);
 
-  //store img url in local storage so we don't fetch it each time and re-render the navbar;
-
-  if (error) {
-    return <h2>there is an error</h2>;
-  }
   return (
     <NavBar>
       <ul>
@@ -52,6 +51,8 @@ export const Navbar: React.FC = () => {
               <Profile
                 uri={data?.images[0].url}
                 displayName={data?.display_name}
+                isLoading={isLoading}
+                href={data.external_urls.spotify}
               />
             )
           )}

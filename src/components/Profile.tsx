@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { useHistory } from "react-router";
+import { ProfilePlaceholder } from "./placeholders/Placeholder";
 interface ProfileProps {
   displayName?: string;
   uri?: string;
+  isLoading?: boolean;
+  href?: string;
 }
 
 const ProfileWrapper = styled.div`
@@ -35,23 +39,42 @@ const ProfileModal = styled.div`
   }
 `;
 
-export const Profile: React.FC<ProfileProps> = ({ displayName, uri }) => {
+export const Profile: React.FC<ProfileProps> = ({
+  displayName,
+  uri,
+  isLoading,
+  href,
+}) => {
+  const history = useHistory();
+  const logOut = () => {
+    window.localStorage.removeItem("token");
+    history.push("/");
+  };
+
   const [profileOpen, setProfileOpen] = useState(false);
   const handleClick = () => {
-    // console.log("i was clicked!");
     setProfileOpen(!profileOpen);
   };
+
   return (
     <ProfileWrapper>
-      <img src={uri} alt={displayName} onClick={handleClick} />
+      {isLoading ? (
+        <ProfilePlaceholder />
+      ) : (
+        <img src={uri} alt={displayName} onClick={handleClick} />
+      )}
       {profileOpen ? (
         <ProfileModal>
           <ul>
-            <li>
-              SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
-            </li>
+            {href ? (
+              <li>
+                <a href={href}>
+                  SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
+                </a>
+              </li>
+            ) : null}
             <li>SETTINGS</li>
-            <li>LOGOUT</li>
+            <li onClick={logOut}>LOGOUT</li>
           </ul>
         </ProfileModal>
       ) : null}
