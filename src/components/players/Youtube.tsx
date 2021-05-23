@@ -1,6 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import YouTube from "react-youtube";
+import styled from "styled-components";
 import { useGlobalContext } from "../../state/context";
+
+const YoutubeWrapper = styled.div`
+  /* display: none; */
+  width: 100px;
+`;
 
 interface YoutubeProps {
   play: boolean;
@@ -14,8 +20,8 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
     setYoutube(event.target);
   };
   const opts = {
-    height: "390",
-    width: "640",
+    height: "100",
+    width: "100",
     playerVars: {
       autoplay: 1 as 1,
     },
@@ -38,7 +44,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
 
   // const handleOnPlay = () => dispatch({ type: "PLAY", payload: {} });
   return (
-    <div>
+    <YoutubeWrapper>
       <YouTube
         videoId={
           state.player.currentService === "youtube"
@@ -52,6 +58,6 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
         // onPlay={handleOnPlay}
       />
       {/* )} */}
-    </div>
+    </YoutubeWrapper>
   );
 };

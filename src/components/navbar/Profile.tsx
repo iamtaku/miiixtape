@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
-import { ProfilePlaceholder } from "./placeholders/Placeholder";
+import { ProfilePlaceholder } from "../placeholders/Placeholder";
 interface ProfileProps {
   displayName?: string;
   uri?: string;
@@ -18,8 +18,8 @@ const ProfileWrapper = styled.div`
     background-position: center center;
     background-size: cover;
     object-fit: cover;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
   position: relative;
 `;
@@ -56,19 +56,18 @@ export const Profile: React.FC<ProfileProps> = ({
     setProfileOpen(!profileOpen);
   };
 
+  if (isLoading) return <ProfilePlaceholder />;
+
   return (
+    //convert to button
     <ProfileWrapper>
-      {isLoading ? (
-        <ProfilePlaceholder />
-      ) : (
-        <img src={uri} alt={displayName} onClick={handleClick} />
-      )}
+      <img src={uri || ""} alt={displayName} onClick={handleClick} />
       {profileOpen ? (
         <ProfileModal>
           <ul>
             {href ? (
               <li>
-                <a href={href}>
+                <a href={href} target="_blank" rel="noreferrer">
                   SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </a>
               </li>

@@ -2,7 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 const InnerGridWrapper = styled.div`
+  grid-area: main;
   display: grid;
+  margin: 24px;
   grid-template-rows: 30% 70%;
   grid-template-areas:
     "top"

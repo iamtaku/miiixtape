@@ -1,6 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import { UserAttributes } from "../types";
 import { useQuery } from "react-query";
+import { GetUser } from "./GetUser";
 
 const getSpotifyInfo = async (access_token?: string, spotify_id?: string) => {
   // console.log("called");
@@ -12,8 +13,10 @@ const getSpotifyInfo = async (access_token?: string, spotify_id?: string) => {
   }
 };
 
-export const GetSpotifyUser = (userInfo?: UserAttributes) =>
-  useQuery(
+export const GetSpotifyUser = () => {
+  const { data: userInfo } = GetUser();
+
+  return useQuery(
     "spotifyInfo",
     () => getSpotifyInfo(userInfo?.access_token, userInfo?.spotify_id),
     {
@@ -22,3 +25,4 @@ export const GetSpotifyUser = (userInfo?: UserAttributes) =>
       refetchOnWindowFocus: false,
     }
   );
+};

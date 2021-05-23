@@ -1,6 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import { UserAttributes } from "../types";
 import { useQuery } from "react-query";
+import { GetUser } from "./GetUser";
 
 const getPlaylist = async (access_token?: string) => {
   if (access_token) {
@@ -10,8 +11,14 @@ const getPlaylist = async (access_token?: string) => {
   }
 };
 
-export const GetAllSpotifyPlaylist = (userInfo?: UserAttributes) =>
-  useQuery("spotifyPlaylistAll", () => getPlaylist(userInfo?.access_token), {
-    enabled: !!userInfo,
-    staleTime: Infinity,
-  });
+export const GetAllSpotifyPlaylist = () => {
+  const { data: userInfo } = GetUser();
+  return useQuery(
+    "spotifyPlaylistAll",
+    () => getPlaylist(userInfo?.access_token),
+    {
+      enabled: !!userInfo,
+      staleTime: Infinity,
+    }
+  );
+};

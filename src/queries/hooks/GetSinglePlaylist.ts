@@ -2,9 +2,10 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { ServerPlaylist, UserAttributes } from "../types";
 import { Service, Playlist } from "../../types/types";
-import { getSingleSpotifyPlaylist } from "../getSingleSpotifyPlaylist";
+import { getSingleSpotifyPlaylist } from "../GetSingleSpotifyPlaylist";
 import { GetUser } from "./GetUser";
 import { mapToPlaylist } from "../../helpers/helpers";
+import { useParams } from "react-router";
 
 const getPlaaaylist = async (
   playlistId: string,
@@ -55,11 +56,12 @@ interface PlaylistParam {
   service: Service;
 }
 
-export const GetSinglePlaylist = (params: PlaylistParam) => {
+export const GetSinglePlaylist = () => {
+  const params = useParams<PlaylistParam>();
   const { data: userInfo } = GetUser();
 
   return useQuery<Playlist, Error>(
-    `playlist-${params.service}-${params.playlistId}`,
+    [`playlist-${params.service}-${params.playlistId}`, params.playlistId],
     () => getPlaylist(params.playlistId, params.service, userInfo),
     {
       enabled: !!userInfo && !!params.playlistId,

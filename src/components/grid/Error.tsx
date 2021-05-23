@@ -5,7 +5,7 @@ import styled from "styled-components";
 const ErrorWrapper = styled.div`
   grid-area: main;
 `;
-const Error = () => {
+export const Error = () => {
   return (
     <ErrorWrapper>
       <h1>something went wrong....</h1>
@@ -13,5 +13,3 @@ const Error = () => {
     </ErrorWrapper>
   );
 };
-
-export default Error;
