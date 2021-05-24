@@ -1,19 +1,24 @@
-import axios from "axios";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
 import { GetAllSpotifyPlaylist } from "../../queries/hooks/GetAllSpotifyPlaylists";
 import { GetSinglePlaylist } from "../../queries/hooks/GetSinglePlaylist";
-import { useGlobalContext } from "../../state/context";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { PostPlaylist } from "../../queries/hooks/PostPlaylist";
 
 const SidebarWrapper = styled.div`
   grid-area: sidebar;
   max-width: 100%;
   background-color: var(--gray);
-  /* border-radius: 50px; */
+  display: flex;
+  flex-direction: column;
   padding: 16px 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   span {
     font-size: 1.2rem;
     text-transform: uppercase;
@@ -28,43 +33,32 @@ const PlaylistItem = styled.div`
   }
 `;
 
-interface PlaylistPost {
-  data: {
-    playlist: {
-      name: string;
-    };
-  };
-}
+const AddPlaylistButton = styled.button`
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  width: 60px;
+  margin: 0 auto;
+  background: transparent;
+  color: var(--accent);
+`;
 
-const postPlaylist = async (name: string) => {
-  const token = window.localStorage.getItem("token");
-  if (!token) throw Error("no token");
-
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  const body = {
-    playlist: {
-      name,
-    },
-  };
-
-  const url = `${process.env.REACT_APP_BASE_URL}/playlists`;
-  return await axios.post<PlaylistPost>(url, body, headers);
-};
+const AddPlaylistInput = styled.input`
+  border: none;
+  background: transparent;
+  color: var(--secondary);
+  outline: none;
+  border-bottom: 1px solid var(--accent);
+  padding: 4px;
+  outline-color: var(--accent);
+`;
 
 export const Sidebar = () => {
   const { data: spotifyPlaylists } = GetAllSpotifyPlaylist();
   const { data: playlists, isLoading, error } = GetAllPlaylists();
   const [input, setInput] = useState("");
-  const queryClient = useQueryClient();
-  const mutation = useMutation(postPlaylist, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("playlistAll");
-    },
-  });
+  const [isNewOpen, setIsNewOpen] = useState(false);
+
+  const mutation = PostPlaylist();
 
   const handleClick = (id: string) => {
     console.log(id);
@@ -74,6 +68,11 @@ export const Sidebar = () => {
     event.preventDefault();
     mutation.mutate(input);
     setInput("");
+  };
+
+  const handleBlur = () => {
+    setInput("");
+    setIsNewOpen(false);
   };
   return (
     <SidebarWrapper>
@@ -93,13 +92,22 @@ export const Sidebar = () => {
           </Link>
         </PlaylistItem>
       ))}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.currentTarget.value)}
-        />
-      </form>
+      {isNewOpen ? (
+        <form onSubmit={handleSubmit}>
+          <AddPlaylistInput
+            type="text"
+            value={input}
+            autoFocus={true}
+            onBlur={handleBlur}
+            onChange={(e) => setInput(e.currentTarget.value)}
+            placeholder="Create a new plaaaylist"
+          />
+        </form>
+      ) : (
+        <AddPlaylistButton onClick={() => setIsNewOpen(true)}>
+          <FontAwesomeIcon icon={faPlus} />
+        </AddPlaylistButton>
+      )}
     </SidebarWrapper>
   );
 };

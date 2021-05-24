@@ -1,50 +1,49 @@
-import axios from "axios";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
 import styled from "styled-components";
-import { Playlist } from "../../types/types";
+import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
+import { PostPlaylistItems } from "../../queries/hooks/PostPlaylistItems";
+import { Playlist, Tracks } from "../../types/types";
 
 const ModalWrapper = styled.div`
   position: absolute;
-  top: 0px;
-  border: 1px solid var(--accent);
+  top: 120px;
+  left: -30%;
+  background-color: var(--gray);
+  border-radius: 25px;
+  padding: 8px 24px;
+  h3 {
+    margin: 4px 0;
+  }
+
+  li {
+    padding: 0 16px;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--accent);
+      border-radius: 4px;
+    }
+  }
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 interface ModalProps {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-  playlists?: Playlist[];
+  tracks: Tracks;
 }
-export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, playlists }) => {
-  const [playlist, setPlaylist] = useState<Playlist>();
-  console.log(playlists);
-  const queryClient = useQueryClient();
-  const token = window.localStorage.getItem("token");
-  // const mutation = useMutation(playlist => {
-  //   return (
-  //     axios.post(`${process.env.REACT_APP_BASE_URL}/playlists`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       playlist
-  //     }),
-  //     {
-  //       onSuccess: () => queryClient.invalidateQueries("playlistAll"),
-  //     }
-  //   );
-  // });
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
 
-  //   const mutation = useMutation((playlist) =>
-  //     axios.post(`${process.env.REACT_APP_BASE_URL}/playlists`, headers, playlist)
-  //   );
-
+export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks }) => {
+  const { data: playlists } = GetAllPlaylists();
+  const mutation = PostPlaylistItems();
   const handleClick = (id: string) => {
-    console.log("i was clicked : ", id);
+    mutation.mutate({ id, tracks });
+    setIsModalOpen(false);
   };
   return (
     <ModalWrapper>
+      <h3>Select a Playlist...</h3>
       <ul>
         {playlists &&
           playlists.map((item) => {

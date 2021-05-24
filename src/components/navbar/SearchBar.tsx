@@ -45,6 +45,8 @@ export const SearchBar = () => {
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onFocus={(e) => (e.currentTarget.placeholder = "")}
+          onBlur={(e) => (e.currentTarget.placeholder = "Search...")}
         />
       </form>
     </SearchBarWrapper>

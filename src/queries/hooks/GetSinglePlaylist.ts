@@ -61,11 +61,11 @@ export const GetSinglePlaylist = () => {
   const { data: userInfo } = GetUser();
 
   return useQuery<Playlist, Error>(
-    [`playlist-${params.service}-${params.playlistId}`, params.playlistId],
+    ["playlist", params.playlistId],
     () => getPlaylist(params.playlistId, params.service, userInfo),
     {
       enabled: !!userInfo && !!params.playlistId,
-      staleTime: Infinity,
+      staleTime: 360000,
     }
   );
 };

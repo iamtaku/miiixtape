@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
-import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
 import { useGlobalContext } from "../../state/context";
 import { PlaylistInfo, Tracks } from "../../types/types";
 import { Modal } from "./Modal";
@@ -10,6 +9,7 @@ import DefaultMusicImage from "../../assets/music-cover.png";
 
 const InnerGridTopWrapper = styled.div`
   grid-area: top;
+  border: 1px solid red;
   display: grid;
   grid-template-columns: 20% 60% 20%;
   img {
@@ -30,14 +30,15 @@ interface InnerGridDescriptionProps {
 
 const InnerGridDescriptionWrapper = styled.div`
   display: flex;
+  border: 1px solid white;
 `;
 
 const InnerGridDescription: React.FC<InnerGridDescriptionProps> = ({
   name,
 }) => (
-  // <InnerGridDescriptionWrapper>
-  <h2>{name}</h2>
-  // </InnerGridDescriptionWrapper>
+  <InnerGridDescriptionWrapper>
+    <h2>{name}</h2>
+  </InnerGridDescriptionWrapper>
 );
 
 const ButtonWrapper = styled.div`
@@ -47,6 +48,22 @@ const ButtonWrapper = styled.div`
   position: relative;
 `;
 
+const ImportButton = styled.button`
+  background-color: transparent;
+  border-radius: 50px;
+  padding: 8px 16px;
+  color: var(--secondary);
+  border: 1px solid var(--accent);
+`;
+
+const PlayButton = styled.button`
+  background-color: var(--accent);
+  border-radius: 50px;
+  padding: 8px 16px;
+  color: var(--secondary);
+  border: none;
+`;
+
 interface PropTypes {
   data?: PlaylistInfo;
   tracks?: Tracks;
@@ -54,7 +71,6 @@ interface PropTypes {
 
 export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
   const { dispatch, state } = useGlobalContext();
-  const { data: playlists } = GetAllPlaylists();
   const params = useParams<PlaylistParam>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -72,12 +88,11 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
   const handleImport = (tracks: Tracks) => {
     console.log("import this!...", tracks);
     setIsModalOpen(true);
-
-    //need to get tracks
-    //need the playlist to import to
-    //send to playlistItems create endpoint
-    //update our tracks in state
   };
+  //close modal if page changes
+  useEffect(() => {
+    setIsModalOpen(false);
+  }, [params]);
   //add loading placeholder...
   if (!data || !tracks) return <h1>loading...</h1>;
   return (
@@ -86,11 +101,15 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
       <InnerGridDescription name={data.name} />
       <ButtonWrapper>
         {params.service === "spotify" && (
-          <button onClick={() => handleImport(tracks)}>Import</button>
+          <ImportButton onClick={() => setIsModalOpen(!isModalOpen)}>
+            IMPORT
+          </ImportButton>
         )}
-        <button onClick={() => handlePlay(data.id, tracks)}>Play</button>
+        <PlayButton onClick={() => handlePlay(data.id, tracks)}>
+          PLAY
+        </PlayButton>
         {isModalOpen && (
-          <Modal setIsModalOpen={setIsModalOpen} playlists={playlists} />
+          <Modal setIsModalOpen={setIsModalOpen} tracks={tracks} />
         )}
       </ButtonWrapper>
     </InnerGridTopWrapper>

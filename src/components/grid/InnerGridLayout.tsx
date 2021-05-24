@@ -5,7 +5,7 @@ const InnerGridWrapper = styled.div`
   grid-area: main;
   display: grid;
   margin: 24px;
-  grid-template-rows: 30% 70%;
+  grid-template-rows: 20% 80%;
   grid-template-areas:
     "top"
     "bottom";
