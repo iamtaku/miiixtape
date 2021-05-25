@@ -9,8 +9,6 @@ import DefaultMusicImage from "../../assets/music-cover.png";
 
 const InnerGridTopWrapper = styled.div`
   grid-area: top;
-  /* border: 1px solid var(--light-gray); */
-  /* border-radius: 12px; */
   display: grid;
   grid-template-columns: 30% 40% 30%;
   grid-template-rows: 100%;

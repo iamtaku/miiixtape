@@ -9,21 +9,20 @@ const mapSpotifyPlaylistToPlaylist = (
     id: data.id,
     name: data.name,
     description: data.description ? data.description : "",
-    external_urls: data.external_urls.spotify,
-    img: data.images ? data.images[0].url : "",
+    external_urls: data.external_urls.spotify || "",
+    img: data.images[0] ? data.images[0].url : "",
   };
 
-  const tracks: Song[] =
-    data.tracks &&
-    data.tracks.items.map((item) => {
+  const tracks: Song[] = data.tracks.items.map(
+    (item: SpotifyApi.PlaylistTrackObject) => {
       return {
         name: item.track.name,
         id: item.track.id,
         service: "spotify",
         uri: item.track.uri,
-        // img: item.track.album.
       };
-    });
+    }
+  );
   return {
     playlistInfo,
     tracks,

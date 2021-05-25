@@ -9,7 +9,7 @@ const LoginBtn = styled.a`
 `;
 
 export const LoginButton: React.FC = ({ children }) => {
-  const URL = "http://localhost:3000/api/v1/auth";
+  const URL = `${process.env.REACT_APP_BASE_URL}/auth`;
 
   return <LoginBtn href={URL}>{children}</LoginBtn>;
 };
