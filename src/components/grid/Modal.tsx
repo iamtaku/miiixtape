@@ -4,13 +4,15 @@ import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
 import { PostPlaylistItems } from "../../queries/hooks/PostPlaylistItems";
 import { Playlist, Tracks } from "../../types/types";
 
-const ModalWrapper = styled.div`
+export const ModalWrapper = styled.div`
   position: absolute;
   top: 120px;
   left: -30%;
   background-color: var(--gray);
   border-radius: 25px;
-  padding: 8px 24px;
+  padding: 16px 24px;
+  background: #353535;
+  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
   h3 {
     margin: 4px 0;
   }
@@ -20,6 +22,7 @@ const ModalWrapper = styled.div`
     cursor: pointer;
     &:hover {
       background-color: var(--accent);
+      opacity: 0.8;
       border-radius: 4px;
     }
   }
@@ -43,7 +46,7 @@ export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks }) => {
   };
   return (
     <ModalWrapper>
-      <h3>Select a Playlist...</h3>
+      <h3>Select a Playlist</h3>
       <ul>
         {playlists &&
           playlists.map((item) => {

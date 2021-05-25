@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
+import { ModalWrapper } from "../grid/Modal";
 interface ProfileProps {
   displayName?: string;
   uri?: string;
@@ -11,7 +12,13 @@ interface ProfileProps {
   href?: string;
 }
 
-const ProfileWrapper = styled.div`
+const ProfileButton = styled.button`
+  background: none;
+  border: none;
+  border-radius: 50px;
+  padding: 12px;
+  background: #353535;
+  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
   img {
     border-radius: 50%;
     background-repeat: no-repeat;
@@ -24,20 +31,30 @@ const ProfileWrapper = styled.div`
   position: relative;
 `;
 
-const ProfileModal = styled.div`
-  position: absolute;
-  left: -25px;
-  ul {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    li {
-      margin: 8px;
-    }
-  }
-`;
+// const ModalWrapper = styled.div`
+//   position: absolute;
+//   left: -25px;
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+
+//   ul {
+//     width: 100%;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: flex-end;
+//     justify-content: flex-end;
+//     li {
+//       margin: 8px;
+
+//       &:hover {
+//         background-color: var(--accent);
+//         opacity: 0.8;
+//         border-radius: 4px;
+//       }
+//     }
+//   }
+// `;
 
 export const Profile: React.FC<ProfileProps> = ({
   displayName,
@@ -60,10 +77,10 @@ export const Profile: React.FC<ProfileProps> = ({
 
   return (
     //convert to button
-    <ProfileWrapper>
+    <ProfileButton>
       <img src={uri || ""} alt={displayName} onClick={handleClick} />
       {profileOpen ? (
-        <ProfileModal>
+        <ModalWrapper>
           <ul>
             {href ? (
               <li>
@@ -75,8 +92,8 @@ export const Profile: React.FC<ProfileProps> = ({
             <li>SETTINGS</li>
             <li onClick={logOut}>LOGOUT</li>
           </ul>
-        </ProfileModal>
+        </ModalWrapper>
       ) : null}
-    </ProfileWrapper>
+    </ProfileButton>
   );
 };

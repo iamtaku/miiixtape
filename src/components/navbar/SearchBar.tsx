@@ -5,7 +5,11 @@ import styled from "styled-components";
 const SearchBarWrapper = styled.div`
   border-radius: 50px;
   padding: 4px 36px;
-  background-color: var(--gray);
+  background-color: var(--light-gray);
+
+  border-radius: 50px;
+  background: #5c5c5c;
+  box-shadow: inset 16px 16px 32px #545454, inset -16px -16px 32px #646464;
 
   input {
     background: transparent;
@@ -13,6 +17,7 @@ const SearchBarWrapper = styled.div`
     border: none;
     color: var(--secondary);
     width: 300px;
+
     ::placeholder {
       color: var(--secondary);
     }
@@ -22,7 +27,7 @@ const SearchBarWrapper = styled.div`
   }
 
   :focus-within {
-    border: 3px solid var(--accent);
+    border: 2px solid var(--accent);
   }
 `;
 

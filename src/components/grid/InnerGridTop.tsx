@@ -9,9 +9,10 @@ import DefaultMusicImage from "../../assets/music-cover.png";
 
 const InnerGridTopWrapper = styled.div`
   grid-area: top;
-  border: 1px solid red;
+  border: 1px solid var(--light-gray);
+  border-radius: 24px;
   display: grid;
-  grid-template-columns: 20% 60% 20%;
+  grid-template-columns: 30% 40% 30%;
   img {
     width: 150px;
   }
@@ -44,24 +45,31 @@ const InnerGridDescription: React.FC<InnerGridDescriptionProps> = ({
 const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: stretch;
+  justify-content: center;
   position: relative;
 `;
 
 const ImportButton = styled.button`
   background-color: transparent;
-  border-radius: 50px;
-  padding: 8px 16px;
+  padding: 8px 24px;
   color: var(--secondary);
-  border: 1px solid var(--accent);
+  /* border: 1px solid var(--accent); */
+  border: none;
+  border-radius: 50px;
+  background: #353535;
+  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
+  margin-right: 8px;
 `;
 
 const PlayButton = styled.button`
   background-color: var(--accent);
   border-radius: 50px;
-  padding: 8px 16px;
-  color: var(--secondary);
+  padding: 8px 24px;
+  color: var(--accent);
   border: none;
+  border-radius: 50px;
+  background: #353535;
+  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
 `;
 
 interface PropTypes {
