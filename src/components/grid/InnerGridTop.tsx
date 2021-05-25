@@ -1,46 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import { useGlobalContext } from "../../state/context";
-import { PlaylistInfo, Tracks } from "../../types/types";
+import { PlaylistInfo, Service, Tracks } from "../../types/types";
 import { Modal } from "./Modal";
-import { PlaylistParam } from "./Playlist";
+import { InnerGridDescription } from "./InnerGridDescription";
 import DefaultMusicImage from "../../assets/music-cover.png";
 
 const InnerGridTopWrapper = styled.div`
   grid-area: top;
-  border: 1px solid var(--light-gray);
-  border-radius: 24px;
+  /* border: 1px solid var(--light-gray); */
+  /* border-radius: 12px; */
   display: grid;
   grid-template-columns: 30% 40% 30%;
-  img {
-    width: 150px;
-  }
+  grid-template-rows: 100%;
+  padding: 8px;
+
   h2 {
     text-decoration-color: var(--primary);
   }
 `;
 
 const CoverImg = styled.img`
-  width: 150px;
+  max-width: 100%;
+  max-height: 100%;
 `;
-
-interface InnerGridDescriptionProps {
-  name: string;
-}
-
-const InnerGridDescriptionWrapper = styled.div`
-  display: flex;
-  border: 1px solid white;
-`;
-
-const InnerGridDescription: React.FC<InnerGridDescriptionProps> = ({
-  name,
-}) => (
-  <InnerGridDescriptionWrapper>
-    <h2>{name}</h2>
-  </InnerGridDescriptionWrapper>
-);
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -53,23 +37,29 @@ const ImportButton = styled.button`
   background-color: transparent;
   padding: 8px 24px;
   color: var(--secondary);
-  /* border: 1px solid var(--accent); */
   border: none;
   border-radius: 50px;
   background: #353535;
   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
   margin-right: 8px;
+  &:hover {
+    background: var(--secondary);
+    color: var(--primary);
+  }
 `;
 
 const PlayButton = styled.button`
   background-color: var(--accent);
-  border-radius: 50px;
   padding: 8px 24px;
   color: var(--accent);
   border: none;
   border-radius: 50px;
   background: #353535;
   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
+  &:hover {
+    background: var(--accent);
+    color: var(--primary);
+  }
 `;
 
 interface PropTypes {
@@ -78,9 +68,14 @@ interface PropTypes {
 }
 
 export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
-  const { dispatch, state } = useGlobalContext();
-  const params = useParams<PlaylistParam>();
+  const { dispatch } = useGlobalContext();
+  const params = useParams<{ service: string; id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //clean this up
+  const servicesSet = new Set<Service>();
+  tracks?.forEach((track) => servicesSet.add(track.service));
+  const services = Array.from(servicesSet);
 
   const handlePlay = (id: string, tracks: Tracks) => {
     console.log(tracks);
@@ -97,16 +92,22 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, tracks }) => {
     console.log("import this!...", tracks);
     setIsModalOpen(true);
   };
+
   //close modal if page changes
   useEffect(() => {
     setIsModalOpen(false);
   }, [params]);
+
   //add loading placeholder...
   if (!data || !tracks) return <h1>loading...</h1>;
   return (
     <InnerGridTopWrapper>
       <CoverImg src={data.img || DefaultMusicImage} alt={data.description} />
-      <InnerGridDescription name={data.name} />
+      <InnerGridDescription
+        name={data.name}
+        type={data.type}
+        services={services}
+      />
       <ButtonWrapper>
         {params.service === "spotify" && (
           <ImportButton onClick={() => setIsModalOpen(!isModalOpen)}>

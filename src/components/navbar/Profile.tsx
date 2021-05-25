@@ -31,31 +31,6 @@ const ProfileButton = styled.button`
   position: relative;
 `;
 
-// const ModalWrapper = styled.div`
-//   position: absolute;
-//   left: -25px;
-//   white-space: nowrap;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-
-//   ul {
-//     width: 100%;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: flex-end;
-//     justify-content: flex-end;
-//     li {
-//       margin: 8px;
-
-//       &:hover {
-//         background-color: var(--accent);
-//         opacity: 0.8;
-//         border-radius: 4px;
-//       }
-//     }
-//   }
-// `;
-
 export const Profile: React.FC<ProfileProps> = ({
   displayName,
   uri,
@@ -76,7 +51,6 @@ export const Profile: React.FC<ProfileProps> = ({
   if (isLoading) return <ProfilePlaceholder />;
 
   return (
-    //convert to button
     <ProfileButton>
       <img src={uri || ""} alt={displayName} onClick={handleClick} />
       {profileOpen ? (

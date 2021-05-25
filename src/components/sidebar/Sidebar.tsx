@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
 import { GetAllSpotifyPlaylist } from "../../queries/hooks/GetAllSpotifyPlaylists";
-import { GetSinglePlaylist } from "../../queries/hooks/GetSinglePlaylist";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { PostPlaylist } from "../../queries/hooks/PostPlaylist";
+import { SidebarItem } from "./SidebarItem";
+import { SidebarCollection } from "./SidebarCollection";
 
 const SidebarWrapper = styled.div`
   grid-area: sidebar;
@@ -26,15 +26,7 @@ const SidebarWrapper = styled.div`
   }
 `;
 
-const PlaylistItem = styled.div`
-  width: 100%;
-  a {
-    overflow: hidden;
-  }
-`;
-
 const AddPlaylistButton = styled.button`
-  /* border: 1px solid var(--accent); */
   border: none;
   border-radius: 8px;
   width: 60px;
@@ -53,7 +45,8 @@ const AddPlaylistInput = styled.input`
   color: var(--secondary);
   outline: none;
   border-bottom: 1px solid var(--accent);
-  padding: 4px;
+  margin: 4px;
+  padding: 4px 8px;
   outline-color: var(--accent);
 `;
 
@@ -61,13 +54,8 @@ export const Sidebar = () => {
   const { data: spotifyPlaylists } = GetAllSpotifyPlaylist();
   const { data: playlists, isLoading, error } = GetAllPlaylists();
   const [input, setInput] = useState("");
-  const [isNewOpen, setIsNewOpen] = useState(false);
-
+  const [isInputOpen, setIsInputOpen] = useState(false);
   const mutation = PostPlaylist();
-
-  const handleClick = (id: string) => {
-    console.log(id);
-  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -77,27 +65,17 @@ export const Sidebar = () => {
 
   const handleBlur = () => {
     setInput("");
-    setIsNewOpen(false);
+    setIsInputOpen(false);
   };
+
   return (
     <SidebarWrapper>
       <span>Spotify Playlists</span>
-      {spotifyPlaylists?.items.map((item) => {
-        return (
-          <PlaylistItem key={item.id}>
-            <Link to={`/app/playlist/spotify/${item.id}`}>{item.name}</Link>
-          </PlaylistItem>
-        );
-      })}
+      <SidebarCollection data={spotifyPlaylists} />
       <span>Playlists</span>
-      {playlists?.map((item) => (
-        <PlaylistItem key={item.playlistInfo.id}>
-          <Link to={`/app/playlist/plaaaylist/${item.playlistInfo.id}`}>
-            {item.playlistInfo.name}
-          </Link>
-        </PlaylistItem>
-      ))}
-      {isNewOpen ? (
+      <SidebarCollection data={playlists} />
+
+      {isInputOpen ? (
         <form onSubmit={handleSubmit}>
           <AddPlaylistInput
             type="text"
@@ -109,7 +87,7 @@ export const Sidebar = () => {
           />
         </form>
       ) : (
-        <AddPlaylistButton onClick={() => setIsNewOpen(true)}>
+        <AddPlaylistButton onClick={() => setIsInputOpen(true)}>
           <FontAwesomeIcon icon={faPlus} />
         </AddPlaylistButton>
       )}

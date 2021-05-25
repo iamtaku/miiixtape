@@ -1,6 +1,5 @@
-import React from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, QueryClient } from "react-query";
+import { QueryClient } from "react-query";
 import styled from "styled-components";
 
 interface SearchParam {

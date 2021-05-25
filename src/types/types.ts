@@ -20,6 +20,15 @@ export type PlaylistInfo = {
   external_urls?: string;
   img?: string;
   description?: string;
+  type?: ContentType;
+  service?: Service;
 };
+
+export interface PlaylistParam {
+  playlistId: string;
+  service: Service;
+}
+
+export type ContentType = "playlist" | "album" | "artist";
 
 export type Service = "plaaaylist" | "spotify" | "youtube" | "";

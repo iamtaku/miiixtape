@@ -1,17 +1,11 @@
-import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { GetSinglePlaylist } from "../../queries/hooks/GetSinglePlaylist";
-import { Service } from "../../types/types";
 import { InnerGridBottom } from "./InnerGridBottom";
 import { InnerGridLayout } from "./InnerGridLayout";
 import { InnerGridTop } from "./InnerGridTop";
 
-export interface PlaylistParam {
-  playlistId: string;
-  service: Service;
-}
 export const Playlist = () => {
-  const { data, isLoading, error } = GetSinglePlaylist();
+  const { data, error } = GetSinglePlaylist();
   const history = useHistory();
   if (error) {
     history.push("/app/error");

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
 import { GetSpotifyUser } from "../../queries/hooks/GetSpotifyUser";
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
 

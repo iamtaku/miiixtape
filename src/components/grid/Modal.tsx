@@ -1,8 +1,8 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
 import { PostPlaylistItems } from "../../queries/hooks/PostPlaylistItems";
-import { Playlist, Tracks } from "../../types/types";
+import { Tracks } from "../../types/types";
 
 export const ModalWrapper = styled.div`
   position: absolute;

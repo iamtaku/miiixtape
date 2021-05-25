@@ -1,7 +1,6 @@
 import { ServerPlaylists } from "../types";
 import { useQuery } from "react-query";
 import axios, { AxiosResponse } from "axios";
-import { mapToPlaylist } from "../../helpers/helpers";
 import { Playlist } from "../../types/types";
 
 const mapServerPlaylist = (
@@ -12,6 +11,7 @@ const mapServerPlaylist = (
       playlistInfo: {
         id: item.id,
         name: item.attributes.name,
+        service: "plaaaylist",
       },
     };
   });
