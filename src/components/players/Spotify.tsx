@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useRef } from "react";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import { GetUser } from "../../queries/hooks/GetUser";
 import { useGlobalContext } from "../../state/context";
@@ -31,7 +25,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
       });
     }
     if (state.player.currentService !== "spotify") {
-      console.log("not spotify");
       ref.current?.setState({ needsUpdate: true });
     }
     if (ref.current?.state.isPlaying) {
@@ -40,7 +33,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
     }
 
     if (callbackState.error) {
-      // console.error()
       console.error(callbackState);
     }
   };
@@ -57,11 +49,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
         <SpotifyPlayer
           token={userInfo.access_token}
           name="plaaaylist player"
-          // uris={state.player.playlistTracks
-          //   ?.filter((song) => song.service === "spotify")
-          //   .map((song) => song.uri)}
           uris={uri}
-          // offset={state.player.playbackPosition}
           callback={handleCallback}
           // autoPlay={true}
           play={

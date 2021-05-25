@@ -23,8 +23,7 @@ const getUser = async () => {
   return data.data.data.attributes;
 };
 
-export const GetUser = (token?: ServerTokenResponse) =>
+export const GetUser = () =>
   useQuery<UserAttributes, Error>("userInfo", getUser, {
     refetchOnWindowFocus: false,
-    enabled: !!token,
   });

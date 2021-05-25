@@ -1,10 +1,11 @@
 import { useQuery } from "react-query";
 import axios from "axios";
 import { ServerPlaylist, UserAttributes } from "../types";
-import { Service, Playlist } from "../../types/types";
-import { getSingleSpotifyPlaylist } from "../getSingleSpotifyPlaylist";
+import { Service, Playlist, PlaylistParam } from "../../types/types";
+import { getSingleSpotifyPlaylist } from "../GetSingleSpotifyPlaylist";
 import { GetUser } from "./GetUser";
 import { mapToPlaylist } from "../../helpers/helpers";
+import { useParams } from "react-router";
 
 const getPlaaaylist = async (
   playlistId: string,
@@ -35,35 +36,35 @@ const getPlaylist = async (
 ): Promise<Playlist> => {
   //if we have a token, call corresponding function to fetch and return data
   const token = window.localStorage.getItem("token");
+  let data;
   if (token) {
     switch (service) {
       case "plaaaylist":
         return await getPlaaaylist(playlistId, token);
       case "spotify":
-        return await getSingleSpotifyPlaylist(
+        data = await getSingleSpotifyPlaylist(
           playlistId,
           userInfo?.access_token
         );
+        data.playlistInfo.type = "playlist";
+        return data;
       default:
         break;
     }
   }
   throw new Error("No token");
 };
-interface PlaylistParam {
-  playlistId: string;
-  service: Service;
-}
 
-export const GetSinglePlaylist = (params: PlaylistParam) => {
+export const GetSinglePlaylist = () => {
+  const params = useParams<PlaylistParam>();
   const { data: userInfo } = GetUser();
 
   return useQuery<Playlist, Error>(
-    `playlist-${params.service}-${params.playlistId}`,
+    ["playlist", params.playlistId],
     () => getPlaylist(params.playlistId, params.service, userInfo),
     {
       enabled: !!userInfo && !!params.playlistId,
-      staleTime: Infinity,
+      staleTime: 360000,
     }
   );
 };

@@ -1,9 +1,7 @@
 import { ServerPlaylists } from "../types";
 import { useQuery } from "react-query";
 import axios, { AxiosResponse } from "axios";
-import { mapToPlaylist } from "../../helpers/helpers";
 import { Playlist } from "../../types/types";
-import { Server } from "node:http";
 
 const mapServerPlaylist = (
   data: AxiosResponse<ServerPlaylists>
@@ -13,17 +11,16 @@ const mapServerPlaylist = (
       playlistInfo: {
         id: item.id,
         name: item.attributes.name,
+        service: "plaaaylist",
       },
     };
   });
   return mappedData;
 };
 
-const getPlaylist = async (): Promise<Playlist[]> => {
+const getAllPlaylists = async (): Promise<Playlist[]> => {
   const token = window.localStorage.getItem("token");
   if (token) {
-    // return await axios.get();
-
     const url = `${process.env.REACT_APP_BASE_URL}/playlists`;
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -32,7 +29,6 @@ const getPlaylist = async (): Promise<Playlist[]> => {
       const data = await axios.get<ServerPlaylists>(url, {
         headers,
       });
-      //   return data.data.;
       if (data.status === 200) {
         const mappedData = mapServerPlaylist(data);
         return mappedData;
@@ -45,6 +41,6 @@ const getPlaylist = async (): Promise<Playlist[]> => {
 };
 
 export const GetAllPlaylists = () =>
-  useQuery<Playlist[], Error>("plaaaylistAll", getPlaylist, {
+  useQuery<Playlist[], Error>("playlistAll", getAllPlaylists, {
     staleTime: Infinity,
   });

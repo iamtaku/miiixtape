@@ -1,10 +1,14 @@
-import React from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, QueryClient } from "react-query";
+import { QueryClient } from "react-query";
+import styled from "styled-components";
 
 interface SearchParam {
   search: string;
 }
+
+const SearchWrapper = styled.div`
+  grid-area: main;
+`;
 
 const Search = () => {
   const location = useParams<SearchParam>();
@@ -12,12 +16,11 @@ const Search = () => {
   const queryClient = new QueryClient();
   const data = queryClient.getQueryData(["userInfo"]);
   console.log(data);
-  //   console.log(queryClient.getQueryData(["userInfo"]));
   return (
-    <div>
+    <SearchWrapper>
       this is the search page
       {location.search}
-    </div>
+    </SearchWrapper>
   );
 };
 

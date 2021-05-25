@@ -25,11 +25,6 @@ export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
   };
   const handlePlay = () => {
     dispatch({ type: "PLAY", payload: {} });
-    // youtube &&
-    // state.player.isPlaying &&
-    // state.player.currentService === "youtube"
-    // ? youtube?.pauseVideo()
-    // : youtube?.playVideo();
     youtube.playVideo();
   };
 

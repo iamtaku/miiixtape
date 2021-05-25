@@ -5,6 +5,7 @@ import styled, { keyframes } from "styled-components";
 import { Home } from "../components/grid/Home";
 
 import { LoginButton } from "../components/Buttons";
+import { GetToken } from "../queries/hooks/GetToken";
 
 const MainWrapper = styled.div`
   grid-area: main;
@@ -13,6 +14,7 @@ const MainWrapper = styled.div`
 const Main = () => {
   const { search } = useLocation();
   const history = useHistory();
+  GetToken();
 
   // const { data: code } = GetToken();
   const { isLoading, error, data } = GetUser();

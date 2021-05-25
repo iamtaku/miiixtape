@@ -1,18 +1,18 @@
 import styled from "styled-components";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
-import { GetUser } from "../queries/hooks/GetUser";
-import { GetSpotifyUser } from "../queries/hooks/GetSpotifyUser";
-import React, { useEffect } from "react";
+import { GetSpotifyUser } from "../../queries/hooks/GetSpotifyUser";
+import React from "react";
 import { Link } from "react-router-dom";
-import { ProfilePlaceholder } from "./placeholders/Placeholder";
-import { GetToken } from "../queries/hooks/GetToken";
+import { ProfilePlaceholder } from "../placeholders/Placeholder";
 
 const NavBar = styled.nav`
   grid-area: nav;
-  margin-top: 8px;
+  /* margin: 8px; */
+  display: flex;
+  align-items: center;
   h1 {
-    color: var(--primary);
+    color: var(--accent);
   }
   ul {
     display: flex;
@@ -27,16 +27,14 @@ const NavBar = styled.nav`
 `;
 
 export const Navbar: React.FC = () => {
-  const { data: token } = GetToken();
-  const { data: userInfo } = GetUser(token);
-  const { data, isLoading, error } = GetSpotifyUser(userInfo);
+  const { data, isLoading, error } = GetSpotifyUser();
 
   return (
     <NavBar>
       <ul>
         <li>
           <Link to="/app">
-            <h1>Plaaaylist</h1>
+            <h1>PLAAAYLIST</h1>
           </Link>
         </li>
         <li>

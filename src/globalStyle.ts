@@ -6,13 +6,17 @@ export const Global = createGlobalStyle`
 --orange: #DC481E;
 --black: #121212;
 --white: #fff;
+--light-gray: #5c5c5c;
+--gray: #353535;
 --red: #cf6679;
---primary: var(--orange);
+--primary: var(--gray);
+--secondary: var(--white);
+--accent: var(--orange)
 }
 
   body {
-    background-color: #121212;
-    color: #fff;
+    background-color: var(--primary);
+    color: var(--secondary);
     font-family: 'Helvetica';
   }
   *,

@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
-import { ProfilePlaceholder } from "./placeholders/Placeholder";
+import { ProfilePlaceholder } from "../placeholders/Placeholder";
+import { ModalWrapper } from "../grid/Modal";
 interface ProfileProps {
   displayName?: string;
   uri?: string;
@@ -11,32 +12,23 @@ interface ProfileProps {
   href?: string;
 }
 
-const ProfileWrapper = styled.div`
+const ProfileButton = styled.button`
+  background: none;
+  border: none;
+  border-radius: 50px;
+  padding: 12px;
+  background: #353535;
+  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
   img {
     border-radius: 50%;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
     object-fit: cover;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
   position: relative;
-`;
-
-const ProfileModal = styled.div`
-  position: absolute;
-  left: -25px;
-  ul {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: flex-end;
-    li {
-      margin: 8px;
-    }
-  }
 `;
 
 export const Profile: React.FC<ProfileProps> = ({
@@ -56,19 +48,17 @@ export const Profile: React.FC<ProfileProps> = ({
     setProfileOpen(!profileOpen);
   };
 
+  if (isLoading) return <ProfilePlaceholder />;
+
   return (
-    <ProfileWrapper>
-      {isLoading ? (
-        <ProfilePlaceholder />
-      ) : (
-        <img src={uri} alt={displayName} onClick={handleClick} />
-      )}
+    <ProfileButton>
+      <img src={uri || ""} alt={displayName} onClick={handleClick} />
       {profileOpen ? (
-        <ProfileModal>
+        <ModalWrapper>
           <ul>
             {href ? (
               <li>
-                <a href={href}>
+                <a href={href} target="_blank" rel="noreferrer">
                   SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </a>
               </li>
@@ -76,8 +66,8 @@ export const Profile: React.FC<ProfileProps> = ({
             <li>SETTINGS</li>
             <li onClick={logOut}>LOGOUT</li>
           </ul>
-        </ProfileModal>
+        </ModalWrapper>
       ) : null}
-    </ProfileWrapper>
+    </ProfileButton>
   );
 };
