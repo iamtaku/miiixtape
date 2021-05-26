@@ -5,8 +5,8 @@ import styled from "styled-components";
 import { PostPlaylist } from "../../queries/hooks/PostPlaylist";
 
 const AddPlaylistButton = styled.button`
-  border: none;
-  width: 60px;
+  border: 1px solid transparent;
+  width: 100%;
   margin: 0 auto;
   margin-top: 4px;
   background: transparent;
@@ -14,6 +14,9 @@ const AddPlaylistButton = styled.button`
   /* background: #353535; */
   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
   color: var(--accent);
+  &:hover {
+    border: 1px solid var(--accent);
+  }
 `;
 
 const AddPlaylistFormWrapper = styled.form`

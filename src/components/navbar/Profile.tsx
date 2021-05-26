@@ -26,6 +26,12 @@ const ProfileButton = styled.button`
   position: relative;
 `;
 
+const ProfileActionsWrapper = styled(ModalWrapper)`
+  ul {
+    flex-direction: column;
+  }
+`;
+
 export const Profile = () => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -43,20 +49,14 @@ export const Profile = () => {
   if (!data || isLoading) return <ProfilePlaceholder />;
 
   return (
-    <ProfileButton>
+    <ProfileButton onClick={handleClick}>
       {data.images ? (
-        [0] && (
-          <img
-            src={data.images[0].url || ""}
-            alt={data.display_name}
-            onClick={handleClick}
-          />
-        )
+        [0] && <img src={data.images[0].url || ""} alt={data.display_name} />
       ) : (
-        <img src={""} alt={data.display_name} onClick={handleClick} />
+        <img src={""} alt={data.display_name} />
       )}
       {isProfileOpen ? (
-        <ModalWrapper>
+        <ProfileActionsWrapper>
           <ul>
             {data.href ? (
               <li>
@@ -68,7 +68,7 @@ export const Profile = () => {
             <li>SETTINGS</li>
             <li onClick={logOut}>LOGOUT</li>
           </ul>
-        </ModalWrapper>
+        </ProfileActionsWrapper>
       ) : null}
     </ProfileButton>
   );

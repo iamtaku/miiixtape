@@ -1,11 +1,11 @@
 import { useHistory } from "react-router";
 import { GetSinglePlaylist } from "../../queries/hooks/GetSinglePlaylist";
-import { InnerGridBottom } from "./InnerGridBottom";
-import { InnerGridLayout } from "./InnerGridLayout";
-import { InnerGridTop } from "./InnerGridTop";
+import { InnerGridBottom } from "./bottom/InnerGridBottom";
+import { InnerGridLayout } from "./GridLayout";
+import { InnerGridTop } from "./top/InnerGridTop";
 
 export const Playlist = () => {
-  const { data, error } = GetSinglePlaylist();
+  const { data, isLoading, error } = GetSinglePlaylist();
   const history = useHistory();
   if (error) {
     history.push("/app/error");
@@ -13,8 +13,8 @@ export const Playlist = () => {
 
   return (
     <InnerGridLayout>
-      <InnerGridTop data={data?.playlistInfo} tracks={data?.tracks} />
-      <InnerGridBottom data={data?.tracks} />
+      <InnerGridTop data={data} isLoading={isLoading} />
+      <InnerGridBottom data={data} isLoading={isLoading} />
     </InnerGridLayout>
   );
 };

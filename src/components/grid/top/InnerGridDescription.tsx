@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import { Service } from "../../types/types";
+import { Playlist, PlaylistInfo, Service, Tracks } from "../../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYoutube, faSpotify } from "@fortawesome/free-brands-svg-icons";
 
 interface InnerGridDescriptionProps {
-  name: string;
-  type?: string;
   services?: Service[];
+  data: Playlist;
 }
 
 const InnerGridDescriptionWrapper = styled.div`
@@ -51,15 +50,15 @@ const GridDescriptionServices = ({ services }: { services?: Service[] }) => (
 );
 
 export const InnerGridDescription: React.FC<InnerGridDescriptionProps> = ({
-  name,
-  type,
+  data,
   services,
 }) => (
   <InnerGridDescriptionWrapper>
     <PlaybackTypesWrapper>
-      <p>{type && type}</p>
+      <p>{data.playlistInfo.type}</p>
       <GridDescriptionServices services={services} />
     </PlaybackTypesWrapper>
-    <h1>{name}</h1>
+    <h1>{data.playlistInfo.name}</h1>
+    {data.tracks && <p>{`${data.tracks.length} Tracks`}</p>}
   </InnerGridDescriptionWrapper>
 );

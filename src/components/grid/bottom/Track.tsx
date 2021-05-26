@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Song } from "../../types/types";
+import { Song } from "../../../types/types";
 
 interface TrackProps {
   track: Song;
@@ -10,6 +10,10 @@ interface TrackProps {
 const TrackListItem = styled.li`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  background-color: var(--light-gray);
+  margin: 4px;
+  padding: 4px 8px;
 `;
 export const Track: React.FC<TrackProps> = ({ track, index }) => {
   return (
