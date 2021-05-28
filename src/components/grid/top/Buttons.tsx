@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import { useGlobalContext } from "../../../state/context";
-import { Playlist, PlaylistInfo, Tracks } from "../../../types/types";
+import { Playlist, Tracks } from "../../../types/types";
 import { Modal } from "../Modal";
 
 const ButtonWrapper = styled.div`

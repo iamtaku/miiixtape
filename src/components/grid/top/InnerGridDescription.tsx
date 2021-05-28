@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Playlist, PlaylistInfo, Service, Tracks } from "../../../types/types";
+import { Playlist, Service } from "../../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYoutube, faSpotify } from "@fortawesome/free-brands-svg-icons";
 

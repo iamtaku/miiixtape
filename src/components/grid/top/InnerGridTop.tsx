@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Playlist, PlaylistInfo, Service, Tracks } from "../../../types/types";
+import { Playlist, Service } from "../../../types/types";
 import { InnerGridDescription } from "./InnerGridDescription";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
@@ -14,10 +14,6 @@ const InnerGridTopWrapper = styled.div`
   border-radius: 50px;
   background: #353535;
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
-
-  h2 {
-    text-decoration-color: var(--primary);
-  }
 `;
 
 const CoverImg = styled.img`
