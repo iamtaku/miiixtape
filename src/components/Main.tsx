@@ -1,16 +1,14 @@
 import { useLocation, useHistory } from "react-router";
-import { GetUser } from "../../queries/hooks/GetUser";
+import { GetUser } from "../queries/hooks/GetUser";
 import styled, { keyframes } from "styled-components";
-import { Home } from "./Home";
 
-import { LoginButton } from "../Buttons";
-import { GetToken } from "../../queries/hooks/GetToken";
+import { LoginButton } from "./Buttons";
+import { GetToken } from "../queries/hooks/GetToken";
+import { InnerLayout } from "./grid/InnerLayout";
+import React from "react";
+import { Layout } from "./Layout";
 
-const MainWrapper = styled.div`
-  grid-area: main;
-`;
-
-const Main = () => {
+export const Main = () => {
   const { search } = useLocation();
   const history = useHistory();
   GetToken();
@@ -30,11 +28,10 @@ const Main = () => {
       </>
     );
   return (
-    <MainWrapper>
-      <Home />
-      {data?.username}
-    </MainWrapper>
+    <Layout>
+      <InnerLayout>
+        <p>Hello {data?.username}</p>
+      </InnerLayout>
+    </Layout>
   );
 };
-
-export default Main;

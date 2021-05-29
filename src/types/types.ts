@@ -5,13 +5,15 @@ export type Song = {
   id: string;
   img?: string;
   playlistPosition?: number;
-  artist?: Artist;
+  artists?: Artists;
   album?: Album;
-  time?: string;
+  time?: number;
 };
 
-interface Artist extends Basic {}
-interface Album extends Basic {}
+export type Artists = Artist[];
+
+export interface Artist extends Basic {}
+export interface Album extends Basic {}
 
 export type Basic = {
   uri: string;

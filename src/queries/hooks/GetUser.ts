@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 
 import axios from "axios";
-import { ServerResponse, ServerTokenResponse, UserAttributes } from "../types";
+import { ServerResponse, UserAttributes } from "../types";
 
 const BASE = "http://localhost:3000/api/v1";
 

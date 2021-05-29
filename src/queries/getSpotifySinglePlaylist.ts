@@ -1,10 +1,10 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { Playlist, PlaylistInfo, Song } from "../types/types";
+import { mapSpotifyTracktoTrack } from "../helpers/mapSpotifyTrack";
+import { Playlist, PlaylistInfo, Song, Album, Artists } from "../types/types";
 
 const mapSpotifyPlaylistToPlaylist = (
   data: SpotifyApi.SinglePlaylistResponse
 ): Playlist => {
-  console.log(data);
   const playlistInfo: PlaylistInfo = {
     id: data.id,
     name: data.name,
@@ -12,17 +12,11 @@ const mapSpotifyPlaylistToPlaylist = (
     external_urls: data.external_urls.spotify || "",
     img: data.images[0] ? data.images[0].url : "",
   };
+  const tracks: Song[] = data.tracks.items.map((item) => {
+    const newItem = item.track as SpotifyApi.TrackObjectFull;
+    return mapSpotifyTracktoTrack(newItem);
+  });
 
-  const tracks: Song[] = data.tracks.items.map(
-    (item: SpotifyApi.PlaylistTrackObject) => {
-      return {
-        name: item.track.name,
-        id: item.track.id,
-        service: "spotify",
-        uri: item.track.uri,
-      };
-    }
-  );
   return {
     playlistInfo,
     tracks,
@@ -31,17 +25,12 @@ const mapSpotifyPlaylistToPlaylist = (
 
 export const getSingleSpotifyPlaylist = async (
   playlistId: string,
-  access_token?: string
+  client: SpotifyWebApi.SpotifyWebApiJs
 ): Promise<Playlist> => {
   try {
-    if (access_token && playlistId) {
-      const client = new SpotifyWebApi();
-      client.setAccessToken(access_token);
-      const data = await client.getPlaylist(playlistId);
-      return mapSpotifyPlaylistToPlaylist(data);
-    }
+    const data = await client.getPlaylist(playlistId);
+    return mapSpotifyPlaylistToPlaylist(data);
   } catch (error) {
     throw new Error(error);
   }
-  throw new Error();
 };
