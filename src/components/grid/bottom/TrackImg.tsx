@@ -8,6 +8,7 @@ interface Props {
 
 const Image = styled.img`
   width: 40px;
+  justify-self: center;
 `;
 
 export const TrackImg: React.FC<Props> = ({ img, alt }) => {

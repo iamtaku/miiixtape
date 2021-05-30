@@ -33,7 +33,7 @@ function App() {
                   path="/app/album/:service/:albumId"
                   component={Album}
                 />
-                <Route exact path="/app/error" component={Error} />
+                <Route exact path="*" component={Error} />
               </Switch>
             </AppProvider>
           </Route>

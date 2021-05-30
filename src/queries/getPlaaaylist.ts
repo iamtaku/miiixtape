@@ -18,8 +18,7 @@ export const getPlaaaylist = async (
     const data = await axios.get<ServerPlaylist>(url, {
       headers,
     });
-    console.log(data.data);
-    return mapToPlaylist(data.data, client);
+    return await mapToPlaylist(data.data, client);
   } catch (error) {
     throw new Error(error.message);
   }
