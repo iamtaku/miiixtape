@@ -1,58 +1,32 @@
 import { useQuery } from "react-query";
-import axios from "axios";
 import { ServerPlaylist, UserAttributes } from "../types";
 import { Service, Playlist, PlaylistParam } from "../../types/types";
-import { getSingleSpotifyPlaylist } from "../GetSingleSpotifyPlaylist";
+import { getSingleSpotifyPlaylist } from "../getSpotifySinglePlaylist";
 import { GetUser } from "./GetUser";
-import { mapToPlaylist } from "../../helpers/helpers";
 import { useParams } from "react-router";
-
-const getPlaaaylist = async (
-  playlistId: string,
-  token: string
-): Promise<Playlist> => {
-  const url = `${process.env.REACT_APP_BASE_URL}/playlists/${playlistId}`;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  try {
-    const data = await axios.get<ServerPlaylist>(url, {
-      headers,
-    });
-    if (data.status === 200) {
-      return mapToPlaylist(data.data);
-    }
-  } catch (error) {
-    throw new Error(error.message);
-  }
-  throw new Error();
-};
+import SpotifyWebApi from "spotify-web-api-js";
+import { getPlaaaylist } from "../getPlaaaylist";
 
 const getPlaylist = async (
   playlistId: string,
   service: Service,
   userInfo?: UserAttributes
 ): Promise<Playlist> => {
-  //if we have a token, call corresponding function to fetch and return data
   const token = window.localStorage.getItem("token");
-  let data;
-  if (token) {
-    switch (service) {
-      case "plaaaylist":
-        return await getPlaaaylist(playlistId, token);
-      case "spotify":
-        data = await getSingleSpotifyPlaylist(
-          playlistId,
-          userInfo?.access_token
-        );
-        data.playlistInfo.type = "playlist";
-        return data;
-      default:
-        break;
-    }
+  if (!token || !userInfo) {
+    throw new Error("auth error");
   }
-  throw new Error("No token");
+  const client = new SpotifyWebApi();
+  client.setAccessToken(userInfo?.access_token);
+
+  switch (service) {
+    case "plaaaylist":
+      return await getPlaaaylist(playlistId, token, client);
+    case "spotify":
+      return await getSingleSpotifyPlaylist(playlistId, client);
+    default:
+      throw new Error("something gone wrong");
+  }
 };
 
 export const GetSinglePlaylist = () => {

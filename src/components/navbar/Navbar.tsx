@@ -1,14 +1,11 @@
 import styled from "styled-components";
 import { Profile } from "./Profile";
 import { SearchBar } from "./SearchBar";
-import { GetSpotifyUser } from "../../queries/hooks/GetSpotifyUser";
 import React from "react";
 import { Link } from "react-router-dom";
-import { ProfilePlaceholder } from "../placeholders/Placeholder";
 
 const NavBar = styled.nav`
   grid-area: nav;
-  /* margin: 8px; */
   display: flex;
   align-items: center;
   h1 {
@@ -27,8 +24,6 @@ const NavBar = styled.nav`
 `;
 
 export const Navbar: React.FC = () => {
-  const { data, isLoading, error } = GetSpotifyUser();
-
   return (
     <NavBar>
       <ul>
@@ -41,19 +36,7 @@ export const Navbar: React.FC = () => {
           <SearchBar />
         </li>
         <li>
-          {isLoading ? (
-            <ProfilePlaceholder />
-          ) : (
-            data &&
-            data.images && (
-              <Profile
-                uri={data?.images[0].url}
-                displayName={data?.display_name}
-                isLoading={isLoading}
-                href={data.external_urls.spotify}
-              />
-            )
-          )}
+          <Profile />
         </li>
       </ul>
     </NavBar>

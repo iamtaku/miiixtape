@@ -1,16 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Landing from "./pages/Landing";
-import Main from "./pages/Main";
-import { Navbar } from "./components/navbar/Navbar";
-import { Sidebar } from "./components/sidebar/Sidebar";
+import { Main } from "./components/Main";
 import { Error } from "./components/grid/Error";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtoolsPanel } from "react-query/devtools";
-import Search from "./components/grid/Search";
-import Player from "./components/players/Player";
-import { LayoutWrapper as LayoutGrid } from "./components/Layout";
-import { Playlist } from "./components/grid/Playlist";
+import Search from "./components/Search";
+import { Playlist } from "./components/Playlist";
+import { Album } from "./components/Album";
 import { AppProvider } from "./state/context";
 const queryClient = new QueryClient();
 
@@ -23,21 +20,21 @@ function App() {
           <Route exact path="/" component={Landing} />
           <Route path="/app">
             <AppProvider>
-              <LayoutGrid>
-                <Navbar />
-                <Sidebar />
-                <Switch>
-                  <Route exact path="/app" component={Main} />
-                  <Route exact path="/app/search/:search" component={Search} />
-                  <Route
-                    exact
-                    path="/app/playlist/:service/:playlistId"
-                    component={Playlist}
-                  />
-                  <Route exact path="/app/error" component={Error} />
-                </Switch>
-                <Player />
-              </LayoutGrid>
+              <Switch>
+                <Route exact path="/app" component={Main} />
+                <Route exact path="/app/search/:search" component={Search} />
+                <Route
+                  exact
+                  path="/app/playlist/:service/:playlistId"
+                  component={Playlist}
+                />
+                <Route
+                  exact
+                  path="/app/album/:service/:albumId"
+                  component={Album}
+                />
+                <Route exact path="*" component={Error} />
+              </Switch>
             </AppProvider>
           </Route>
           {/* work on 404 page */}

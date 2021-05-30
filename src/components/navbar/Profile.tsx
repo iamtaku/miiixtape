@@ -5,12 +5,7 @@ import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
 import { ModalWrapper } from "../grid/Modal";
-interface ProfileProps {
-  displayName?: string;
-  uri?: string;
-  isLoading?: boolean;
-  href?: string;
-}
+import { GetSpotifyUser } from "../../queries/hooks/GetSpotifyUser";
 
 const ProfileButton = styled.button`
   background: none;
@@ -31,34 +26,41 @@ const ProfileButton = styled.button`
   position: relative;
 `;
 
-export const Profile: React.FC<ProfileProps> = ({
-  displayName,
-  uri,
-  isLoading,
-  href,
-}) => {
+const ProfileActionsWrapper = styled(ModalWrapper)`
+  ul {
+    flex-direction: column;
+  }
+`;
+
+export const Profile = () => {
   const history = useHistory();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { data, isLoading, error } = GetSpotifyUser();
+
   const logOut = () => {
     window.localStorage.removeItem("token");
     history.push("/");
   };
 
-  const [profileOpen, setProfileOpen] = useState(false);
   const handleClick = () => {
-    setProfileOpen(!profileOpen);
+    setIsProfileOpen(!isProfileOpen);
   };
 
-  if (isLoading) return <ProfilePlaceholder />;
+  if (!data || isLoading) return <ProfilePlaceholder />;
 
   return (
-    <ProfileButton>
-      <img src={uri || ""} alt={displayName} onClick={handleClick} />
-      {profileOpen ? (
-        <ModalWrapper>
+    <ProfileButton onClick={handleClick}>
+      {data.images ? (
+        [0] && <img src={data.images[0].url || ""} alt={data.display_name} />
+      ) : (
+        <img src={""} alt={data.display_name} />
+      )}
+      {isProfileOpen ? (
+        <ProfileActionsWrapper>
           <ul>
-            {href ? (
+            {data.href ? (
               <li>
-                <a href={href} target="_blank" rel="noreferrer">
+                <a href={data.href} target="_blank" rel="noreferrer">
                   SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </a>
               </li>
@@ -66,7 +68,7 @@ export const Profile: React.FC<ProfileProps> = ({
             <li>SETTINGS</li>
             <li onClick={logOut}>LOGOUT</li>
           </ul>
-        </ModalWrapper>
+        </ProfileActionsWrapper>
       ) : null}
     </ProfileButton>
   );

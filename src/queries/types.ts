@@ -18,8 +18,12 @@ interface SingleDataItem {
   id: string;
 }
 
-interface PlaylistItemItem extends SingleDataItem {
+export interface PlaylistItemItem extends SingleDataItem {
   type: "playlist_item";
+  attributes: {
+    position: number;
+    song: SongAttributes;
+  };
 }
 
 interface UserItem extends SingleDataItem {
@@ -78,7 +82,7 @@ export type ServerPlaylist = {
     id: string;
     relationships: PlaylistRelationships;
   };
-  included: (ServerSong | PlaylistItemPosition)[];
+  included: PlaylistItemItem[];
 };
 
 export type PlaylistItemPosition = {

@@ -1,22 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useHistory } from "react-router";
 import { GetUser } from "../queries/hooks/GetUser";
 import styled, { keyframes } from "styled-components";
-import { Home } from "../components/grid/Home";
 
-import { LoginButton } from "../components/Buttons";
+import { LoginButton } from "./Buttons";
 import { GetToken } from "../queries/hooks/GetToken";
+import { InnerLayout } from "./grid/InnerLayout";
+import React from "react";
+import { Layout } from "./Layout";
 
-const MainWrapper = styled.div`
-  grid-area: main;
-`;
-
-const Main = () => {
+export const Main = () => {
   const { search } = useLocation();
   const history = useHistory();
   GetToken();
 
-  // const { data: code } = GetToken();
   const { isLoading, error, data } = GetUser();
   if (search === "?error=access_denied") {
     console.error("You need to authorize spotify for this App to work");
@@ -31,13 +27,11 @@ const Main = () => {
         <LoginButton>Login</LoginButton>
       </>
     );
-  // }, []);
   return (
-    <MainWrapper>
-      <Home />
-      {data?.username}
-    </MainWrapper>
+    <Layout>
+      <InnerLayout>
+        <p>Hello {data?.username}</p>
+      </InnerLayout>
+    </Layout>
   );
 };
-
-export default Main;

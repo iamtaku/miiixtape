@@ -4,6 +4,7 @@ export const Global = createGlobalStyle`
 /* colors */
 :root {
 --orange: #DC481E;
+--dark-orange: #b93d19;
 --black: #121212;
 --white: #fff;
 --light-gray: #5c5c5c;
@@ -11,13 +12,15 @@ export const Global = createGlobalStyle`
 --red: #cf6679;
 --primary: var(--gray);
 --secondary: var(--white);
---accent: var(--orange)
+--accent: var(--orange);
+--dark-accent: var(--dark-orange);
 }
 
   body {
     background-color: var(--primary);
     color: var(--secondary);
     font-family: 'Helvetica';
+
   }
   *,
 *::before,

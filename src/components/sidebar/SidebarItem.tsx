@@ -7,8 +7,13 @@ interface SideBarItemProps {
   playlist: Playlist;
 }
 
-const PlaylistItem = styled.li`
-  border: 1px solid transparent;
+const PlaylistItem = styled.li<{ isActive: boolean }>`
+  border: 1px solid;
+  border-color: ${(props) =>
+    props.isActive ? "var(--accent)" : "transparent"};
+  background-color: ${(props) =>
+    props.isActive ? "var(--accent)" : "default"};
+  border-radius: 4px;
   opacity: 0.8;
   margin: 4px;
   a {
@@ -23,28 +28,14 @@ const PlaylistItem = styled.li`
     border-radius: 4px;
   }
 `;
-
-const ActivePlaylistItem = styled(PlaylistItem)`
-  background-color: var(--accent);
-  opacity: 0.9;
-  border-radius: 4px;
-`;
 export const SidebarItem: React.FC<SideBarItemProps> = ({ playlist }) => {
   const { pathname } = useLocation();
 
-  if (pathname.includes(playlist.playlistInfo.id)) {
-    return (
-      <ActivePlaylistItem key={playlist.playlistInfo.id}>
-        <Link
-          to={`/app/playlist/${playlist.playlistInfo.service}/${playlist.playlistInfo.id}`}
-        >
-          {playlist.playlistInfo.name}
-        </Link>
-      </ActivePlaylistItem>
-    );
-  }
   return (
-    <PlaylistItem key={playlist.playlistInfo.id}>
+    <PlaylistItem
+      key={playlist.playlistInfo.id}
+      isActive={pathname.includes(playlist.playlistInfo.id)}
+    >
       <Link
         to={`/app/playlist/${playlist.playlistInfo.service}/${playlist.playlistInfo.id}`}
       >

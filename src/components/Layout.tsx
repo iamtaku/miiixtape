@@ -1,12 +1,44 @@
+import React from "react";
 import styled from "styled-components";
+import { Navbar } from "./navbar/Navbar";
+import Player from "./players/Player";
+import { Sidebar } from "./sidebar/Sidebar";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
-export const LayoutWrapper = styled.div`
-  height: 100vh;
+const LayoutWrapper = styled.div`
+  grid-area: main;
   display: grid;
-  grid-template-rows: 10% 80% 10%;
-  grid-template-columns: 20px 0.3fr 1fr 20px;
+  margin: 0 24px;
+  height: 100vh;
+  grid-template-rows: 100px 1fr 100px;
+  grid-template-columns: 220px 1fr;
+  grid-row-gap: 15px;
+  grid-column-gap: 15px;
   grid-template-areas:
-    ". nav nav ."
-    ". sidebar main . "
-    ". player player .";
+    "nav nav"
+    "sidebar inner"
+    "player player";
 `;
+
+export const Layout: React.FC = ({ children }) => {
+  const handleOnDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+
+    if (!destination) return;
+
+    const sInd = +source.droppableId;
+    const dInd = +destination.droppableId;
+
+    console.log("dragged");
+  };
+  return (
+    <LayoutWrapper>
+      <Navbar />
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Sidebar />
+        {children}
+      </DragDropContext>
+      <Player />
+    </LayoutWrapper>
+  );
+};
