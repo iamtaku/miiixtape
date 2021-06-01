@@ -6,8 +6,7 @@ import { UserAttributes } from "../types";
 import { GetUser } from "./GetUser";
 import { getSpotifyAlbum } from "../getSpotifyAlbum";
 const getAlbum = async (
-  albumId: string,
-  service: Service,
+  params: AlbumParam,
   userInfo?: UserAttributes
 ): Promise<Playlist> => {
   const token = window.localStorage.getItem("token");
@@ -17,9 +16,9 @@ const getAlbum = async (
   const client = new SpotifyWebApi();
   client.setAccessToken(userInfo?.access_token);
 
-  switch (service) {
+  switch (params.service) {
     case "spotify":
-      return await getSpotifyAlbum(albumId, client);
+      return await getSpotifyAlbum(params.albumId, client);
     default:
       throw new Error("something gone wrong");
   }
@@ -36,7 +35,7 @@ export const GetAlbum = () => {
 
   return useQuery<Playlist, Error>(
     ["playlist", params.albumId],
-    () => getAlbum(params.albumId, params.service, userInfo),
+    () => getAlbum(params, userInfo),
     {
       enabled: !!userInfo && !!params.albumId,
       staleTime: 360000,

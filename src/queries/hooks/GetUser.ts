@@ -1,5 +1,4 @@
 import { useQuery } from "react-query";
-
 import axios from "axios";
 import { ServerResponse, UserAttributes } from "../types";
 

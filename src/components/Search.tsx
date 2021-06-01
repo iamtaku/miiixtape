@@ -12,7 +12,7 @@ const SearchWrapper = styled.div`
   grid-area: main;
 `;
 
-const Search = () => {
+export const Search = () => {
   const location = useParams<SearchParam>();
   console.log(location);
   const queryClient = new QueryClient();
@@ -29,5 +29,3 @@ const Search = () => {
     </Layout>
   );
 };
-
-export default Search;
