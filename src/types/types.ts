@@ -34,7 +34,7 @@ export type PlaylistInfo = {
   img?: string;
   description?: string;
   type?: ContentType;
-  service?: Service;
+  service: Service;
 };
 
 export interface PlaylistParam {

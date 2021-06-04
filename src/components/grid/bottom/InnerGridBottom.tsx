@@ -80,7 +80,7 @@ export const InnerGridBottom: React.FC<PropTypes> = ({ data, isLoading }) => {
         {(provided) => (
           <TrackList ref={provided.innerRef} {...provided.droppableProps}>
             {data?.tracks?.map((track, index) => (
-              <Track key={track.id} track={track} index={index} />
+              <Track key={index.toString()} track={track} index={index} />
             ))}
             {provided.placeholder}
           </TrackList>

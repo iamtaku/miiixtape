@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
-import { GetUser } from "../../queries/hooks/GetUser";
+import { useAuth } from "../../queries/hooks/useAuth";
 import { useGlobalContext } from "../../state/context";
 
 interface SpotifyProps {
@@ -8,12 +8,12 @@ interface SpotifyProps {
 }
 
 export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
-  const { data: userInfo } = GetUser();
+  const userInfo = useAuth();
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
 
   const handleCallback = (callbackState: CallbackState) => {
-    console.log(callbackState);
+    // console.log(callbackState);
     if (
       callbackState.type === "player_update" &&
       callbackState.isPlaying === false &&
@@ -41,7 +41,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
     state.player.currentService === "spotify"
       ? state.player.currentSong?.uri
       : undefined;
-  console.log(uri);
+  // console.log(uri);
 
   if (userInfo?.access_token) {
     return (
@@ -51,7 +51,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
           name="plaaaylist player"
           uris={uri}
           callback={handleCallback}
-          // autoPlay={true}
           play={
             state.player.isPlaying && state.player.currentService === "spotify"
           }

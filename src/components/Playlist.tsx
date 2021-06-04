@@ -5,10 +5,17 @@ import { InnerGridBottom } from "./grid/bottom/InnerGridBottom";
 import { Layout } from "./Layout";
 import { InnerGridTop } from "./grid/top/InnerGridTop";
 import { InnerLayout } from "./grid/InnerLayout";
-
-export const Playlist = () => {
+import { useQueryClient } from "react-query";
+export const Playlist: React.FC = (props) => {
   const { data, isLoading, error } = GetSinglePlaylist();
   const history = useHistory();
+  const queryClient = useQueryClient();
+  const test = queryClient.getQueryData([
+    "playlist",
+    { playlistId: data?.playlistInfo.id, service: data?.playlistInfo.service },
+  ]);
+  console.log(test);
+
   if (error) {
     console.log(error);
     history.push("/app/error");

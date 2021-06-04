@@ -48,6 +48,7 @@ export const mapToPlaylist = async (
     name: data.data.attributes.name,
     description: data.data.attributes.description,
     type: "playlist",
+    service: "plaaaylist",
   };
   if (data.included.length === 0) {
     return {

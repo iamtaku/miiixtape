@@ -1,10 +1,11 @@
 import { useQuery } from "react-query";
 import axios from "axios";
 import { ServerResponse, UserAttributes } from "../types";
+import { useAuth } from "./useAuth";
 
 const BASE = "http://localhost:3000/api/v1";
 
-const getUser = async () => {
+export const getUser = async () => {
   let token = window.localStorage.getItem("token");
   //if no token, fetch a new one
   if (!token) {
@@ -22,7 +23,9 @@ const getUser = async () => {
   return data.data.data.attributes;
 };
 
-export const GetUser = () =>
-  useQuery<UserAttributes, Error>("userInfo", getUser, {
+export const GetUser = () => {
+  const user = useAuth();
+  return useQuery<UserAttributes, Error>("userInfo", getUser, {
     refetchOnWindowFocus: false,
   });
+};

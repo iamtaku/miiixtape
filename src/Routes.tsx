@@ -7,7 +7,7 @@ import { Search } from "./components/Search";
 import { Playlist } from "./components/Playlist";
 import { Album } from "./components/Album";
 
-export const Router = () => (
+export const Routes = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path="/">

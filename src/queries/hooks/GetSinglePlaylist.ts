@@ -37,7 +37,7 @@ export const GetSinglePlaylist = () => {
     () => getPlaylist(params, userInfo),
     {
       enabled: !!userInfo,
-      // staleTime: 360000,
+      staleTime: 360000,
     }
   );
 };

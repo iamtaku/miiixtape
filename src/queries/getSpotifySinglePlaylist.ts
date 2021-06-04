@@ -12,6 +12,7 @@ const mapSpotifyPlaylistToPlaylist = (
     external_urls: data.external_urls.spotify || "",
     img: data.images[0] ? data.images[0].url : "",
     type: "playlist",
+    service: "spotify",
   };
   const tracks: Song[] = data.tracks.items.map((item) => {
     const newItem = item.track as SpotifyApi.TrackObjectFull;

@@ -1,28 +1,23 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { UserAttributes } from "../types";
 import { useQuery } from "react-query";
-import { GetUser } from "./GetUser";
+import { useAuth } from "./useAuth";
+import { UserAttributes } from "../types";
 
-const getSpotifyInfo = async (access_token?: string, spotify_id?: string) => {
-  // console.log("called");
-  if (access_token && spotify_id) {
+const getSpotifyInfo = async (userInfo?: UserAttributes) => {
+  if (!userInfo) throw new Error("auth failed");
+  if (userInfo.access_token && userInfo.spotify_id) {
     const client = new SpotifyWebApi();
-    client.setAccessToken(access_token);
-    // console.log(access_token, spotify_id, client);
-    return await client.getUser(spotify_id);
+    client.setAccessToken(userInfo.access_token);
+    return await client.getUser(userInfo.spotify_id);
   }
 };
 
 export const GetSpotifyUser = () => {
-  const { data: userInfo } = GetUser();
+  const userInfo = useAuth();
 
-  return useQuery(
-    "spotifyInfo",
-    () => getSpotifyInfo(userInfo?.access_token, userInfo?.spotify_id),
-    {
-      enabled: !!userInfo,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  );
+  return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
+    enabled: !!userInfo,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 };

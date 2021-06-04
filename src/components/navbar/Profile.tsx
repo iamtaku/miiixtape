@@ -35,7 +35,7 @@ const ProfileActionsWrapper = styled(ModalWrapper)`
 export const Profile = () => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { data, isLoading, error } = GetSpotifyUser();
+  const { data, isLoading } = GetSpotifyUser();
 
   const logOut = () => {
     window.localStorage.removeItem("token");
