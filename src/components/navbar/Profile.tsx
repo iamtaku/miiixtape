@@ -5,7 +5,7 @@ import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
 import { ModalWrapper } from "../grid/Modal";
-import { GetSpotifyUser } from "../../queries/hooks/GetSpotifyUser";
+import { useGetSpotifyUser } from "../../queries/hooks/plaaaylist";
 
 const ProfileButton = styled.button`
   background: none;
@@ -35,7 +35,7 @@ const ProfileActionsWrapper = styled(ModalWrapper)`
 export const Profile = () => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { data, isLoading } = GetSpotifyUser();
+  const { data, isLoading } = useGetSpotifyUser();
 
   const logOut = () => {
     window.localStorage.removeItem("token");

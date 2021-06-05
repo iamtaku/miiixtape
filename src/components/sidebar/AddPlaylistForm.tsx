@@ -2,7 +2,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { usePostPlaylist } from "../../queries/hooks/usePostPlaylist";
+import { usePostPlaylist } from "../../queries/hooks/plaaaylist";
 
 const AddPlaylistButton = styled.button`
   border: 1px solid transparent;

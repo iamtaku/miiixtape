@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import SpotifyWebApi from "spotify-web-api-js";
 import { mapServerPlaylist, mapToPlaylist } from "../helpers/mappingHelpers";
 import { Playlist as PlaylistType, Tracks } from "../types/types";
-import { ServerPlaylist, ServerPlaylists } from "./types";
+import { ServerPlaylist } from "./types";
 
 const instance = () => {
   const token = window.localStorage.getItem("token");

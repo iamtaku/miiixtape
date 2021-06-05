@@ -1,7 +1,9 @@
 import React, { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
-import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
-import { PostPlaylistItems } from "../../queries/hooks/PostPlaylistItems";
+import {
+  useGetAllPlaylists,
+  usePostPlaylistItems,
+} from "../../queries/hooks/plaaaylist";
 import { Tracks } from "../../types/types";
 
 export const ModalWrapper = styled.div`
@@ -38,8 +40,8 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks }) => {
-  const { data: playlists } = GetAllPlaylists();
-  const mutation = PostPlaylistItems();
+  const { data: playlists } = useGetAllPlaylists();
+  const mutation = usePostPlaylistItems();
   const handleClick = (id: string) => {
     mutation.mutate({ id, tracks });
     setIsModalOpen(false);

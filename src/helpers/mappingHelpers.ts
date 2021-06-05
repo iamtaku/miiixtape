@@ -166,3 +166,26 @@ export const mapSpotifyTracktoTrack = (
     time: data.duration_ms,
   };
 };
+
+export const mapSpotifyPlaylistToPlaylist = (
+  data: SpotifyApi.SinglePlaylistResponse
+): Playlist => {
+  const playlistInfo: PlaylistInfo = {
+    id: data.id,
+    name: data.name,
+    description: data.description ? data.description : "",
+    external_urls: data.external_urls.spotify || "",
+    img: data.images[0] ? data.images[0].url : "",
+    type: "playlist",
+    service: "spotify",
+  };
+  const tracks: Song[] = data.tracks.items.map((item) => {
+    const newItem = item.track as SpotifyApi.TrackObjectFull;
+    return mapSpotifyTracktoTrack(newItem);
+  });
+
+  return {
+    playlistInfo,
+    tracks,
+  };
+};

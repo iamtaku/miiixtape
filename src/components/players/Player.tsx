@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Spotify } from "./Spotify";
 import styled from "styled-components";
-import { GetUser } from "../../queries/hooks/GetUser";
 import { useGlobalContext } from "../../state/context";
 import { Youtube } from "./Youtube";
 import { Controls } from "./Controls";

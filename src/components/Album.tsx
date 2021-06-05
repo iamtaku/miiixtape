@@ -4,11 +4,11 @@ import { InnerLayout } from "./grid/InnerLayout";
 import { useHistory } from "react-router";
 import { InnerGridTop } from "./grid/top/InnerGridTop";
 import { InnerGridBottom } from "./grid/bottom/InnerGridBottom";
-import { GetAlbum } from "../queries/hooks/GetAlbum";
 import { useQueryClient } from "react-query";
+import { useGetAlbum } from "../queries/hooks/plaaaylist";
 
 export const Album = ({ id }: { id?: string }) => {
-  const { data, isLoading, error } = GetAlbum();
+  const { data, isLoading, error } = useGetAlbum();
   const history = useHistory();
   const queryClient = useQueryClient();
   const test = queryClient.getQueryData([
