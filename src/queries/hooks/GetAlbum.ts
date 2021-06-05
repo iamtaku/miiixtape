@@ -4,7 +4,7 @@ import SpotifyWebApi from "spotify-web-api-js";
 import { Playlist, Service } from "../../types/types";
 import { UserAttributes } from "../types";
 import { getSpotifyAlbum } from "../getSpotifyAlbum";
-import { useAuth } from "./useAuth";
+import { GetUser } from "./GetUser";
 
 const getAlbum = async (
   params: AlbumParam,
@@ -32,7 +32,7 @@ interface AlbumParam {
 
 export const GetAlbum = () => {
   const params = useParams<AlbumParam>();
-  const userInfo = useAuth();
+  const { data: userInfo } = GetUser();
 
   return useQuery<Playlist, Error>(
     ["album", { ...params }],

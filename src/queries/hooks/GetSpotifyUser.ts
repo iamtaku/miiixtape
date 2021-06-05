@@ -1,7 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import { useQuery } from "react-query";
-import { useAuth } from "./useAuth";
 import { UserAttributes } from "../types";
+import { GetUser } from "./GetUser";
 
 const getSpotifyInfo = async (userInfo?: UserAttributes) => {
   if (!userInfo) throw new Error("auth failed");
@@ -13,7 +13,7 @@ const getSpotifyInfo = async (userInfo?: UserAttributes) => {
 };
 
 export const GetSpotifyUser = () => {
-  const userInfo = useAuth();
+  const { data: userInfo } = GetUser();
 
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,

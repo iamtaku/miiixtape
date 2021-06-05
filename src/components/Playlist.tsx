@@ -6,15 +6,17 @@ import { Layout } from "./Layout";
 import { InnerGridTop } from "./grid/top/InnerGridTop";
 import { InnerLayout } from "./grid/InnerLayout";
 import { useQueryClient } from "react-query";
-export const Playlist: React.FC = (props) => {
+import { Playlist as PlaylistType } from "../types/types";
+
+export const Playlist: React.FC = () => {
   const { data, isLoading, error } = GetSinglePlaylist();
   const history = useHistory();
   const queryClient = useQueryClient();
-  const test = queryClient.getQueryData([
+  const test = queryClient.getQueryData<PlaylistType>([
     "playlist",
     { playlistId: data?.playlistInfo.id, service: data?.playlistInfo.service },
   ]);
-  console.log(test);
+  console.log(test?.playlistInfo.name);
 
   if (error) {
     console.log(error);

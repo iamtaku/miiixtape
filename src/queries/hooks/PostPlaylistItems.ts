@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
-import { Playlist, Tracks } from "../../types/types";
+import { Tracks } from "../../types/types";
+import { PlaylistItems } from "../api";
 
 const postPlaylistItems = async ({
   id,
@@ -9,21 +9,13 @@ const postPlaylistItems = async ({
   id: string;
   tracks: Tracks;
 }) => {
-  const token = window.localStorage.getItem("token");
-  if (!token) throw Error("no token");
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
   const body = {
     playlist_items: {
       songs: tracks,
     },
   };
 
-  const url = `${process.env.REACT_APP_BASE_URL}/playlists/${id}/playlist_items`;
-  return await axios.post<Playlist>(url, body, headers);
+  return await PlaylistItems.createPlaylistItems(id, body);
 };
 export const PostPlaylistItems = () => {
   const queryClient = useQueryClient();

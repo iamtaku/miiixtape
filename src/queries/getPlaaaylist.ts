@@ -1,25 +1,14 @@
-import axios from "axios";
 import SpotifyWebApi from "spotify-web-api-js";
-import { mapToPlaylist } from "../helpers/mappingHelpers";
-import { Playlist } from "../types/types";
-import { ServerPlaylist } from "./types";
+import { Playlist as PlaylistType } from "../types/types";
+import { Playlist } from "./api";
 
 export const getPlaaaylist = async (
   playlistId: string,
-  token: string,
   client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<Playlist> => {
-  const url = `${process.env.REACT_APP_BASE_URL}/playlists/${playlistId}`;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-
+): Promise<PlaylistType> => {
   try {
-    const data = await axios.get<ServerPlaylist>(url, {
-      headers,
-    });
-    return await mapToPlaylist(data.data, client);
+    return await Playlist.getPlaylist(playlistId, client);
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error);
   }
 };

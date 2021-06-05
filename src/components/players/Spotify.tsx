@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
-import { useAuth } from "../../queries/hooks/useAuth";
+import { GetUser } from "../../queries/hooks/GetUser";
 import { useGlobalContext } from "../../state/context";
 
 interface SpotifyProps {
@@ -8,7 +8,7 @@ interface SpotifyProps {
 }
 
 export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
-  const userInfo = useAuth();
+  const { data: userInfo } = GetUser();
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
 

@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { mapSpotifyTracktoTrack } from "../helpers/mapSpotifyTrack";
+import { mapSpotifyTracktoTrack } from "../helpers/mappingHelpers";
 import { Playlist, PlaylistInfo, Song } from "../types/types";
 
 const mapSpotifyPlaylistToPlaylist = (

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Server } from "node:http";
 import { useQuery } from "react-query";
 import { ServerTokenResponse } from "../types";
 

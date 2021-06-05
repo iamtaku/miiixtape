@@ -20,7 +20,7 @@ const getPlaylist = async (
 
   switch (params.service) {
     case "plaaaylist":
-      return await getPlaaaylist(params.playlistId, token, client);
+      return await getPlaaaylist(params.playlistId, client);
     case "spotify":
       return await getSingleSpotifyPlaylist(params.playlistId, client);
     default:
@@ -38,6 +38,7 @@ export const GetSinglePlaylist = () => {
     {
       enabled: !!userInfo,
       staleTime: 360000,
+      refetchOnWindowFocus: false,
     }
   );
 };

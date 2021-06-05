@@ -3,21 +3,7 @@ import { useQuery } from "react-query";
 import { GetUser } from "./GetUser";
 import { Playlist } from "../../types/types";
 import { UserAttributes } from "../types";
-
-const mapSpotifyToPlaylist = (
-  data: SpotifyApi.ListOfUsersPlaylistsResponse
-): Playlist[] => {
-  const mappedData: Playlist[] = data.items.map((item) => {
-    return {
-      playlistInfo: {
-        id: item.id,
-        name: item.name,
-        service: "spotify",
-      },
-    };
-  });
-  return mappedData;
-};
+import { mapSpotifyToPlaylist } from "../../helpers/mappingHelpers";
 
 const getPlaylist = async (userInfo?: UserAttributes): Promise<Playlist[]> => {
   if (userInfo?.access_token) {
@@ -34,5 +20,6 @@ export const GetAllSpotifyPlaylist = () => {
   return useQuery("spotifyPlaylistAll", () => getPlaylist(userInfo), {
     enabled: !!userInfo,
     staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 };
