@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import YouTube from "react-youtube";
+import YouTube, { Options } from "react-youtube";
 import styled from "styled-components";
+import { YouTubePlayer } from "youtube-player/dist/types";
 import { useGlobalContext } from "../../state/context";
 
 const YoutubeWrapper = styled.div`
@@ -17,13 +18,15 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
   const { dispatch, state } = useGlobalContext();
 
   const handleOnReady = (event: any) => {
+    console.log("youtube ready");
     setYoutube(event.target);
   };
-  const opts = {
+  const opts: Options = {
     height: "100",
     width: "100",
     playerVars: {
       autoplay: 1 as 1,
+      start: 0,
     },
   };
 
@@ -35,10 +38,24 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
     });
   };
 
-  const handleOnPause = (event: any) => {
+  const handleOnPause = (event: { target: YouTubePlayer; data: number }) => {
     console.log("pausing youtube");
+    console.log(event.target.seekTo(0, true));
     if (!state.player.nextSong || !state.player.previousSong) {
       dispatch({ type: "PAUSE_CURRENT", payload: {} });
+    }
+  };
+
+  const handleOnStateChange = ({
+    target,
+    data,
+  }: {
+    target: YouTubePlayer;
+    data: number;
+  }) => {
+    console.log("handling youtube state change", state.player.currentService);
+    if (state.player.currentService !== "youtube") {
+      target.seekTo(0, true);
     }
   };
 
@@ -55,6 +72,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
         opts={opts}
         onEnd={handleOnEnd}
         onPause={handleOnPause}
+        onStateChange={handleOnStateChange}
         // onPlay={handleOnPlay}
       />
       {/* )} */}

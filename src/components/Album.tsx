@@ -1,6 +1,4 @@
 import React from "react";
-import { Layout } from "./Layout";
-import { InnerLayout } from "./grid/InnerLayout";
 import { useHistory } from "react-router";
 import { InnerGridTop } from "./grid/top/InnerGridTop";
 import { InnerGridBottom } from "./grid/bottom/InnerGridBottom";
@@ -23,11 +21,9 @@ export const Album = ({ id }: { id?: string }) => {
   }
 
   return (
-    <Layout>
-      <InnerLayout>
-        <InnerGridTop data={data} isLoading={isLoading} />
-        <InnerGridBottom data={data} isLoading={isLoading} />
-      </InnerLayout>
-    </Layout>
+    <>
+      <InnerGridTop data={data} isLoading={isLoading} />
+      <InnerGridBottom data={data} isLoading={isLoading} />
+    </>
   );
 };

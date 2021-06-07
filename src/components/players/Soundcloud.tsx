@@ -6,7 +6,7 @@ import { useGlobalContext } from "../../state/context";
 export const Soundcloud = () => {
   const { dispatch, state } = useGlobalContext();
   const handleOnLoadError = () => {
-    console.error("something went wrong");
+    console.error("soundcloud  went wrong");
   };
   const handleOnPlay = () => {
     console.log("playing soundclouds");
@@ -14,21 +14,21 @@ export const Soundcloud = () => {
 
   const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
 
-  const fetchSpotify = () => {
-    console.log(KEY);
-    axios
-      .get(
-        // `https://api.soundcloud.com/tracks?q=lofi&client_id=e38841b15b2059a39f261df195dfb430&limit=5`
+  //   const fetchSpotify = () => {
+  //     console.log(KEY);
+  //     axios
+  //       .get(
+  //         // `https://api.soundcloud.com/tracks?q=lofi&client_id=e38841b15b2059a39f261df195dfb430&limit=5`
 
-        `https://api.soundcloud.com/tracks?q=lofi&client_id=${KEY}&limit=5`
-        // "https://api.soundcloud.com/tracks?q=lofi"
-      )
-      .then((res) => console.log(res));
-  };
+  //         `https://api.soundcloud.com/tracks?q=lofi&client_id=${KEY}&limit=5`
+  //         // "https://api.soundcloud.com/tracks?q=lofi"
+  //       )
+  //       .then((res) => console.log(res));
+  //   };
 
-  useEffect(() => {
-    fetchSpotify();
-  }, []);
+  //   useEffect(() => {
+  //     fetchSpotify();
+  //   }, []);
 
   return (
     <div>

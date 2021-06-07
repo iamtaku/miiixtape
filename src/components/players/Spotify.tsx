@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import { useGetUser } from "../../queries/hooks/plaaaylist";
 import { useGlobalContext } from "../../state/context";
@@ -10,7 +16,18 @@ interface SpotifyProps {
 export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
   const { data: userInfo } = useGetUser();
   const { dispatch, state } = useGlobalContext();
+  const [uri, setUri] = useState("");
   const ref = useRef<SpotifyPlayer>(null);
+
+  useEffect(() => {
+    if (
+      state.player.currentService === "spotify" &&
+      state.player.currentSong?.uri
+    ) {
+      console.log("setting spotify uri: ", uri);
+      setUri(state.player.currentSong?.uri);
+    }
+  }, [state]);
 
   const handleCallback = (callbackState: CallbackState) => {
     // console.log(callbackState);
@@ -37,11 +54,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
     }
   };
 
-  const uri =
-    state.player.currentService === "spotify"
-      ? state.player.currentSong?.uri
-      : undefined;
-
   if (userInfo?.access_token) {
     return (
       <>
@@ -54,6 +66,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
             state.player.isPlaying && state.player.currentService === "spotify"
           }
           ref={ref}
+          autoPlay={true}
         />
       </>
     );

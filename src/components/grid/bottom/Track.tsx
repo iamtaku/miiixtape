@@ -76,9 +76,11 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               <TrackImg img={track.img} alt={track.album?.name} />
               <Item>{track.name}</Item>
               <Item>
-                {track.artists?.map((artist) => (
-                  <span key={artist.uri}>{artist.name}</span>
-                ))}
+                {track.artists
+                  ? track.artists?.map((artist) => (
+                      <span key={artist.uri}>{artist.name}</span>
+                    ))
+                  : "-"}
               </Item>
               <Item>
                 {track.album ? (
@@ -87,10 +89,10 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
                       track.album.uri
                     )}`}
                   >
-                    {track.name}
+                    {track.album.name}
                   </Link>
                 ) : (
-                  track.name
+                  "-"
                 )}
               </Item>
               <Item isRight>
