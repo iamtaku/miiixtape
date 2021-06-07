@@ -1,7 +1,17 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { PlaylistItemItem, ServerPlaylist } from "../queries/types";
-import { PlaylistInfo, Song, Playlist } from "../types/types";
-import { mapSpotifyTracktoTrack } from "./mapSpotifyTrack";
+import {
+  PlaylistItemItem,
+  ServerPlaylist,
+  ServerPlaylists,
+} from "../queries/types";
+import {
+  PlaylistInfo,
+  Song,
+  Playlist,
+  Tracks,
+  Album,
+  Artists,
+} from "../types/types";
 import { stripURI } from "./stripURI";
 
 const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
@@ -48,6 +58,7 @@ export const mapToPlaylist = async (
     name: data.data.attributes.name,
     description: data.data.attributes.description,
     type: "playlist",
+    service: "plaaaylist",
   };
   if (data.included.length === 0) {
     return {
@@ -64,6 +75,113 @@ export const mapToPlaylist = async (
       return res;
     }
     return mapPlaylistItemToTrack(item);
+  });
+
+  return {
+    playlistInfo,
+    tracks,
+  };
+};
+export const mapServerPlaylist = (data: ServerPlaylists): Playlist[] => {
+  const mappedData: Playlist[] = data.data.map((item) => {
+    return {
+      playlistInfo: {
+        id: item.id,
+        name: item.attributes.name,
+        service: "plaaaylist",
+      },
+    };
+  });
+  return mappedData;
+};
+export const mapSpotifyToPlaylist = (
+  data: SpotifyApi.ListOfUsersPlaylistsResponse
+): Playlist[] => {
+  const mappedData: Playlist[] = data.items.map((item) => {
+    return {
+      playlistInfo: {
+        id: item.id,
+        name: item.name,
+        service: "spotify",
+      },
+    };
+  });
+  return mappedData;
+};
+export const mergeAlbumWithTrack = (
+  track: SpotifyApi.TrackObjectSimplified,
+  album: SpotifyApi.SingleAlbumResponse
+): SpotifyApi.TrackObjectFull => {
+  return {
+    ...track,
+    album,
+    external_ids: {},
+    popularity: album.popularity,
+  };
+};
+
+export const mapSpotifyAlbumtoPlaylist = (
+  album: SpotifyApi.SingleAlbumResponse
+) => {
+  const playlistInfo: PlaylistInfo = {
+    id: album.id,
+    name: album.name,
+    external_urls: album.external_urls.spotify,
+    img: album.images[0].url,
+    service: "spotify",
+    type: "album",
+  };
+
+  const tracks: Tracks = album.tracks.items.map((item) =>
+    mapSpotifyTracktoTrack(mergeAlbumWithTrack(item, album))
+  );
+
+  return {
+    playlistInfo,
+    tracks,
+  };
+};
+
+export const mapSpotifyTracktoTrack = (
+  data: SpotifyApi.SingleTrackResponse | SpotifyApi.TrackObjectFull
+): Song => {
+  const album: Album = {
+    name: data.album.name,
+    uri: data.album.uri,
+  };
+
+  const artists: Artists = data.artists.map((artist) => ({
+    name: artist.name,
+    uri: artist.uri,
+  }));
+
+  return {
+    name: data.name,
+    id: data.id,
+    service: "spotify",
+    uri: data.uri,
+    album,
+    artists,
+    img: data.album.images[0].url,
+    time: data.duration_ms,
+  };
+};
+
+export const mapSpotifyPlaylistToPlaylist = (
+  data: SpotifyApi.SinglePlaylistResponse
+): Playlist => {
+  const playlistInfo: PlaylistInfo = {
+    id: data.id,
+    name: data.name,
+    description: data.description ? data.description : "",
+    external_urls: data.external_urls.spotify || "",
+    img: data.images[0] ? data.images[0].url : "",
+    type: "playlist",
+    service: "spotify",
+  };
+  const tracks: Song[] = data.tracks.items.map((item) => {
+    const newItem = item.track as SpotifyApi.TrackObjectFull;
+    return mapSpotifyTracktoTrack(newItem);
   });
 
   return {

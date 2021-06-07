@@ -2,7 +2,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { PostPlaylist } from "../../queries/hooks/PostPlaylist";
+import { usePostPlaylist } from "../../queries/hooks/plaaaylist";
 
 const AddPlaylistButton = styled.button`
   border: 1px solid transparent;
@@ -34,7 +34,7 @@ const AddPlaylistFormWrapper = styled.form`
 `;
 
 export const AddPlaylistForm = () => {
-  const mutation = PostPlaylist();
+  const mutation = usePostPlaylist();
 
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [input, setInput] = useState("");

@@ -47,7 +47,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const isAlbum = location.pathname.includes("album");
 
   return (
-    <Draggable draggableId={track.id} index={index}>
+    <Draggable draggableId={`${track.id}-${index.toString()}}`} index={index}>
       {(provided) => (
         <ItemContainer
           ref={provided.innerRef}
@@ -62,7 +62,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               <Item>{track.name}</Item>
               <Item>
                 {track.artists?.map((artist) => (
-                  <span>{artist.name}</span>
+                  <span key={artist.uri}>{artist.name}</span>
                 ))}
               </Item>
               <Item isRight>
@@ -77,7 +77,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               <Item>{track.name}</Item>
               <Item>
                 {track.artists?.map((artist) => (
-                  <span>{artist.name}</span>
+                  <span key={artist.uri}>{artist.name}</span>
                 ))}
               </Item>
               <Item>

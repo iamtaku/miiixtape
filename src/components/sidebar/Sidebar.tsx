@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { GetAllPlaylists } from "../../queries/hooks/GetAllPlaylists";
-import { GetAllSpotifyPlaylist } from "../../queries/hooks/GetAllSpotifyPlaylists";
 import { SidebarCollection } from "./SidebarCollection";
 import { AddPlaylistForm } from "./AddPlaylistForm";
+import {
+  useGetAllSpotifyPlaylist,
+  useGetAllPlaylists,
+} from "../../queries/hooks/plaaaylist";
 
 const SidebarWrapper = styled.div`
   grid-area: sidebar;
@@ -26,8 +28,8 @@ const SidebarWrapper = styled.div`
 
 export const Sidebar = () => {
   const { data: spotifyPlaylists, isLoading: spotifyLoading } =
-    GetAllSpotifyPlaylist();
-  const { data: playlists, isLoading } = GetAllPlaylists();
+    useGetAllSpotifyPlaylist();
+  const { data: playlists, isLoading } = useGetAllPlaylists();
 
   //add sidebar loading placeholder
   if (isLoading || spotifyLoading)
