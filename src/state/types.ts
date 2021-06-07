@@ -1,5 +1,4 @@
-import { Song, Tracks } from "../types/types";
-import { Service } from "../types/types";
+import { Song, Tracks, Service } from "../types/types";
 
 export type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined

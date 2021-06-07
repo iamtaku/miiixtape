@@ -33,8 +33,6 @@ export const player = {
   isFinished: false,
 };
 
-// const playlist: Playlist[] = [];
-
 export const initialState = {
   player,
 };

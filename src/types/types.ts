@@ -44,4 +44,4 @@ export interface PlaylistParam {
 
 export type ContentType = "playlist" | "album" | "artist";
 
-export type Service = "plaaaylist" | "spotify" | "youtube" | "";
+export type Service = "plaaaylist" | "spotify" | "youtube" | "soundcloud" | "";

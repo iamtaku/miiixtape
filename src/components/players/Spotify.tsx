@@ -41,7 +41,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
     state.player.currentService === "spotify"
       ? state.player.currentSong?.uri
       : undefined;
-  // console.log(uri);
 
   if (userInfo?.access_token) {
     return (

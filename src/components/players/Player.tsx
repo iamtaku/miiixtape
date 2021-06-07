@@ -5,6 +5,7 @@ import { useGlobalContext } from "../../state/context";
 import { Youtube } from "./Youtube";
 import { Controls } from "./Controls";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
+import { Soundcloud } from "./Soundcloud";
 
 const PlayerWrapper = styled.div`
   grid-area: player;
@@ -26,6 +27,7 @@ const Player = () => {
         setYoutube={setYoutube}
       />
       <Spotify setSpotify={setSpotify} />
+      <Soundcloud />
     </PlayerWrapper>
   );
 };
