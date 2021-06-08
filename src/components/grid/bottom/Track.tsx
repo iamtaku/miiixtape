@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { Song } from "../../../types/types";
+import { Playlist, Song } from "../../../types/types";
 import { TrackImg } from "./TrackImg";
 import { timeConversion } from "../../../helpers/timeConversion";
 import { Link, useLocation } from "react-router-dom";
@@ -19,14 +19,13 @@ const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
-      ? "20px 50px 2.5fr 1fr 0.5fr 0.5fr"
+      ? "20px 50px 2.5fr 1fr 0.5fr "
       : "20px 50px 2fr 1fr 1fr 0.5fr 0.5fr"};
   grid-column-gap: 8px;
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
   min-height: 40px;
-
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
 
@@ -68,11 +67,15 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const isCurrent = () => state.player.currentSong === track;
 
   const handleClick = (track: Song) => {
+    const playlist: Playlist = {
+      playlistInfo: { name: track.name, id: track.id, service: track.service },
+      tracks: [{ ...track }],
+    };
     isCurrent()
       ? dispatch({ type: "PAUSE_CURRENT", payload: {} })
       : dispatch({
           type: "PLAY_PLAYLIST",
-          payload: { id: track.id, tracks: [track] },
+          payload: { playlist },
         });
   };
 
@@ -94,7 +97,14 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
         >
           {isAlbum ? (
             <>
-              <Item isRight>{index + 1}</Item>
+              {isActive ? (
+                <PlayButton onClick={() => handleClick(track)}>
+                  <FontAwesomeIcon icon={isPlaying() ? faPause : faPlay} />
+                </PlayButton>
+              ) : (
+                <Item isCenter>{index + 1}</Item>
+              )}
+
               <Item>{` `}</Item>
               <Item>{track.name}</Item>
               <Item>
@@ -105,7 +115,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               <Item isRight>
                 {track.time ? timeConversion(track.time) : "-"}
               </Item>
-              <Item isRight>{track.service}</Item>
+              {/* <Item isRight>{track.service}</Item> */}
             </>
           ) : (
             <>

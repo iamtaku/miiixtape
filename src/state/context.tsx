@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
-import { Song, Service } from "../types/types";
+import { Song, Service, Playlist } from "../types/types";
 import { playbackReducer, PlaybackActions } from "./reducers";
 import { PlaybackType } from "./types";
 
@@ -17,12 +17,13 @@ const song: Song = {
 
 const service: Service = "";
 
+const playlist = {
+  playlistInfo: { id: "", name: "", service: "" },
+  tracks: [],
+} as Playlist;
+
 export const player = {
-  currentPlaylist: {
-    name: "",
-    description: "",
-  },
-  playlistTracks: [],
+  currentPlaylist: playlist,
   playbackPosition: 0,
   previousSong: undefined,
   currentSong: undefined,

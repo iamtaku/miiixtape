@@ -90,6 +90,7 @@ export const mapServerPlaylist = (data: ServerPlaylists): Playlist[] => {
         name: item.attributes.name,
         service: "plaaaylist",
       },
+      tracks: [],
     };
   });
   return mappedData;
@@ -104,6 +105,7 @@ export const mapSpotifyToPlaylist = (
         name: item.name,
         service: "spotify",
       },
+      tracks: [],
     };
   });
   return mappedData;

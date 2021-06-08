@@ -19,8 +19,12 @@ export const getPlaaaylist = async (
   }
 };
 
+interface IParam {
+  id: string;
+  service: string;
+}
 export const getPlaylist = async (
-  params: PlaylistParam,
+  params: IParam,
   userInfo?: UserAttributes
 ): Promise<PlaylistType> => {
   const token = window.localStorage.getItem("token");
@@ -32,9 +36,9 @@ export const getPlaylist = async (
 
   switch (params.service) {
     case "plaaaylist":
-      return await getPlaaaylist(params.playlistId, client);
+      return await getPlaaaylist(params.id, client);
     case "spotify":
-      return await getSingleSpotifyPlaylist(params.playlistId, client);
+      return await getSingleSpotifyPlaylist(params.id, client);
     default:
       throw new Error("something gone wrong");
   }

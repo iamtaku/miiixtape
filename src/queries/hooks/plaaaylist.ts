@@ -18,13 +18,12 @@ import {
   getSpotifyPlaylists,
 } from "../spotify-queries";
 
-export const useGetSinglePlaylist = () => {
-  const params = useParams<PlaylistParam>();
+export const useGetSinglePlaylist = (id: string, service: string) => {
   const { data: userInfo } = useGetUser();
   console.log("fetching... playing");
   return useQuery<PlaylistType, Error>(
-    ["playlist", { ...params }],
-    () => getPlaylist(params, userInfo),
+    ["playlist", { id, service }],
+    () => getPlaylist({ id, service }, userInfo),
     {
       enabled: !!userInfo,
       staleTime: 360000,

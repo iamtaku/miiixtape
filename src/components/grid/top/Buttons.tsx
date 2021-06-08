@@ -1,7 +1,7 @@
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPause, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import styled from "styled-components";
 import { useGlobalContext } from "../../../state/context";
 import { Playlist, Tracks } from "../../../types/types";
@@ -12,6 +12,9 @@ const ButtonWrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  svg {
+    margin-right: 8px;
+  }
 `;
 
 const ImportButton = styled.button`
@@ -41,45 +44,47 @@ const PlayButton = styled.button`
     background: var(--accent);
     color: var(--primary);
   }
-
-  svg {
-    margin-right: 8px;
-  }
 `;
 
 interface ButtonsProps {
   data: Playlist;
 }
 
+interface IParam {
+  service: string;
+}
+
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const { state, dispatch } = useGlobalContext();
-  const params = useParams<{ service: string; id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isPlaying = () => state.player.isPlaying;
+  const { pathname } = useLocation();
+  const params = useParams<IParam>();
   useEffect(() => {
     setIsModalOpen(false);
-  }, [params]);
+  }, [pathname]);
 
-  const handlePlay = (id: string, tracks?: Tracks) => {
-    if (isPlaying()) {
+  const isCurrent = () =>
+    state.player.currentPlaylist &&
+    pathname.includes(state.player.currentPlaylist.playlistInfo.id);
+
+  const handlePlay = () => {
+    if (state.player.isPlaying && isCurrent()) {
       dispatch({
         type: "PAUSE_CURRENT",
         payload: {},
       });
       return;
     }
-    if (tracks) {
-      dispatch({
-        type: "PLAY_PLAYLIST",
-        payload: {
-          id,
-          tracks,
-        },
-      });
-    }
+
+    dispatch({
+      type: "PLAY_PLAYLIST",
+      payload: {
+        playlist: data,
+      },
+    });
   };
 
-  if (data.tracks === undefined) {
+  if (data.tracks.length === 0) {
     return <p>No tracks</p>;
   }
 
@@ -87,12 +92,15 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
     <ButtonWrapper>
       {params.service === "spotify" && (
         <ImportButton onClick={() => setIsModalOpen(!isModalOpen)}>
-          IMPORT
+          <FontAwesomeIcon icon={faPlus} />
+          ADD
         </ImportButton>
       )}
-      <PlayButton onClick={() => handlePlay(data.playlistInfo.id, data.tracks)}>
-        <FontAwesomeIcon icon={isPlaying() ? faPause : faPlay} />
-        {isPlaying() ? "PAUSE" : "PLAY"}
+      <PlayButton onClick={handlePlay}>
+        <FontAwesomeIcon
+          icon={isCurrent() && state.player.isPlaying ? faPause : faPlay}
+        />
+        {isCurrent() && state.player.isPlaying ? "PAUSE" : "PLAY"}
       </PlayButton>
       {isModalOpen && (
         <Modal setIsModalOpen={setIsModalOpen} tracks={data.tracks} />

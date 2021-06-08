@@ -1,13 +1,17 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { useGetSinglePlaylist } from "../queries/hooks/plaaaylist";
 import { InnerGridBottom } from "./grid/bottom/InnerGridBottom";
 import { InnerGridTop } from "./grid/top/InnerGridTop";
 import { useQueryClient } from "react-query";
-import { Playlist as PlaylistType } from "../types/types";
+import { Playlist as PlaylistType, PlaylistParam } from "../types/types";
 
 export const Playlist: React.FC = () => {
-  const { data, isLoading, error } = useGetSinglePlaylist();
+  const params = useParams<PlaylistParam>();
+  const { data, isLoading, error } = useGetSinglePlaylist(
+    params.playlistId,
+    params.service
+  );
   const history = useHistory();
   const queryClient = useQueryClient();
   const test = queryClient.getQueryData<PlaylistType>([

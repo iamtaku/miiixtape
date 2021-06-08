@@ -24,7 +24,7 @@ export type Tracks = Song[];
 
 export type Playlist = {
   playlistInfo: PlaylistInfo;
-  tracks?: Tracks;
+  tracks: Tracks;
 };
 
 export type PlaylistInfo = {

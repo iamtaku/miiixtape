@@ -13,8 +13,7 @@ export type ActionMap<M extends { [index: string]: any }> = {
 
 export type PlaybackPayload = {
   PLAY_PLAYLIST: {
-    id: string;
-    tracks: Tracks;
+    playlist: Playlist;
   };
   SONG_END: {};
   PLAY_NEXT: {};
@@ -25,7 +24,6 @@ export type PlaybackPayload = {
 
 export type PlaybackType = {
   currentPlaylist: Playlist;
-  playlistTracks?: Tracks;
   playbackPosition: number;
   previousSong?: Song;
   currentSong?: Song;

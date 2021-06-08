@@ -21,7 +21,7 @@ const ItemContainer = styled.li<{ isAlbum?: boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
-      ? "15px 50px 2.5fr 1fr 0.5fr 0.5fr"
+      ? "15px 50px 2.5fr 1fr 0.5fr "
       : "15px 50px 2fr 1fr 1fr 0.5fr 0.5fr"};
   grid-column-gap: 8px;
   padding: 4px 12px;
@@ -63,7 +63,7 @@ export const InnerGridBottom: React.FC<PropTypes> = ({ data, isLoading }) => {
           <Item>Title</Item>
           <Item>Artist</Item>
           <Item isRight>Length</Item>
-          <Item isRight>Service</Item>
+          {/* <Item isRight>Service</Item> */}
         </ItemContainer>
       ) : (
         <ItemContainer>

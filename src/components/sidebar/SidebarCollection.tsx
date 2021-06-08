@@ -51,7 +51,6 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   const [isOpen, setIsOpen] = useState(true);
 
   const [isActive, setIsActive] = useState(false);
-  // const isCurrent = () => state.player.currentSong === track;
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
@@ -80,8 +79,8 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
         </Container>
       </TitleSection>
       {isOpen &&
-        data?.map((item) => (
-          <SidebarItem playlist={item} key={item.playlistInfo.id} />
+        data?.map((playlist) => (
+          <SidebarItem playlist={playlist} key={playlist.playlistInfo.id} />
         ))}
     </List>
   );

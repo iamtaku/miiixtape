@@ -1,4 +1,3 @@
-import Player from "../components/players/Player";
 import { Song, Tracks } from "../types/types";
 import { initialState, player } from "./context";
 import { ActionMap, PlaybackPayload, PlaybackType } from "./types";
@@ -34,9 +33,9 @@ const handlePlayPrevious = (state: PlaybackType) => {
   console.log("prev state: ", state);
   if (!state.previousSong) return state;
   const currentSong = state.previousSong;
-  const nextSong = nextTrack(state.playlistTracks, currentSong);
-  const previousSong = previousTrack(state.playlistTracks, currentSong);
-  if (currentIndex(state.playlistTracks, currentSong) === 0) {
+  const nextSong = nextTrack(state.currentPlaylist.tracks, currentSong);
+  const previousSong = previousTrack(state.currentPlaylist.tracks, currentSong);
+  if (currentIndex(state.currentPlaylist.tracks, currentSong) === 0) {
     return {
       ...state,
       currentSong,
@@ -68,8 +67,8 @@ const handlePlayNext = (state: PlaybackType) => {
   if (!state.nextSong) return state;
 
   const currentSong = state.nextSong;
-  const nextSong = nextTrack(state.playlistTracks, currentSong);
-  const previousSong = previousTrack(state.playlistTracks, currentSong);
+  const nextSong = nextTrack(state.currentPlaylist.tracks, currentSong);
+  const previousSong = previousTrack(state.currentPlaylist.tracks, currentSong);
   const playBackPosition =
     currentSong.service === "spotify"
       ? (state.playbackPosition += 1)
@@ -103,16 +102,20 @@ export const playbackReducer = (
   let newState: PlaybackType;
   switch (action.type) {
     case "PLAY_PLAYLIST":
-      newState = {
-        ...initialState.player,
-        playlistTracks: action.payload.tracks,
-        currentSong: action.payload.tracks[0],
-        nextSong: action.payload.tracks[1],
-        currentService: action.payload.tracks[0].service,
-        nextService: action.payload.tracks[1]?.service,
-        isPlaying: true,
-      };
-      return newState;
+      if (action.payload.playlist.tracks) {
+        newState = {
+          ...initialState.player,
+          currentPlaylist: action.payload.playlist,
+          // playlistTracks: action.payload.playlist.tracks,
+          currentSong: action.payload.playlist?.tracks[0],
+          nextSong: action.payload.playlist?.tracks[1],
+          currentService: action.payload.playlist.tracks[0].service,
+          nextService: action.payload.playlist.tracks[1]?.service,
+          isPlaying: true,
+        };
+        return newState;
+      }
+      return state;
     case "PLAY_NEXT":
       return handlePlayNext(state);
     case "SONG_END":
