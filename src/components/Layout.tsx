@@ -18,7 +18,7 @@ const Container = styled.div`
 const LayoutWrapper = styled.div`
   grid-area: main;
   display: grid;
-  margin: 0 24px;
+  /* margin: 0 24px; */
   /* height: 100vh; */
   grid-template-rows: 1fr;
   grid-template-columns: 220px 1fr;

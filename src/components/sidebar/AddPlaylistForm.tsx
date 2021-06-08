@@ -11,7 +11,6 @@ const AddPlaylistButton = styled.button`
   margin-top: 4px;
   background: transparent;
   border-radius: 50px;
-  /* background: #353535; */
   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
   color: var(--accent);
   &:hover {

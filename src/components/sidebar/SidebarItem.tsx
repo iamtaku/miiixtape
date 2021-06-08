@@ -7,15 +7,13 @@ interface SideBarItemProps {
   playlist: Playlist;
 }
 
-const PlaylistItem = styled.li<{ isActive: boolean }>`
-  border: 1px solid;
-  border-color: ${(props) =>
-    props.isActive ? "var(--accent)" : "transparent"};
+const Item = styled.li<{ isActive: boolean }>`
   background-color: ${(props) =>
-    props.isActive ? "var(--accent)" : "default"};
+    props.isActive ? "var(--light-gray) !important" : "default"};
   border-radius: 4px;
   opacity: 0.8;
   margin: 4px;
+  padding: 0 8px;
   a {
     padding: 4px 8px;
     display: block;
@@ -24,15 +22,14 @@ const PlaylistItem = styled.li<{ isActive: boolean }>`
     z-index: 10;
   }
   &:hover {
-    border: 1px solid var(--accent);
-    border-radius: 4px;
+    background-color: var(--light-gray);
   }
 `;
 export const SidebarItem: React.FC<SideBarItemProps> = ({ playlist }) => {
   const { pathname } = useLocation();
 
   return (
-    <PlaylistItem
+    <Item
       key={playlist.playlistInfo.id}
       isActive={pathname.includes(playlist.playlistInfo.id)}
     >
@@ -41,6 +38,6 @@ export const SidebarItem: React.FC<SideBarItemProps> = ({ playlist }) => {
       >
         {playlist.playlistInfo.name}
       </Link>
-    </PlaylistItem>
+    </Item>
   );
 };

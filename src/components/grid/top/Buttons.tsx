@@ -1,3 +1,5 @@
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
@@ -39,6 +41,10 @@ const PlayButton = styled.button`
     background: var(--accent);
     color: var(--primary);
   }
+
+  svg {
+    margin-right: 8px;
+  }
 `;
 
 interface ButtonsProps {
@@ -46,15 +52,22 @@ interface ButtonsProps {
 }
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
-  const { dispatch } = useGlobalContext();
+  const { state, dispatch } = useGlobalContext();
   const params = useParams<{ service: string; id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const isPlaying = () => state.player.isPlaying;
   useEffect(() => {
     setIsModalOpen(false);
   }, [params]);
 
   const handlePlay = (id: string, tracks?: Tracks) => {
+    if (isPlaying()) {
+      dispatch({
+        type: "PAUSE_CURRENT",
+        payload: {},
+      });
+      return;
+    }
     if (tracks) {
       dispatch({
         type: "PLAY_PLAYLIST",
@@ -78,7 +91,8 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
         </ImportButton>
       )}
       <PlayButton onClick={() => handlePlay(data.playlistInfo.id, data.tracks)}>
-        PLAY
+        <FontAwesomeIcon icon={isPlaying() ? faPause : faPlay} />
+        {isPlaying() ? "PAUSE" : "PLAY"}
       </PlayButton>
       {isModalOpen && (
         <Modal setIsModalOpen={setIsModalOpen} tracks={data.tracks} />

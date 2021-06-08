@@ -17,18 +17,24 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
   const { data: userInfo } = useGetUser();
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
+  const [play, setPlay] = useState(false);
 
-  const handleCallback = (callbackState: CallbackState) => {
+  useEffect(() => setPlay(true), [state]);
+
+  const handleCallback = (state: CallbackState) => {
+    console.log(state);
     if (
-      callbackState.type === "player_update" &&
-      callbackState.isPlaying === false &&
-      callbackState.position === 0
+      state.type === "player_update" &&
+      state.isPlaying === false &&
+      state.position === 0
     ) {
       dispatch({
         type: "PLAY_NEXT",
         payload: {},
       });
     }
+    if (!state.isPlaying) setPlay(false);
+
     // if (state.player.currentService !== "spotify") {
     //   ref.current?.setState({ needsUpdate: true });
     // }
@@ -37,8 +43,8 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
     //   dispatch({ type: "PLAY", payload: {} });
     // }
 
-    if (callbackState.error) {
-      console.error(callbackState);
+    if (state.error) {
+      console.error(state);
     }
   };
 

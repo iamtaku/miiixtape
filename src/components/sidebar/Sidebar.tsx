@@ -11,19 +11,14 @@ const SidebarWrapper = styled.div`
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  /* padding-top: 16px; */
+  padding: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-radius: 50px;
-  background: #353535;
-  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
-  span {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    opacity: 0.8;
-    text-align: center;
-  }
+  /* border-radius: 50px; */
+  /* background: #353535; */
+  /* box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d; */
 `;
 
 export const Sidebar = () => {
@@ -41,10 +36,8 @@ export const Sidebar = () => {
 
   return (
     <SidebarWrapper>
-      <span>Spotify Playlists</span>
-      <SidebarCollection data={spotifyPlaylists} />
-      <span>Plaaaylist</span>
-      <SidebarCollection data={playlists} />
+      <SidebarCollection data={spotifyPlaylists} title={"spotify"} />
+      <SidebarCollection data={playlists} title={"plaaaylist"} />
       <AddPlaylistForm />
     </SidebarWrapper>
   );

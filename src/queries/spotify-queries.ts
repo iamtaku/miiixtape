@@ -25,8 +25,12 @@ export const getSpotifyPlaylists = async (
   if (userInfo?.access_token) {
     const client = new SpotifyWebApi();
     client.setAccessToken(userInfo?.access_token);
-    const res = await client.getUserPlaylists();
-    return mapSpotifyToPlaylist(res);
+    try {
+      const res = await client.getUserPlaylists();
+      return mapSpotifyToPlaylist(res);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
   throw new Error("something wrong");
 };
@@ -34,9 +38,13 @@ export const getSpotifyPlaylists = async (
 export const getSpotifyInfo = async (userInfo?: UserAttributes) => {
   if (!userInfo) throw new Error("auth failed");
   if (userInfo.access_token && userInfo.spotify_id) {
-    const client = new SpotifyWebApi();
-    client.setAccessToken(userInfo.access_token);
-    return await client.getUser(userInfo.spotify_id);
+    try {
+      const client = new SpotifyWebApi();
+      client.setAccessToken(userInfo.access_token);
+      return await client.getUser(userInfo.spotify_id);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 };
 
@@ -57,7 +65,11 @@ export const getAlbum = async (
 
   // switch (params.service) {
   // case "spotify":
-  return await getSpotifyAlbum(params.albumId, client);
+  try {
+    return await getSpotifyAlbum(params.albumId, client);
+  } catch (err) {
+    throw new Error(err);
+  }
   // default:
   // throw new Error("something gone wrong");
   // }

@@ -1,4 +1,4 @@
-import { Song, Tracks, Service } from "../types/types";
+import { Song, Tracks, Service, Playlist } from "../types/types";
 
 export type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -35,8 +35,3 @@ export type PlaybackType = {
   isPlaying: boolean;
   isFinished: boolean;
 };
-
-interface Playlist {
-  name: string;
-  description: string;
-}

@@ -115,7 +115,6 @@ export const playbackReducer = (
       return newState;
     case "PLAY_NEXT":
       return handlePlayNext(state);
-
     case "SONG_END":
       return {
         ...state,
@@ -127,7 +126,6 @@ export const playbackReducer = (
       return handlePlay(state);
     case "PAUSE_CURRENT":
       return handlePause(state);
-
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);
     default:
