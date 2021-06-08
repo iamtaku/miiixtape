@@ -21,7 +21,7 @@ import {
 export const useGetSinglePlaylist = () => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
-
+  console.log("fetching... playing");
   return useQuery<PlaylistType, Error>(
     ["playlist", { ...params }],
     () => getPlaylist(params, userInfo),
@@ -39,6 +39,7 @@ export const useGetUser = () => {
   const { data: token } = useGetToken();
   return useQuery<UserAttributes>("user", () => getUser(token), {
     enabled: !!token,
+    refetchOnWindowFocus: false,
   });
 };
 

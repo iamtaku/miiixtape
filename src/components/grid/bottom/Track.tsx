@@ -12,7 +12,7 @@ interface TrackProps {
   index: number;
 }
 
-const ItemContainer = styled.li<{ isAlbum?: boolean }>`
+const Container = styled.li<{ isAlbum?: boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
@@ -49,7 +49,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
   return (
     <Draggable draggableId={`${track.id}-${index.toString()}}`} index={index}>
       {(provided) => (
-        <ItemContainer
+        <Container
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -101,7 +101,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               <Item isRight>{track.service}</Item>
             </>
           )}
-        </ItemContainer>
+        </Container>
       )}
     </Draggable>
   );

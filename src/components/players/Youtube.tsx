@@ -14,13 +14,19 @@ interface YoutubeProps {
   setYoutube: Dispatch<SetStateAction<any>>;
 }
 
+interface IYoutubeEvent {
+  target: YouTubePlayer;
+  data: number;
+}
+
 export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
   const { dispatch, state } = useGlobalContext();
 
-  const handleOnReady = (event: any) => {
-    console.log("youtube ready");
-    setYoutube(event.target);
+  const handleOnReady = ({ target, data }: IYoutubeEvent) => {
+    target.seekTo(0, true);
+    setYoutube(target);
   };
+
   const opts: Options = {
     height: "100",
     width: "100",
@@ -30,7 +36,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
     },
   };
 
-  const handleOnEnd = (event: any) => {
+  const handleOnEnd = ({ target, data }: IYoutubeEvent) => {
     console.log("youtubed finished!");
     dispatch({
       type: "PLAY_NEXT",
@@ -38,9 +44,9 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
     });
   };
 
-  const handleOnPause = (event: { target: YouTubePlayer; data: number }) => {
+  const handleOnPause = ({ target, data }: IYoutubeEvent) => {
     console.log("pausing youtube");
-    console.log(event.target.seekTo(0, true));
+    console.log(target.seekTo(0, true));
     if (!state.player.nextSong || !state.player.previousSong) {
       dispatch({ type: "PAUSE_CURRENT", payload: {} });
     }

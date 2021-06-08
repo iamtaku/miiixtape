@@ -7,7 +7,7 @@ interface SearchParam {
 }
 
 const SearchWrapper = styled.div`
-  grid-area: main;
+  grid-area: inner;
 `;
 
 export const Search = () => {

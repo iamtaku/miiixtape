@@ -6,7 +6,7 @@ import { Error } from "./components/grid/Error";
 import { Search } from "./components/Search";
 import { Playlist } from "./components/Playlist";
 import { Album } from "./components/Album";
-import { Wrapper as Layout } from "./components/Wrapper";
+import { InnerLayout, Layout } from "./components/Layout";
 
 export const Routes = () => (
   <BrowserRouter>
@@ -22,10 +22,14 @@ export const Routes = () => (
           <Search />
         </Route>
         <Route exact path="/app/playlist/:service/:playlistId">
-          <Playlist />
+          <InnerLayout>
+            <Playlist />
+          </InnerLayout>
         </Route>
         <Route exact path="/app/album/:service/:albumId">
-          <Album />
+          <InnerLayout>
+            <Album />
+          </InnerLayout>
         </Route>
       </Layout>
       <Route path="*">

@@ -1,10 +1,14 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ReactHowler from "react-howler";
 import { useGlobalContext } from "../../state/context";
 
-export const Soundcloud = () => {
+interface IProps {
+  setSoundCloud: Dispatch<SetStateAction<ReactHowler | undefined>>;
+}
+export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
   const { dispatch, state } = useGlobalContext();
+  const ref = useRef<ReactHowler>(null);
   const handleOnLoadError = () => {
     console.error("soundcloud  went wrong");
   };
@@ -41,6 +45,7 @@ export const Soundcloud = () => {
         onPause={handleOnPlay}
         preload={true}
         html5
+        ref={ref}
       />
     </div>
   );

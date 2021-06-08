@@ -14,7 +14,7 @@ export const Playlist: React.FC = () => {
     "playlist",
     { playlistId: data?.playlistInfo.id, service: data?.playlistInfo.service },
   ]);
-  console.log(test?.playlistInfo.name);
+  console.log("playist : ", test?.playlistInfo.name);
 
   if (error) {
     console.log(error);
