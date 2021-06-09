@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const ErrorWrapper = styled.div`
-  grid-area: main;
+  grid-area: inner;
 `;
 const Error = () => {
+  console.error("something gone wrong");
   return (
     <ErrorWrapper>
       <h1>something went wrong....</h1>

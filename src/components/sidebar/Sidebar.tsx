@@ -4,7 +4,7 @@ import { AddPlaylistForm } from "./AddPlaylistForm";
 import {
   useGetAllSpotifyPlaylist,
   useGetAllPlaylists,
-} from "../../queries/hooks/plaaaylist";
+} from "../../queries/hooks";
 
 const SidebarWrapper = styled.div`
   grid-area: sidebar;

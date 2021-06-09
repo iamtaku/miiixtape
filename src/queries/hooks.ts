@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { UserAttributes } from "../types";
-import { Playlist as PlaylistType, PlaylistParam } from "../../types/types";
+import { UserAttributes } from "./types";
+import { Playlist as PlaylistType, PlaylistParam } from "../types/types";
 import { useParams } from "react-router";
 import {
   getAllPlaylists,
@@ -10,13 +10,13 @@ import {
   postPlaylist,
   postPlaylistItems,
   Token,
-} from "../plaaaylist-queries";
+} from "./plaaaylist-queries";
 import {
   AlbumParam,
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
-} from "../spotify-queries";
+} from "./spotify-queries";
 
 export const useGetSinglePlaylist = (id: string, service: string) => {
   const { data: userInfo } = useGetUser();

@@ -1,9 +1,10 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import { InnerGridTop } from "./grid/top/InnerGridTop";
 import { InnerGridBottom } from "./grid/bottom/InnerGridBottom";
 import { useQueryClient } from "react-query";
-import { useGetAlbum } from "../queries/hooks/plaaaylist";
+import { useGetAlbum } from "../queries/hooks";
+import { InnerLayout } from "./Layout";
 
 export const Album = ({ id }: { id?: string }) => {
   const { data, isLoading, error } = useGetAlbum();
@@ -16,14 +17,14 @@ export const Album = ({ id }: { id?: string }) => {
   console.log(test);
 
   if (error) {
-    console.log(error);
-    history.push("/app/error");
+    console.error(error);
+    <Redirect to="/app/error" />;
   }
 
   return (
-    <>
+    <InnerLayout>
       <InnerGridTop data={data} isLoading={isLoading} />
       <InnerGridBottom data={data} isLoading={isLoading} />
-    </>
+    </InnerLayout>
   );
 };

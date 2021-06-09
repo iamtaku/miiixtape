@@ -21,7 +21,7 @@ const LayoutWrapper = styled.div`
   /* margin: 0 24px; */
   /* height: 100vh; */
   grid-template-rows: 1fr;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 1fr 3fr;
   grid-column-gap: 15px;
   grid-template-areas: "sidebar inner";
 `;

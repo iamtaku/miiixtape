@@ -1,40 +1,58 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useRouteMatch } from "react-router-dom";
 import Landing from "./pages/Landing";
+import Error from "./pages/Error";
 import { Main } from "./components/Main";
-import { Error } from "./components/grid/Error";
 import { Search } from "./components/Search";
 import { Playlist } from "./components/Playlist";
 import { Album } from "./components/Album";
-import { InnerLayout, Layout } from "./components/Layout";
+import { Layout } from "./components/Layout";
+import { NotFound } from "./pages/NotFound";
 
 export const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/">
-        <Landing />
-      </Route>
-      <Layout>
-        <Route exact path="/app">
-          <Main />
-        </Route>
-        <Route exact path="/app/search/:search">
-          <Search />
-        </Route>
-        <Route exact path="/app/playlist/:service/:playlistId">
-          <InnerLayout>
-            <Playlist />
-          </InnerLayout>
-        </Route>
-        <Route exact path="/app/album/:service/:albumId">
-          <InnerLayout>
-            <Album />
-          </InnerLayout>
-        </Route>
-      </Layout>
-      <Route path="*">
-        <Error />
+      <Route path="/app">
+        <AppRoutes />
       </Route>
     </Switch>
+    <PageRoutes />
   </BrowserRouter>
 );
+
+const PageRoutes = () => (
+  <Switch>
+    <Route exact path="/">
+      <Landing />
+    </Route>
+    <Route path="*">
+      <NotFound />
+    </Route>
+  </Switch>
+);
+
+const AppRoutes = () => {
+  const { path, url } = useRouteMatch();
+  console.log(path, url);
+  return (
+    <Layout>
+      <Switch>
+        <Route exact path={path}>
+          <Main />
+        </Route>
+        <Route path={`${path}/search/:search`}>
+          <Search />
+        </Route>
+        <Route path={`${path}/playlist/:service/:playlistId`}>
+          <Playlist />
+        </Route>
+        <Route path={`${path}/album/:service/:albumId`}>
+          <Album />
+        </Route>
+        <Route path={`${path}/error`}>
+          <Error />
+        </Route>
+      </Switch>
+    </Layout>
+  );
+};

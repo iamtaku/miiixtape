@@ -64,7 +64,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const { state, dispatch } = useGlobalContext();
 
   const isPlaying = () => isCurrent() && state.player.isPlaying;
-  const isCurrent = () => state.player.currentSong === track;
+  const isCurrent = () => state.player.currentSong?.id === track.id;
 
   const handleClick = (track: Song) => {
     const playlist: Playlist = {
@@ -115,7 +115,6 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               <Item isRight>
                 {track.time ? timeConversion(track.time) : "-"}
               </Item>
-              {/* <Item isRight>{track.service}</Item> */}
             </>
           ) : (
             <>

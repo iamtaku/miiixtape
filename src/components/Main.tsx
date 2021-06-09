@@ -1,6 +1,6 @@
 import { useLocation, useHistory } from "react-router";
 import { LoginButton } from "./Buttons";
-import { useGetUser } from "../queries/hooks/plaaaylist";
+import { useGetUser } from "../queries/hooks";
 
 export const Main = () => {
   const { search } = useLocation();

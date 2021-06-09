@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
-import { useGetUser } from "../../queries/hooks/plaaaylist";
+import { useGetUser } from "../../queries/hooks";
 import { useGlobalContext } from "../../state/context";
 
 interface SpotifyProps {

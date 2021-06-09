@@ -11,7 +11,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <Routes />
-          {/* <ReactQueryDevtoolsPanel /> */}
+          <ReactQueryDevtoolsPanel />
         </AppProvider>
       </QueryClientProvider>
     </div>

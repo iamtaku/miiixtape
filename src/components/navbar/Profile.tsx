@@ -5,7 +5,7 @@ import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
 import { ModalWrapper } from "../grid/Modal";
-import { useGetSpotifyUser } from "../../queries/hooks/plaaaylist";
+import { useGetSpotifyUser } from "../../queries/hooks";
 
 const ProfileButton = styled.button`
   background: none;
