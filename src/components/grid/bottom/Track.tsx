@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { Playlist, Song } from "../../../types/types";
+import { Song } from "../../../types/types";
 import { TrackImg } from "./TrackImg";
 import { timeConversion } from "../../../helpers/timeConversion";
 import { Link, useLocation } from "react-router-dom";
-import { stripURI } from "../../../helpers/stripURI";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { useGlobalContext } from "../../../state/context";
+import { mapTrackToPlaylist } from "../../../helpers/mappingHelpers";
+import { PlaybackButton } from "../../PlaybackButton";
 
 interface TrackProps {
   track: Song;
@@ -34,8 +33,12 @@ const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
   }
 `;
 
-const Item = styled.span<{ isRight?: boolean; isCenter?: boolean }>`
-  display: flex;
+const Item = styled.span<{
+  isRight?: boolean;
+  isCenter?: boolean;
+  isHidden?: boolean;
+}>`
+  display: ${(props) => (props.isHidden ? "none" : "flex")};
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
@@ -48,39 +51,34 @@ const Item = styled.span<{ isRight?: boolean; isCenter?: boolean }>`
   }
 `;
 
-const PlayButton = styled.button<{ isPlaying?: boolean }>`
-  background: none;
-  border: none;
-  color: var(--white);
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
-  const isAlbum = location.pathname.includes("album");
   const [isActive, setIsActive] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const { state, dispatch } = useGlobalContext();
 
-  const isPlaying = () => isCurrent() && state.player.isPlaying;
-  const isCurrent = () => state.player.currentSong?.id === track.id;
+  const draggableId = `${track.id}-${index}`;
+  const currentId = `${state.player.currentSong?.id}-${index}`;
+  const isCurrent = currentId === draggableId;
+  const playlist = mapTrackToPlaylist(track);
+  const isAlbum = location.pathname.includes("album");
 
-  const handleClick = (track: Song) => {
-    const playlist: Playlist = {
-      playlistInfo: { name: track.name, id: track.id, service: track.service },
-      tracks: [{ ...track }],
-    };
-    isCurrent()
-      ? dispatch({ type: "PAUSE_CURRENT", payload: {} })
-      : dispatch({
-          type: "PLAY_PLAYLIST",
-          payload: { playlist },
-        });
-  };
+  // console.log(state.player.currentPlaylist.tracks);
+
+  useEffect(() => {
+    if (
+      state.player.currentPlaylist.playlistInfo.id ===
+        playlist.playlistInfo.id &&
+      state.player.isPlaying
+    ) {
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
+  }, [state, playlist.playlistInfo.id]);
 
   return (
-    <Draggable draggableId={`${track.id}-${index.toString()}}`} index={index}>
+    <Draggable draggableId={draggableId} index={index}>
       {(provided) => (
         <Container
           ref={provided.innerRef}
@@ -93,66 +91,42 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           onMouseLeave={(e) => {
             setIsActive(false);
           }}
-          isCurrent={isCurrent()}
+          isCurrent={isCurrent}
         >
-          {isAlbum ? (
-            <>
-              {isActive ? (
-                <PlayButton onClick={() => handleClick(track)}>
-                  <FontAwesomeIcon icon={isPlaying() ? faPause : faPlay} />
-                </PlayButton>
-              ) : (
-                <Item isCenter>{index + 1}</Item>
-              )}
+          {/* {isActive ? ( */}
+          <Item isCenter isHidden={isActive}>
+            {index + 1}
+          </Item>
+          <PlaybackButton
+            playlist={playlist}
+            // isPlaying={isPlaying}
+            isActive={isActive}
+          />
 
-              <Item>{` `}</Item>
-              <Item>{track.name}</Item>
-              <Item>
-                {track.artists?.map((artist) => (
-                  <span key={artist.uri}>{artist.name}</span>
-                ))}
-              </Item>
-              <Item isRight>
-                {track.time ? timeConversion(track.time) : "-"}
-              </Item>
-            </>
+          {isAlbum ? (
+            <Item>{` `}</Item>
           ) : (
-            <>
-              {isActive ? (
-                <PlayButton onClick={() => handleClick(track)}>
-                  <FontAwesomeIcon icon={isPlaying() ? faPause : faPlay} />
-                </PlayButton>
-              ) : (
-                <Item isCenter>{index + 1}</Item>
-              )}
-              <TrackImg img={track.img} alt={track.album?.name} />
-              <Item>{track.name}</Item>
-              <Item>
-                {track.artists
-                  ? track.artists?.map((artist) => (
-                      <span key={artist.uri}>{artist.name}</span>
-                    ))
-                  : "-"}
-              </Item>
-              <Item>
-                {track.album ? (
-                  <Link
-                    to={`/app/album/${track.service}/${stripURI(
-                      track.album.uri
-                    )}`}
-                  >
-                    {track.album.name}
-                  </Link>
-                ) : (
-                  "-"
-                )}
-              </Item>
-              <Item isRight>
-                {track.time ? timeConversion(track.time) : "-"}
-              </Item>
-              <Item isRight>{track.service}</Item>
-            </>
+            <TrackImg img={track.img} alt={track.album?.name} />
           )}
+          <Item>{track.name}</Item>
+          <Item>
+            {track.artists
+              ? track.artists?.map((artist) => (
+                  <span key={artist.uri}>{artist.name}</span>
+                ))
+              : "-"}
+          </Item>
+          {isAlbum ? null : track.album ? (
+            <Item>
+              <Link to={`/app/album/${track.service}/${track.album.uri}`}>
+                {track.album.name}
+              </Link>
+            </Item>
+          ) : (
+            "-"
+          )}
+          <Item isRight>{track.time ? timeConversion(track.time) : "-"}</Item>
+          {isAlbum ? null : <Item isRight>{track.service}</Item>}
         </Container>
       )}
     </Draggable>

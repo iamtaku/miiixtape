@@ -39,7 +39,15 @@ export const Youtube: React.FC<YoutubeProps> = ({ play, setYoutube }) => {
   const handleOnEnd = ({ target, data }: IYoutubeEvent) => {
     console.log("youtubed finished!");
     dispatch({
-      type: "PLAY_NEXT",
+      type: "SONG_END",
+      payload: {},
+    });
+    dispatch({
+      type: "SET_NEXT",
+      payload: {},
+    });
+    dispatch({
+      type: "PLAY",
       payload: {},
     });
   };

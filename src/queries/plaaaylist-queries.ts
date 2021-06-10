@@ -1,9 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import {
-  Playlist as PlaylistType,
-  PlaylistParam,
-  Tracks,
-} from "../types/types";
+import { Playlist as PlaylistType, Tracks } from "../types/types";
 import api, { Playlist, PlaylistItems } from "./api";
 import { getSingleSpotifyPlaylist } from "./spotify-queries";
 import { ServerTokenResponse, UserAttributes } from "./types";
@@ -46,7 +42,6 @@ export const getPlaylist = async (
 
 export type Token = string;
 export const getToken = async (): Promise<Token> => {
-  //if we have a token in localstorage return it
   const token = window.localStorage.getItem("token");
   if (token) {
     return token;
@@ -67,7 +62,7 @@ export const getToken = async (): Promise<Token> => {
   throw new Error("no token");
 };
 
-export const getUser = async (token?: string) => {
+export const getUser = async () => {
   try {
     const data = await api().get("/users");
     return data.data.data.attributes;

@@ -40,11 +40,19 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   const handleNext = () => {
-    console.log("playing next");
     dispatch({
-      type: "PLAY_NEXT",
+      type: "SONG_END",
       payload: {},
     });
+    dispatch({
+      type: "SET_NEXT",
+      payload: {},
+    });
+    dispatch({
+      type: "PLAY",
+      payload: {},
+    });
+
     // youtube && youtube.stopVideo();
   };
 

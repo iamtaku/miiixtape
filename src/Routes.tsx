@@ -15,8 +15,9 @@ export const Routes = () => (
       <Route path="/app">
         <AppRoutes />
       </Route>
+
+      <PageRoutes />
     </Switch>
-    <PageRoutes />
   </BrowserRouter>
 );
 

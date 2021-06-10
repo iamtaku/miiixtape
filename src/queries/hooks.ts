@@ -20,13 +20,13 @@ import {
 
 export const useGetSinglePlaylist = (id: string, service: string) => {
   const { data: userInfo } = useGetUser();
-  console.log("fetching... playing");
+  // console.log("fetching... playing");
   return useQuery<PlaylistType, Error>(
     ["playlist", { id, service }],
     () => getPlaylist({ id, service }, userInfo),
     {
       enabled: !!userInfo,
-      staleTime: 360000,
+      staleTime: Infinity,
       refetchOnWindowFocus: false,
     }
   );
@@ -36,7 +36,7 @@ export const useGetToken = () => useQuery<Token>("token", getToken);
 
 export const useGetUser = () => {
   const { data: token } = useGetToken();
-  return useQuery<UserAttributes>("user", () => getUser(token), {
+  return useQuery<UserAttributes>("user", getUser, {
     enabled: !!token,
     refetchOnWindowFocus: false,
   });

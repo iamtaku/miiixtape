@@ -8,7 +8,6 @@ import { InnerLayout } from "./Layout";
 
 export const Album = ({ id }: { id?: string }) => {
   const { data, isLoading, error } = useGetAlbum();
-  const history = useHistory();
   const queryClient = useQueryClient();
   const test = queryClient.getQueryData([
     "album",

@@ -38,8 +38,8 @@ const generateSpotifyHash = async (
   const res = await client.getTracks(spotifyURIS);
   const spotifyHash: IHash = {};
 
-  res.tracks.forEach((track) => {
-    const mapped = mapSpotifyTracktoTrack(track);
+  res.tracks.forEach((track, index) => {
+    const mapped = mapSpotifyTracktoTrack(track, index);
     spotifyHash[mapped.name] = mapped;
   });
   return spotifyHash;
@@ -134,8 +134,8 @@ export const mapSpotifyAlbumtoPlaylist = (
     type: "album",
   };
 
-  const tracks: Tracks = album.tracks.items.map((item) =>
-    mapSpotifyTracktoTrack(mergeAlbumWithTrack(item, album))
+  const tracks: Tracks = album.tracks.items.map((item, index) =>
+    mapSpotifyTracktoTrack(mergeAlbumWithTrack(item, album), index)
   );
 
   return {
@@ -145,21 +145,21 @@ export const mapSpotifyAlbumtoPlaylist = (
 };
 
 export const mapSpotifyTracktoTrack = (
-  data: SpotifyApi.SingleTrackResponse | SpotifyApi.TrackObjectFull
+  data: SpotifyApi.SingleTrackResponse | SpotifyApi.TrackObjectFull,
+  index: number
 ): Song => {
   const album: Album = {
     name: data.album.name,
-    uri: data.album.uri,
+    uri: stripURI(data.album.uri),
   };
 
   const artists: Artists = data.artists.map((artist) => ({
     name: artist.name,
-    uri: artist.uri,
+    uri: stripURI(artist.uri),
   }));
-
   return {
     name: data.name,
-    id: data.id,
+    id: `${data.id}${index}`,
     service: "spotify",
     uri: data.uri,
     album,
@@ -181,9 +181,9 @@ export const mapSpotifyPlaylistToPlaylist = (
     type: "playlist",
     service: "spotify",
   };
-  const tracks: Song[] = data.tracks.items.map((item) => {
+  const tracks: Song[] = data.tracks.items.map((item, index) => {
     const newItem = item.track as SpotifyApi.TrackObjectFull;
-    return mapSpotifyTracktoTrack(newItem);
+    return mapSpotifyTracktoTrack(newItem, index);
   });
 
   return {
@@ -191,3 +191,8 @@ export const mapSpotifyPlaylistToPlaylist = (
     tracks,
   };
 };
+
+export const mapTrackToPlaylist = (track: Song): Playlist => ({
+  playlistInfo: { name: track.name, id: track.id, service: track.service },
+  tracks: [{ ...track }],
+});

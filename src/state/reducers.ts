@@ -1,5 +1,5 @@
 import { Song, Tracks } from "../types/types";
-import { initialState, player } from "./context";
+import { player as initial } from "./context";
 import { ActionMap, PlaybackPayload, PlaybackType } from "./types";
 
 export type PlaybackActions =
@@ -59,11 +59,10 @@ const handlePlayPrevious = (state: PlaybackType) => {
   return newState;
 };
 
-// const calcSpotifyPosition
-
-const handlePlayNext = (state: PlaybackType) => {
-  console.group("playing next...");
+const handleSetNext = (state: PlaybackType) => {
+  console.group("setting next...");
   console.log("before update,", state);
+
   if (!state.nextSong) return state;
 
   const currentSong = state.nextSong;
@@ -78,11 +77,11 @@ const handlePlayNext = (state: PlaybackType) => {
     ...state,
     currentSong,
     currentService: currentSong.service,
-    isPlaying: true,
     nextSong,
     nextService: nextSong?.service,
     previousSong,
     playBackPosition,
+    isPlaying: false,
   };
 
   console.log("new state...: ", newState);
@@ -91,7 +90,12 @@ const handlePlayNext = (state: PlaybackType) => {
   return newState;
 };
 
-const handlePlay = (state: PlaybackType) => ({ ...state, isPlaying: true });
+const handlePlay = (state: PlaybackType) => {
+  if (state.nextSong) {
+    return { ...state, isPlaying: true, isFinished: true };
+  }
+  return state;
+};
 
 const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
 
@@ -102,11 +106,10 @@ export const playbackReducer = (
   let newState: PlaybackType;
   switch (action.type) {
     case "PLAY_PLAYLIST":
-      if (action.payload.playlist.tracks) {
+      if (action.payload.playlist.tracks.length > 0) {
         newState = {
-          ...initialState.player,
+          ...initial,
           currentPlaylist: action.payload.playlist,
-          // playlistTracks: action.payload.playlist.tracks,
           currentSong: action.payload.playlist?.tracks[0],
           nextSong: action.payload.playlist?.tracks[1],
           currentService: action.payload.playlist.tracks[0].service,
@@ -115,15 +118,15 @@ export const playbackReducer = (
         };
         return newState;
       }
+
       return state;
-    case "PLAY_NEXT":
-      return handlePlayNext(state);
+    case "SET_NEXT":
+      return handleSetNext(state);
     case "SONG_END":
       return {
         ...state,
-        currentSong: state.nextSong,
-        nextService: state.nextService,
-        playbackPosition: (state.playbackPosition += 1),
+        isPlaying: false,
+        isFinished: true,
       } as PlaybackType;
     case "PLAY":
       return handlePlay(state);
@@ -131,6 +134,7 @@ export const playbackReducer = (
       return handlePause(state);
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);
+
     default:
       return state;
   }

@@ -85,13 +85,15 @@ export const getSingleSpotifyPlaylist = async (
     throw new Error(error);
   }
 };
+
 export const getSpotifySingleTrack = async (
   id: string,
-  client: SpotifyWebApi.SpotifyWebApiJs
+  client: SpotifyWebApi.SpotifyWebApiJs,
+  index: number
 ): Promise<Song> => {
   try {
     const data = await client.getTrack(id);
-    return mapSpotifyTracktoTrack(data);
+    return mapSpotifyTracktoTrack(data, index);
   } catch (error) {
     throw new Error(error.message);
   }

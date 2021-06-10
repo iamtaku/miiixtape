@@ -8,6 +8,7 @@ import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import { Soundcloud } from "./Soundcloud";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
+import { useGetUser } from "../../queries/hooks";
 
 const Wrapper = styled.div`
   grid-area: player;
@@ -16,6 +17,7 @@ const Wrapper = styled.div`
 
 const Player = () => {
   const { state, dispatch } = useGlobalContext();
+  const { data: userInfo } = useGetUser();
   const [youtube, setYoutube] = useState<YouTubePlayer>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer>();
   const [soundcloud, setSoundCloud] = useState<ReactHowler>();
@@ -30,8 +32,8 @@ const Player = () => {
           setYoutube={setYoutube}
         />
       )}
-      {state.player.currentService === "spotify" && (
-        <Spotify setSpotify={setSpotify} />
+      {state.player.currentService === "spotify" && userInfo && (
+        <Spotify setSpotify={setSpotify} token={userInfo.access_token} />
       )}
       {state.player.currentService === "soundcloud" && (
         <Soundcloud setSoundCloud={setSoundCloud} />

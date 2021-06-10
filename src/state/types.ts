@@ -16,7 +16,7 @@ export type PlaybackPayload = {
     playlist: Playlist;
   };
   SONG_END: {};
-  PLAY_NEXT: {};
+  SET_NEXT: {};
   PAUSE_CURRENT: {};
   PLAY: {};
   PLAY_PREVIOUS: {};

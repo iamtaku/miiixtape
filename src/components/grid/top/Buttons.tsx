@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import styled from "styled-components";
+import { useIsCurrent } from "../../../helpers/hooks";
 import { useGlobalContext } from "../../../state/context";
 import { Playlist, Tracks } from "../../../types/types";
+import { BasicButton } from "../../Buttons";
 import { Modal } from "../Modal";
 
 const ButtonWrapper = styled.div`
@@ -17,33 +19,24 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const ImportButton = styled.button`
-  background-color: transparent;
-  padding: 8px 24px;
+const ImportButton = styled(BasicButton)`
   color: var(--secondary);
-  border: none;
-  border-radius: 50px;
-  background: #353535;
-  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-  margin-right: 8px;
-  &:hover {
-    background: var(--secondary);
-    color: var(--primary);
-  }
 `;
 
-const PlayButton = styled.button`
-  background-color: var(--accent);
-  padding: 8px 24px;
+const PlayButton = styled(BasicButton)<{ isPressed?: Boolean }>`
   color: var(--accent);
-  border: none;
-  border-radius: 50px;
-  background: #353535;
+  ${(props) =>
+    props.isPressed
+      ? `
+background: var(--primary);
+box-shadow: inset 20px 20px 60px #2d2d2d,
+            inset -20px -20px 60px #3d3d3d; 
+  `
+      : `
+   background: var(--primary);
   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-  &:hover {
-    background: var(--accent);
-    color: var(--primary);
-  }
+
+  `}
 `;
 
 interface ButtonsProps {
@@ -57,18 +50,17 @@ interface IParam {
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const { state, dispatch } = useGlobalContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isCurrent, isPlaying } = useIsCurrent(data);
+
   const { pathname } = useLocation();
   const params = useParams<IParam>();
+
   useEffect(() => {
     setIsModalOpen(false);
   }, [pathname]);
 
-  const isCurrent = () =>
-    state.player.currentPlaylist &&
-    pathname.includes(state.player.currentPlaylist.playlistInfo.id);
-
-  const handlePlay = () => {
-    if (state.player.isPlaying && isCurrent()) {
+  const handleOnClick = () => {
+    if (isCurrent && isPlaying) {
       dispatch({
         type: "PAUSE_CURRENT",
         payload: {},
@@ -96,12 +88,20 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
           ADD
         </ImportButton>
       )}
-      <PlayButton onClick={handlePlay}>
-        <FontAwesomeIcon
-          icon={isCurrent() && state.player.isPlaying ? faPause : faPlay}
-        />
-        {isCurrent() && state.player.isPlaying ? "PAUSE" : "PLAY"}
+      <PlayButton onClick={handleOnClick} isPressed={isCurrent && isPlaying}>
+        {isCurrent && isPlaying ? (
+          <>
+            <FontAwesomeIcon icon={faPause} />
+            PAUSE
+          </>
+        ) : (
+          <>
+            <FontAwesomeIcon icon={faPlay} />
+            PLAY
+          </>
+        )}
       </PlayButton>
+
       {isModalOpen && (
         <Modal setIsModalOpen={setIsModalOpen} tracks={data.tracks} />
       )}
