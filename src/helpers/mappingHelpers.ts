@@ -36,6 +36,7 @@ const generateSpotifyHash = async (
     return stripURI(track.attributes.song.uri);
   });
   const res = await client.getTracks(spotifyURIS);
+
   const spotifyHash: IHash = {};
 
   res.tracks.forEach((track, index) => {
@@ -48,6 +49,16 @@ const generateSpotifyHash = async (
 interface IHash {
   [title: string]: Song;
 }
+
+// const mapTrackToTrack = async (
+//   data: PlaylistItemItem[],
+//   client: SpotifyWebApi.SpotifyWebApiJs
+// ): Promise<Tracks> => {
+//   const tracks = data.map(item => {
+
+//   })
+//   return tracks;
+// };
 
 export const mapToPlaylist = async (
   data: ServerPlaylist,
@@ -66,13 +77,20 @@ export const mapToPlaylist = async (
       tracks: [],
     };
   }
-
+  //for each track,
+  //IF it is a spotify track, we need to fetch info about that track
+  //IF youtube, soundcloud etc. fetch appropriate track
+  // ELSE just return that track
+  // return all mapped tracks for given playlist
   const spotifyHash = await generateSpotifyHash(data.included, client);
-  const tracks = data.included.map((item) => {
+
+  const tracks: Tracks = data.included.map((item) => {
     if (item.attributes.song.service === "spotify") {
-      const res = spotifyHash[item.attributes.song.name];
-      res.playlistPosition = item.attributes.position;
-      return res;
+      const spotifyTrack = JSON.parse(
+        JSON.stringify(spotifyHash[item.attributes.song.name])
+      );
+      spotifyTrack.playlistPosition = item.attributes.position;
+      return spotifyTrack;
     }
     return mapPlaylistItemToTrack(item);
   });
@@ -82,6 +100,7 @@ export const mapToPlaylist = async (
     tracks,
   };
 };
+
 export const mapServerPlaylist = (data: ServerPlaylists): Playlist[] => {
   const mappedData: Playlist[] = data.data.map((item) => {
     return {
@@ -159,7 +178,7 @@ export const mapSpotifyTracktoTrack = (
   }));
   return {
     name: data.name,
-    id: `${data.id}${index}`,
+    id: `${data.id}-${index}`,
     service: "spotify",
     uri: data.uri,
     album,
