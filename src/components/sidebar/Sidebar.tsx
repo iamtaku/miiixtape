@@ -6,15 +6,16 @@ import {
   useGetAllPlaylists,
 } from "../../queries/hooks";
 
-const SidebarWrapper = styled.div`
+const Wrapper = styled.div`
   grid-area: sidebar;
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  background: transparent;
+  opacity: 0.8;
 `;
 
 export const Sidebar = () => {
@@ -25,16 +26,16 @@ export const Sidebar = () => {
   //add sidebar loading placeholder
   if (isLoading || spotifyLoading)
     return (
-      <SidebarWrapper>
+      <Wrapper>
         <h2>Loading...</h2>
-      </SidebarWrapper>
+      </Wrapper>
     );
 
   return (
-    <SidebarWrapper>
+    <Wrapper>
       <SidebarCollection data={spotifyPlaylists} title={"spotify"} />
       <SidebarCollection data={playlists} title={"plaaaylist"} />
       <AddPlaylistForm />
-    </SidebarWrapper>
+    </Wrapper>
   );
 };

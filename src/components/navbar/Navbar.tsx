@@ -13,13 +13,9 @@ const NavBar = styled.nav`
   }
   ul {
     display: flex;
+    align-items: center;
     width: 100%;
     justify-content: space-between;
-    align-items: center;
-  }
-
-  li {
-    margin: 0 16px;
   }
 `;
 

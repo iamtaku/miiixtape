@@ -3,41 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import styled from "styled-components";
-import { useIsCurrent } from "../../../helpers/hooks";
+import { device } from "../../../globalStyle";
+import { useIsCurrentPlaylist } from "../../../helpers/hooks";
 import { useGlobalContext } from "../../../state/context";
-import { Playlist, Tracks } from "../../../types/types";
+import { Playlist } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
+import { PlaybackButton } from "../../PlaybackButton";
 import { Modal } from "../Modal";
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  svg {
-    margin-right: 8px;
-  }
-`;
-
-const ImportButton = styled(BasicButton)`
-  color: var(--secondary);
-`;
-
-const PlayButton = styled(BasicButton)<{ isPressed?: Boolean }>`
-  color: var(--accent);
-  ${(props) =>
-    props.isPressed
-      ? `
-background: var(--primary);
-box-shadow: inset 20px 20px 60px #2d2d2d,
-            inset -20px -20px 60px #3d3d3d; 
-  `
-      : `
-   background: var(--primary);
-  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-
-  `}
-`;
 
 interface ButtonsProps {
   data: Playlist;
@@ -47,10 +19,71 @@ interface IParam {
   service: string;
 }
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+`;
+
+const Btn = styled(BasicButton)`
+  margin-left: 8px;
+  padding: 8px;
+  min-width: 60px;
+  span {
+    display: none;
+    margin-left: 8px;
+  }
+
+  @media ${device.laptop} {
+    max-width: 60px;
+    span {
+      display: initial;
+    }
+  }
+  @media ${device.tablet} {
+    min-width: 90px;
+  }
+  @media ${device.laptopL} {
+    min-width: 120px;
+  }
+`;
+
+const GridButton = styled(PlaybackButton)`
+  margin-left: 8px;
+  padding: 8px;
+  min-width: 60px;
+  span {
+    display: none;
+    margin-left: 8px;
+  }
+
+  @media ${device.laptop} {
+    max-width: 60px;
+    span {
+      display: initial;
+    }
+  }
+  @media ${device.tablet} {
+    min-width: 90px;
+  }
+  @media ${device.laptopL} {
+    min-width: 120px;
+  }
+`;
+
+const ImportButton = styled(Btn)`
+  color: var(--secondary);
+`;
+
+const PlayButton = styled(GridButton)`
+  color: var(--accent);
+`;
+
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const { state, dispatch } = useGlobalContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isCurrent, isPlaying } = useIsCurrent(data);
+  const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
 
   const { pathname } = useLocation();
   const params = useParams<IParam>();
@@ -59,23 +92,6 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
     setIsModalOpen(false);
   }, [pathname]);
 
-  const handleOnClick = () => {
-    if (isCurrent && isPlaying) {
-      dispatch({
-        type: "PAUSE_CURRENT",
-        payload: {},
-      });
-      return;
-    }
-
-    dispatch({
-      type: "PLAY_PLAYLIST",
-      payload: {
-        playlist: data,
-      },
-    });
-  };
-
   if (data.tracks.length === 0) {
     return <p>No tracks</p>;
   }
@@ -83,21 +99,24 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   return (
     <ButtonWrapper>
       {params.service === "spotify" && (
-        <ImportButton onClick={() => setIsModalOpen(!isModalOpen)}>
+        <ImportButton
+          onClick={() => setIsModalOpen(!isModalOpen)}
+          isPressed={isModalOpen}
+        >
           <FontAwesomeIcon icon={faPlus} />
-          ADD
+          <span>ADD</span>
         </ImportButton>
       )}
-      <PlayButton onClick={handleOnClick} isPressed={isCurrent && isPlaying}>
+      <PlayButton playlist={data}>
         {isCurrent && isPlaying ? (
           <>
             <FontAwesomeIcon icon={faPause} />
-            PAUSE
+            <span>PAUSE</span>
           </>
         ) : (
           <>
             <FontAwesomeIcon icon={faPlay} />
-            PLAY
+            <span>PLAY</span>
           </>
         )}
       </PlayButton>

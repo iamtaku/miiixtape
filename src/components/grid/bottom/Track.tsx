@@ -14,7 +14,7 @@ interface TrackProps {
   index: number;
 }
 
-const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
+const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
@@ -34,9 +34,9 @@ const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
 `;
 
 const Item = styled.span<{
-  isRight?: boolean;
-  isCenter?: boolean;
-  isHidden?: boolean;
+  isRight?: Boolean;
+  isCenter?: Boolean;
+  isHidden?: Boolean;
 }>`
   display: ${(props) => (props.isHidden ? "none" : "flex")};
   font-size: 14px;
@@ -54,31 +54,14 @@ const Item = styled.span<{
 export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
   const [isActive, setIsActive] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const { state, dispatch } = useGlobalContext();
 
-  const draggableId = `${track.id}-${index}`;
-  const currentId = `${state.player.currentSong?.id}-${index}`;
-  const isCurrent = currentId === draggableId;
+  const isCurrent = state.player.currentSong?.id === track.id;
   const playlist = mapTrackToPlaylist(track);
   const isAlbum = location.pathname.includes("album");
 
-  // console.log(state.player.currentPlaylist.tracks);
-
-  useEffect(() => {
-    if (
-      state.player.currentPlaylist.playlistInfo.id ===
-        playlist.playlistInfo.id &&
-      state.player.isPlaying
-    ) {
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(false);
-    }
-  }, [state, playlist.playlistInfo.id]);
-
   return (
-    <Draggable draggableId={draggableId} index={index}>
+    <Draggable draggableId={track.id} index={index}>
       {(provided) => (
         <Container
           ref={provided.innerRef}
@@ -93,15 +76,10 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           }}
           isCurrent={isCurrent}
         >
-          {/* {isActive ? ( */}
           <Item isCenter isHidden={isActive}>
             {index + 1}
           </Item>
-          <PlaybackButton
-            playlist={playlist}
-            // isPlaying={isPlaying}
-            isActive={isActive}
-          />
+          {/* <PlaybackButton playlist={playlist} isActive={isActive} /> */}
 
           {isAlbum ? (
             <Item>{` `}</Item>

@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Redirect } from "react-router";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import { useGlobalContext } from "../../state/context";
 
@@ -34,6 +35,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token }) => {
 
     if (state.error) {
       console.error(state);
+      <Redirect to="/app/error" />;
     }
   };
 

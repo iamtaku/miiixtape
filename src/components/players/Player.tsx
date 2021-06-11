@@ -12,7 +12,9 @@ import { useGetUser } from "../../queries/hooks";
 
 const Wrapper = styled.div`
   grid-area: player;
-  display: flex;
+  /* display: flex; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 `;
 
 const Player = () => {
@@ -21,6 +23,7 @@ const Player = () => {
   const [youtube, setYoutube] = useState<YouTubePlayer>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer>();
   const [soundcloud, setSoundCloud] = useState<ReactHowler>();
+
   return (
     <Wrapper>
       <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />

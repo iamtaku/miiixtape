@@ -1,13 +1,32 @@
+import { useEffect, useState } from "react";
 import { useGlobalContext } from "../state/context";
 import { Playlist } from "../types/types";
 
-export const useIsCurrent = (
-  playlist: Playlist
-): { isCurrent: Boolean; isPlaying: Boolean } => {
+interface ICurrent {
+  isCurrent: Boolean;
+  isPlaying: Boolean;
+}
+export const useIsCurrentPlaylist = (playlist: Playlist): ICurrent => {
   const { state } = useGlobalContext();
-  const isCurrent =
-    playlist.playlistInfo.id === state.player.currentPlaylist.playlistInfo.id;
-  const isPlaying = state.player.isPlaying;
+  const [isCurrent, setIsCurrent] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    playlist.playlistInfo.id === state.player.currentPlaylist.playlistInfo.id
+      ? setIsCurrent(true)
+      : setIsCurrent(false);
+  }, [state, playlist]);
+
+  useEffect(() => {
+    if (isCurrent && state.player.isPlaying) {
+      setIsPlaying(true);
+    }
+
+    if (!state.player.isPlaying && isCurrent) {
+      setIsPlaying(false);
+    }
+  }, [state, isCurrent]);
+
   return {
     isCurrent,
     isPlaying,

@@ -48,10 +48,12 @@ export const Controls: React.FC<ControlsProps> = ({
       type: "SET_NEXT",
       payload: {},
     });
-    dispatch({
-      type: "PLAY",
-      payload: {},
-    });
+
+    state.player.isPlaying &&
+      dispatch({
+        type: "PLAY",
+        payload: {},
+      });
 
     // youtube && youtube.stopVideo();
   };
@@ -62,6 +64,7 @@ export const Controls: React.FC<ControlsProps> = ({
       payload: {},
     });
   };
+
   return (
     <ControllerWrapper>
       <p>previous: {state.player.previousSong?.name}</p>

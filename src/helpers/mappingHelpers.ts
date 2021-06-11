@@ -39,8 +39,8 @@ const generateSpotifyHash = async (
 
   const spotifyHash: IHash = {};
 
-  res.tracks.forEach((track, index) => {
-    const mapped = mapSpotifyTracktoTrack(track, index);
+  res.tracks.forEach((track) => {
+    const mapped = mapSpotifyTracktoTrack(track);
     spotifyHash[mapped.name] = mapped;
   });
   return spotifyHash;
@@ -82,14 +82,17 @@ export const mapToPlaylist = async (
   //IF youtube, soundcloud etc. fetch appropriate track
   // ELSE just return that track
   // return all mapped tracks for given playlist
+
+  //fetch to fetch 50 at a time
   const spotifyHash = await generateSpotifyHash(data.included, client);
 
-  const tracks: Tracks = data.included.map((item) => {
+  const tracks: Tracks = data.included.map((item, index) => {
     if (item.attributes.song.service === "spotify") {
-      const spotifyTrack = JSON.parse(
+      const spotifyTrack: Song = JSON.parse(
         JSON.stringify(spotifyHash[item.attributes.song.name])
       );
       spotifyTrack.playlistPosition = item.attributes.position;
+      spotifyTrack.id = spotifyTrack.id += index; //guarantee individual ID
       return spotifyTrack;
     }
     return mapPlaylistItemToTrack(item);
@@ -153,8 +156,8 @@ export const mapSpotifyAlbumtoPlaylist = (
     type: "album",
   };
 
-  const tracks: Tracks = album.tracks.items.map((item, index) =>
-    mapSpotifyTracktoTrack(mergeAlbumWithTrack(item, album), index)
+  const tracks: Tracks = album.tracks.items.map((item) =>
+    mapSpotifyTracktoTrack(mergeAlbumWithTrack(item, album))
   );
 
   return {
@@ -165,7 +168,7 @@ export const mapSpotifyAlbumtoPlaylist = (
 
 export const mapSpotifyTracktoTrack = (
   data: SpotifyApi.SingleTrackResponse | SpotifyApi.TrackObjectFull,
-  index: number
+  index?: number
 ): Song => {
   const album: Album = {
     name: data.album.name,

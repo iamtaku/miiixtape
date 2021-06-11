@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { device } from "../globalStyle";
 
 const LoginBtn = styled.a`
   margin: 16px;
@@ -14,14 +15,30 @@ export const LoginButton: React.FC = ({ children }) => {
   return <LoginBtn href={URL}>{children}</LoginBtn>;
 };
 
-export const BasicButton = styled.button`
+export const BasicButton = styled.button<{
+  isPressed?: Boolean;
+}>`
   padding: 8px 24px;
   border: none;
   border-radius: 50px;
   background: var(--primary);
   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-  margin-left: 8px;
   min-width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${(props) =>
+    props.isPressed
+      ? `
+background: var(--primary);
+box-shadow: inset 20px 20px 60px #2d2d2d,
+            inset -20px -20px 60px #3d3d3d; 
+  `
+      : `
+   background: var(--primary);
+  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
+
+  `}
 
   &:hover {
     cursor: pointer;

@@ -39,6 +39,8 @@ export const useGetUser = () => {
   return useQuery<UserAttributes>("user", getUser, {
     enabled: !!token,
     refetchOnWindowFocus: false,
+    staleTime: 3200000,
+    refetchInterval: 3300000,
   });
 };
 
@@ -47,7 +49,7 @@ export const useGetAlbum = () => {
   const { data: userInfo } = useGetUser();
 
   return useQuery<PlaylistType, Error>(
-    ["album", { ...params }],
+    ["playlist", { id: params.albumId, service: params.service }],
     () => getAlbum(params, userInfo),
     {
       enabled: !!userInfo && !!params.albumId,

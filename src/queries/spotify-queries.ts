@@ -3,7 +3,6 @@ import {
   mapSpotifyAlbumtoPlaylist,
   mapSpotifyPlaylistToPlaylist,
   mapSpotifyToPlaylist,
-  mapSpotifyTracktoTrack,
 } from "../helpers/mappingHelpers";
 import { Playlist, Service, Song } from "../types/types";
 import { UserAttributes } from "./types";
@@ -83,18 +82,5 @@ export const getSingleSpotifyPlaylist = async (
     return mapSpotifyPlaylistToPlaylist(data);
   } catch (error) {
     throw new Error(error);
-  }
-};
-
-export const getSpotifySingleTrack = async (
-  id: string,
-  client: SpotifyWebApi.SpotifyWebApiJs,
-  index: number
-): Promise<Song> => {
-  try {
-    const data = await client.getTrack(id);
-    return mapSpotifyTracktoTrack(data, index);
-  } catch (error) {
-    throw new Error(error.message);
   }
 };

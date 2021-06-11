@@ -4,69 +4,81 @@ import { Playlist } from "../types/types";
 import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/plaaaylist-queries";
 import { useGetUser } from "../queries/hooks";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
-import { useIsCurrent } from "../helpers/hooks";
+import { useIsCurrentPlaylist } from "../helpers/hooks";
+import { useQueryClient } from "react-query";
 
-const PlayButton = styled.button<{
-  isPlaying?: Boolean;
-  isActive?: Boolean;
-  isPressed?: Boolean;
-}>`
-  /* position: absolute; */
-  display: ${(props) => (props.isActive ? "show" : "none")};
-  background: none;
-  border: none;
-  color: var(--accent);
-  &:hover {
-    cursor: pointer;
-  }
-`;
 interface IProps {
   playlist: Playlist;
-  isActive: Boolean;
 }
 
-export const PlaybackButton: React.FC<IProps> = ({ playlist, isActive }) => {
+const Button = styled.button`
+  border: none;
+  background: transparent;
+`;
+
+export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
+  playlist,
+  children,
+  className,
+}) => {
   const { data: user } = useGetUser();
   const { dispatch } = useGlobalContext();
-  const { isPlaying, isCurrent } = useIsCurrent(playlist);
+  const { isPlaying, isCurrent } = useIsCurrentPlaylist(playlist);
+  const queryClient = useQueryClient();
 
-  const handlePlayback = async () => {
-    // if (playlist.tracks.length > 0) {
-    //   dispatch({
-    //     type: "PLAY_PLAYLIST",
-    //     payload: { playlist },
-    //   });
-    //   return;
-    // }
+  const handlePlayback = async (playlist: Playlist) => {
+    let cache = queryClient.getQueryData<Playlist>([
+      "playlist",
+      { id: playlist.playlistInfo.id, service: playlist.playlistInfo.service },
+    ]);
 
-    try {
-      const params = {
-        id: playlist.playlistInfo.id,
-        service: playlist.playlistInfo.service,
-      };
-      const fullData = await getPlaylist(params, user);
+    if (isCurrent && isPlaying) {
       dispatch({
-        type: "PLAY_PLAYLIST",
-        payload: { playlist: fullData },
+        type: "PAUSE_CURRENT",
+        payload: {},
       });
-    } catch (err) {
-      throw new Error(err);
+      return;
     }
+
+    if (isCurrent && !isPlaying) {
+      dispatch({
+        type: "PLAY",
+        payload: {},
+      });
+      return;
+    }
+
+    if (!cache) {
+      try {
+        const params = {
+          id: playlist.playlistInfo.id,
+          service: playlist.playlistInfo.service,
+        };
+        cache = await getPlaylist(params, user);
+      } catch (err) {
+        throw new Error(err);
+      }
+    }
+
+    dispatch({
+      type: "PLAY_PLAYLIST",
+      payload: {
+        playlist: cache,
+      },
+    });
   };
 
-  const handleClick = async () => {
+  const handleClick = async (playlist: Playlist) => {
     try {
-      await handlePlayback();
+      await handlePlayback(playlist);
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <PlayButton onClick={() => handleClick()} isActive={isActive || isCurrent}>
-      <FontAwesomeIcon icon={isPlaying && isCurrent ? faPause : faPlay} />
-    </PlayButton>
+    <Button onClick={() => handleClick(playlist)} className={className}>
+      {children}
+    </Button>
   );
 };

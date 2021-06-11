@@ -81,7 +81,6 @@ const handleSetNext = (state: PlaybackType) => {
     nextService: nextSong?.service,
     previousSong,
     playBackPosition,
-    isPlaying: false,
   };
 
   console.log("new state...: ", newState);
@@ -91,10 +90,10 @@ const handleSetNext = (state: PlaybackType) => {
 };
 
 const handlePlay = (state: PlaybackType) => {
-  if (state.nextSong) {
-    return { ...state, isPlaying: true, isFinished: true };
-  }
-  return state;
+  // if (state.nextSong) {
+  return { ...state, isPlaying: true, isFinished: true };
+  // }
+  // return state;
 };
 
 const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
@@ -106,6 +105,7 @@ export const playbackReducer = (
   let newState: PlaybackType;
   switch (action.type) {
     case "PLAY_PLAYLIST":
+      console.log(action.type);
       if (action.payload.playlist.tracks.length > 0) {
         newState = {
           ...initial,
@@ -129,8 +129,10 @@ export const playbackReducer = (
         isFinished: true,
       } as PlaybackType;
     case "PLAY":
+      console.log(action.type);
       return handlePlay(state);
     case "PAUSE_CURRENT":
+      console.log(action.type);
       return handlePause(state);
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);

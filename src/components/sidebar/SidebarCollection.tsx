@@ -47,7 +47,6 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   data,
   title,
 }) => {
-  const { state, dispatch } = useGlobalContext();
   const [isOpen, setIsOpen] = useState(true);
 
   const [isActive, setIsActive] = useState(false);

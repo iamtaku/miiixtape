@@ -1,15 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { Playlist, Service } from "../../../types/types";
-import { InnerGridDescription } from "./InnerGridDescription";
+import { InnerGridDescription as Description } from "./InnerGridDescription";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
 
 const InnerGridTopWrapper = styled.div`
   grid-area: top;
   display: grid;
+  max-width: 1440px;
   grid-template-columns: 30% 40% 30%;
   grid-template-rows: 100%;
+  grid-column-gap: 8px;
+  align-items: center;
   padding: 24px;
   border-radius: 50px;
   background: #353535;
@@ -20,6 +23,8 @@ const CoverImg = styled.img`
   justify-self: center;
   max-width: 100%;
   max-height: 100%;
+  background: var(--primary);
+  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
 `;
 
 interface PropTypes {
@@ -42,7 +47,7 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, isLoading }) => {
         src={data.playlistInfo.img || DefaultMusicImage}
         alt={data.playlistInfo.description}
       />
-      <InnerGridDescription data={data} services={services} />
+      <Description data={data} services={services} />
       <Buttons data={data} />
     </InnerGridTopWrapper>
   );
