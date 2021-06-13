@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../state/context";
-import { Playlist, Song } from "../types/types";
+import { Collection, Song } from "../types/types";
 
 interface ICurrent {
   isCurrent: Boolean;
   isPlaying: Boolean;
-  playlist?: Playlist;
+  collection?: Collection;
 }
-export const useIsCurrentPlaylist = (playlist: Playlist): ICurrent => {
+export const useIsCurrentPlaylist = (collection: Collection): ICurrent => {
   const { state } = useGlobalContext();
   const [isCurrent, setIsCurrent] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    playlist.playlistInfo.id === state.player.currentPlaylist?.playlistInfo.id
+    // debugger;
+    collection.playlistInfo.id ===
+    state.player.currentCollection?.playlistInfo.id
       ? setIsCurrent(true)
       : setIsCurrent(false);
-  }, [state, playlist]);
+  }, [state, collection]);
 
   useEffect(() => {
     isCurrent && state.player.isPlaying
@@ -34,7 +36,7 @@ export const useIsCurrentTrack = (track?: Song): ICurrent => {
   const { state } = useGlobalContext();
   const [isCurrent, setIsCurrent] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playlist, setPlaylist] = useState<Playlist | undefined>(undefined);
+  const [collection, setPlaylist] = useState<Collection | undefined>(undefined);
 
   useEffect(() => {
     if (!track) return;
@@ -50,14 +52,14 @@ export const useIsCurrentTrack = (track?: Song): ICurrent => {
   }, [state, isCurrent]);
 
   useEffect(() => {
-    state.player.currentPlaylist
-      ? setPlaylist(state.player.currentPlaylist)
+    state.player.currentCollection
+      ? setPlaylist(state.player.currentCollection)
       : setPlaylist(undefined);
   }, [state]);
 
   return {
     isCurrent,
     isPlaying,
-    playlist,
+    collection,
   };
 };

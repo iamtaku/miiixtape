@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { Playlist as PlaylistType, Tracks } from "../types/types";
+import { Collection as PlaylistType, Tracks } from "../types/types";
 import api, { Playlist, PlaylistItems } from "./api";
 import { getSingleSpotifyPlaylist } from "./spotify-queries";
 import { ServerTokenResponse, UserAttributes } from "./types";

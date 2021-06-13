@@ -4,11 +4,11 @@ import { Link, useLocation } from "react-router-dom";
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useIsCurrentPlaylist } from "../../helpers/hooks";
-import { Playlist } from "../../types/types";
+import { Collection } from "../../types/types";
 import { PlaybackButton } from "../Buttons";
 
 interface SideBarItemProps {
-  playlist: Playlist;
+  playlist: Collection;
 }
 
 const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
@@ -67,7 +67,7 @@ export const SidebarItem: React.FC<SideBarItemProps> = ({ playlist }) => {
         setIsActive(false);
       }}
     >
-      <PlayButton playlist={playlist} isActive={isActive || isCurrent}>
+      <PlayButton data={playlist} isActive={isActive || isCurrent}>
         <FontAwesomeIcon icon={isPlaying && isCurrent ? faPause : faPlay} />
       </PlayButton>
       <Link

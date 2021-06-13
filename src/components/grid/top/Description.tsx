@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { Playlist, Service } from "../../../types/types";
+import { Collection, Service } from "../../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYoutube, faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { device } from "../../../globalStyle";
 
 interface IProps {
   services?: Service[];
-  data: Playlist;
+  data: Collection;
 }
 
 const Wrapper = styled.div`

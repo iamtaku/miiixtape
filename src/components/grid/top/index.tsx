@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Playlist, Service } from "../../../types/types";
+import { Collection, Service } from "../../../types/types";
 import { Description } from "./Description";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
@@ -28,7 +28,7 @@ const CoverImg = styled.img`
 `;
 
 interface PropTypes {
-  data?: Playlist;
+  data?: Collection;
   isLoading: boolean;
 }
 

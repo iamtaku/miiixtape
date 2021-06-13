@@ -33,12 +33,12 @@ const handlePlayPrevious = (state: PlaybackType) => {
   console.log("prev state: ", state);
   if (!state.previousSong) return state;
   const currentSong = state.previousSong;
-  const nextSong = nextTrack(state.currentPlaylist?.tracks, currentSong);
+  const nextSong = nextTrack(state.currentCollection?.tracks, currentSong);
   const previousSong = previousTrack(
-    state.currentPlaylist?.tracks,
+    state.currentCollection?.tracks,
     currentSong
   );
-  if (currentIndex(state.currentPlaylist?.tracks, currentSong) === 0) {
+  if (currentIndex(state.currentCollection?.tracks, currentSong) === 0) {
     return {
       ...state,
       currentSong,
@@ -73,9 +73,9 @@ const handleSetNext = (state: PlaybackType) => {
   }
 
   const currentSong = state.nextSong;
-  const nextSong = nextTrack(state.currentPlaylist?.tracks, currentSong);
+  const nextSong = nextTrack(state.currentCollection?.tracks, currentSong);
   const previousSong = previousTrack(
-    state.currentPlaylist?.tracks,
+    state.currentCollection?.tracks,
     currentSong
   );
   const playBackPosition =
@@ -109,7 +109,7 @@ const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
   // debugger;
   return {
     ...state,
-    currentPlaylist: undefined,
+    currentCollection: undefined,
     currentSong: track,
     isPlaying: true,
   };
@@ -118,8 +118,8 @@ const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
 const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
   // debugger;
   console.log("setting track, ", newTrack.name);
-  const nextSong = nextTrack(state.currentPlaylist?.tracks, newTrack);
-  const previousSong = previousTrack(state.currentPlaylist?.tracks, newTrack);
+  const nextSong = nextTrack(state.currentCollection?.tracks, newTrack);
+  const previousSong = previousTrack(state.currentCollection?.tracks, newTrack);
 
   return {
     ...state,
@@ -135,16 +135,16 @@ export const playbackReducer = (
 ) => {
   let newState: PlaybackType;
   switch (action.type) {
-    case "PLAY_PLAYLIST":
+    case "PLAY_COLLECTION":
       console.log(action.type);
-      if (action.payload.playlist.tracks.length > 0) {
+      if (action.payload.collection.tracks.length > 0) {
         newState = {
           ...initial,
-          currentPlaylist: action.payload.playlist,
-          currentSong: action.payload.playlist?.tracks[0],
-          nextSong: action.payload.playlist?.tracks[1],
-          currentService: action.payload.playlist.tracks[0].service,
-          nextService: action.payload.playlist.tracks[1]?.service,
+          currentCollection: action.payload.collection,
+          currentSong: action.payload.collection?.tracks[0],
+          nextSong: action.payload.collection?.tracks[1],
+          currentService: action.payload.collection.tracks[0].service,
+          nextService: action.payload.collection.tracks[1]?.service,
           isPlaying: true,
         };
         return newState;
@@ -152,6 +152,7 @@ export const playbackReducer = (
 
       return state;
     case "PLAY_TRACK":
+      debugger;
       return handlePlayTrack(state, action.payload.track);
     case "SET_TRACK":
       return handleSetTrack(state, action.payload.track);

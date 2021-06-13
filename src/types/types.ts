@@ -8,6 +8,7 @@ export type Song = {
   artists?: Artists;
   album?: Album;
   time?: number;
+  href?: string;
 };
 
 export type Artists = Artist[];
@@ -22,7 +23,7 @@ export type Basic = {
 
 export type Tracks = Song[];
 
-export type Playlist = {
+export type Collection = {
   playlistInfo: PlaylistInfo;
   tracks: Tracks;
 };

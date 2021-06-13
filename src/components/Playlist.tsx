@@ -4,7 +4,7 @@ import { useGetSinglePlaylist } from "../queries/hooks";
 import { InnerGridBottom } from "./grid/bottom";
 import { InnerGridTop } from "./grid/top";
 import { useQueryClient } from "react-query";
-import { Playlist as PlaylistType, PlaylistParam } from "../types/types";
+import { Collection as PlaylistType, PlaylistParam } from "../types/types";
 import { InnerLayout } from "./Layout";
 
 export const Playlist: React.FC = () => {

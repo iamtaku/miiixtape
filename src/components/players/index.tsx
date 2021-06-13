@@ -9,6 +9,7 @@ import { Soundcloud } from "./Soundcloud";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
 import { useGetUser } from "../../queries/hooks";
+import ErrorBoundary from "../ErrorBoundary";
 
 const Wrapper = styled.div`
   grid-area: player;
@@ -27,20 +28,22 @@ const Player = () => {
 
   return (
     <Wrapper>
-      <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />
-      {state.player.currentSong?.service === "youtube" && (
-        <Youtube setYoutube={setYoutube} uri={uri} />
-      )}
-      {state.player.currentSong?.service === "spotify" && userInfo && (
-        <Spotify
-          setSpotify={setSpotify}
-          token={userInfo.access_token}
-          uri={uri}
-        />
-      )}
-      {state.player.currentSong?.service === "soundcloud" && (
-        <Soundcloud setSoundCloud={setSoundCloud} uri={uri} />
-      )}
+      <ErrorBoundary>
+        <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />
+        {state.player.currentSong?.service === "youtube" && (
+          <Youtube setYoutube={setYoutube} uri={uri} />
+        )}
+        {state.player.currentSong?.service === "spotify" && userInfo && (
+          <Spotify
+            setSpotify={setSpotify}
+            token={userInfo.access_token}
+            uri={uri}
+          />
+        )}
+        {state.player.currentSong?.service === "soundcloud" && (
+          <Soundcloud setSoundCloud={setSoundCloud} uri={uri} />
+        )}
+      </ErrorBoundary>
     </Wrapper>
   );
 };

@@ -2,12 +2,12 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Playlist } from "../../types/types";
+import { Collection } from "../../types/types";
 import { SidebarItem } from "./SidebarItem";
 import { useSpring, animated } from "react-spring";
 
 interface SidebarCollectionProps {
-  data?: Playlist[];
+  data?: Collection[];
   title: string;
 }
 

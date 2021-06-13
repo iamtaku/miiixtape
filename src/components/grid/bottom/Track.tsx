@@ -5,11 +5,14 @@ import { Song } from "../../../types/types";
 import { timeConversion } from "../../../helpers/timeConversion";
 import { Link, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../../../state/context";
-import { mapTrackToPlaylist } from "../../../helpers/mappingHelpers";
 import { TrackPlaybackButton } from "../../Buttons";
 import { useIsCurrentTrack } from "../../../helpers/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPause,
+  faPlay,
+  faExternalLinkAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface TrackProps {
   track: Song;
@@ -30,6 +33,10 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
 
+  .index {
+    display: ${(props) => (props.isCurrent ? "none" : "default")};
+  }
+
   &:hover {
     background-color: var(--light-gray);
 
@@ -43,11 +50,11 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
 
   .index {
     margin: 0 auto;
-    /* display: flex; */
-    /* align-items: center; */
-    /* justify-self: center;
-     */
     text-align: center;
+  }
+
+  button {
+    ${(props) => (props.isCurrent ? "svg {color: var(--white)}" : null)}
   }
 `;
 
@@ -68,6 +75,14 @@ const Item = styled.span<{
   }
 `;
 
+const ExternalLink = styled.a`
+  text-align: right;
+  justify-self: end;
+  /* display: flex; */
+  /* justify-content: flex-end; */
+  width: 16px;
+`;
+
 const Image = styled.img`
   width: 40px;
   justify-self: center;
@@ -75,7 +90,7 @@ const Image = styled.img`
 
 const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: Boolean }>`
   /* display: ${(props) => (props.isActive ? "initial" : "none")}; */
-  display: none;
+  display: ${(props) => (props.isActive ? "default" : "none")};
 `;
 
 export const Track: React.FC<TrackProps> = ({ track, index }) => {
@@ -83,9 +98,17 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const [isActive, setIsActive] = useState(false);
   const { state, dispatch } = useGlobalContext();
 
-  const playlist = mapTrackToPlaylist(track);
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
+
+  const handleUrlClick = () => {
+    if (isPlaying && isCurrent) {
+      dispatch({
+        type: "PAUSE_CURRENT",
+        payload: {},
+      });
+    }
+  };
 
   return (
     <Draggable draggableId={track.id} index={index}>
@@ -105,20 +128,16 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
         >
           <Item className="" isCenter>
             <div className="index">{index + 1}</div>
-            <PlaybackButton className="play" data={track} isActive={isActive}>
+            <PlaybackButton
+              className="play"
+              data={track}
+              isActive={isActive || isCurrent}
+            >
               <FontAwesomeIcon
                 icon={isPlaying && isCurrent ? faPause : faPlay}
               />
             </PlaybackButton>
           </Item>
-          {/* <Item isCenter> */}
-          {/* <TrackPlaybackButton data={track}>
-              <FontAwesomeIcon
-                icon={isPlaying && isCurrent ? faPause : faPlay}
-              />
-            </TrackPlaybackButton> */}
-          {/* </Item> */}
-
           {isAlbum ? (
             <Item>{` `}</Item>
           ) : (
@@ -142,7 +161,18 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
             "-"
           )}
           <Item isRight>{track.time ? timeConversion(track.time) : "-"}</Item>
-          {isAlbum ? null : <Item isRight>{track.service}</Item>}
+          {isAlbum ? null : (
+            // <Item isRight>
+            <ExternalLink
+              href={track.href}
+              onClick={handleUrlClick}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <FontAwesomeIcon icon={faExternalLinkAlt} />
+            </ExternalLink>
+            // </Item>
+          )}
         </Container>
       )}
     </Draggable>

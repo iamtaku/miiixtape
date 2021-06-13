@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Playlist, Song } from "../types/types";
+import { Collection, Song } from "../types/types";
 import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/plaaaylist-queries";
 import { useGetUser } from "../queries/hooks";
@@ -53,29 +53,36 @@ box-shadow: inset 20px 20px 60px #2d2d2d,
 `;
 
 interface IProps {
-  playlist: Playlist;
+  data: Collection;
 }
 
 const Button = styled.button`
   border: none;
   background: transparent;
   color: var(--accent);
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
-  playlist,
+  data,
   children,
   className,
 }) => {
   const { data: user } = useGetUser();
   const { dispatch } = useGlobalContext();
-  const { isPlaying, isCurrent } = useIsCurrentPlaylist(playlist);
+  const { isPlaying, isCurrent } = useIsCurrentPlaylist(data);
   const queryClient = useQueryClient();
 
-  const handlePlayback = async (playlist: Playlist) => {
-    let cache = queryClient.getQueryData<Playlist>([
-      "playlist",
-      { id: playlist.playlistInfo.id, service: playlist.playlistInfo.service },
+  const handlePlayback = async (data: Collection) => {
+    debugger;
+    let cache = queryClient.getQueryData<Collection>([
+      "collection",
+      {
+        id: data.playlistInfo.id,
+        service: data.playlistInfo.service,
+      },
     ]);
 
     if (isCurrent && isPlaying) {
@@ -97,33 +104,43 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
     if (!cache) {
       try {
         const params = {
-          id: playlist.playlistInfo.id,
-          service: playlist.playlistInfo.service,
+          id: data.playlistInfo.id,
+          service: data.playlistInfo.service,
         };
         cache = await getPlaylist(params, user);
+        dispatch({
+          type: "PLAY_COLLECTION",
+          payload: {
+            collection: cache,
+          },
+        });
+        return;
       } catch (err) {
         throw new Error(err);
       }
     }
 
-    dispatch({
-      type: "PLAY_PLAYLIST",
-      payload: {
-        playlist: cache,
-      },
-    });
+    if (cache) {
+      dispatch({
+        type: "PLAY_COLLECTION",
+        payload: {
+          collection: cache,
+        },
+      });
+    }
   };
 
-  const handleClick = async (playlist: Playlist) => {
+  const handleClick = async (data: Collection) => {
+    debugger;
     try {
-      await handlePlayback(playlist);
+      await handlePlayback(data);
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <Button onClick={() => handleClick(playlist)} className={className}>
+    <Button onClick={() => handleClick(data)} className={className}>
       {children}
     </Button>
   );
@@ -137,7 +154,7 @@ export const TrackPlaybackButton: React.FC<
   ITrackButtonProps & { className?: string }
 > = ({ data, children, className }) => {
   const { dispatch, state } = useGlobalContext();
-  const { isPlaying, playlist } = useIsCurrentTrack(data);
+  const { isPlaying, collection } = useIsCurrentTrack(data);
 
   const handleClick = (track: Song) => {
     if (isPlaying) {
@@ -148,7 +165,7 @@ export const TrackPlaybackButton: React.FC<
       return;
     }
 
-    if (!playlist) {
+    if (!data) {
       dispatch({
         type: "PLAY_TRACK",
         payload: { track },
@@ -156,7 +173,7 @@ export const TrackPlaybackButton: React.FC<
       return;
     }
 
-    if (playlist) {
+    if (data) {
       dispatch({
         type: "SET_TRACK",
         payload: { track },

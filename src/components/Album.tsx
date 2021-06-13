@@ -5,13 +5,14 @@ import { InnerGridBottom } from "./grid/bottom";
 import { useQueryClient } from "react-query";
 import { useGetAlbum } from "../queries/hooks";
 import { InnerLayout } from "./Layout";
+import { Collection } from "../types/types";
 
 export const Album = ({ id }: { id?: string }) => {
   const { data, isLoading, error } = useGetAlbum();
   const queryClient = useQueryClient();
-  const test = queryClient.getQueryData([
-    "album",
-    { albumId: data?.playlistInfo.id, service: "spotify" },
+  const test = queryClient.getQueryData<Collection>([
+    "playlist",
+    { id: data?.playlistInfo.id, service: "spotify" },
   ]);
   console.log(test);
 

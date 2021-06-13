@@ -1,4 +1,4 @@
-import { Song, Tracks, Service, Playlist } from "../types/types";
+import { Song, Tracks, Service, Collection } from "../types/types";
 
 export type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -12,8 +12,8 @@ export type ActionMap<M extends { [index: string]: any }> = {
 };
 
 export type PlaybackPayload = {
-  PLAY_PLAYLIST: {
-    playlist: Playlist;
+  PLAY_COLLECTION: {
+    collection: Collection;
   };
   PLAY_TRACK: {
     track: Song;
@@ -29,7 +29,7 @@ export type PlaybackPayload = {
 };
 
 export type PlaybackType = {
-  currentPlaylist?: Playlist;
+  currentCollection?: Collection;
   playbackPosition: number;
   previousSong?: Song;
   currentSong?: Song;

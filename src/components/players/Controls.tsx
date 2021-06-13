@@ -6,6 +6,7 @@ import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
+import { useQueryClient } from "react-query";
 
 interface ControlsProps {
   youtube?: YouTubePlayer;
@@ -25,6 +26,8 @@ export const Controls: React.FC<ControlsProps> = ({
   soundcloud,
 }) => {
   const { state, dispatch } = useGlobalContext();
+  const queryClient = useQueryClient();
+  const data = queryClient.getQueryData("user");
 
   const handlePause = () => {
     dispatch({ type: "PAUSE_CURRENT", payload: {} });
@@ -34,6 +37,7 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   const handlePlayPause = () => {
+    debugger;
     state.player.isPlaying ? handlePause() : handlePlay();
   };
 

@@ -5,13 +5,13 @@ import { useLocation, useParams } from "react-router";
 import styled from "styled-components";
 import { device } from "../../../globalStyle";
 import { useIsCurrentPlaylist } from "../../../helpers/hooks";
-import { Playlist } from "../../../types/types";
+import { Collection } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
 import { Modal } from "../Modal";
 
 interface ButtonsProps {
-  data: Playlist;
+  data: Collection;
 }
 
 interface IParam {
@@ -105,7 +105,7 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
           <span>ADD</span>
         </ImportButton>
       )}
-      <PlayButton playlist={data}>
+      <PlayButton data={data}>
         {isCurrent && isPlaying ? (
           <>
             <FontAwesomeIcon icon={faPause} />

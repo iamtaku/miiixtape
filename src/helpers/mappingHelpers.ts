@@ -3,24 +3,42 @@ import {
   PlaylistItemItem,
   ServerPlaylist,
   ServerPlaylists,
+  SongAttributes,
 } from "../queries/types";
 import {
   PlaylistInfo,
   Song,
-  Playlist,
+  Collection,
   Tracks,
   Album,
   Artists,
 } from "../types/types";
 import { stripURI } from "./stripURI";
 
+const generateURL = (song: SongAttributes): string => {
+  const YOUTUBE = "https://www.youtube.com/watch?v=";
+  let URL = "";
+  switch (song.service) {
+    case "youtube":
+      URL = `${YOUTUBE}${song.uri}`;
+      break;
+    default:
+      break;
+  }
+
+  return URL;
+};
+
 const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
+  let href = generateURL(item.attributes.song);
+
   return {
     id: item.id,
     name: item.attributes.song.name,
     service: item.attributes.song.service,
     uri: item.attributes.song.uri,
     playlistPosition: item.attributes.position,
+    href,
   };
 };
 
@@ -50,20 +68,10 @@ interface IHash {
   [title: string]: Song;
 }
 
-// const mapTrackToTrack = async (
-//   data: PlaylistItemItem[],
-//   client: SpotifyWebApi.SpotifyWebApiJs
-// ): Promise<Tracks> => {
-//   const tracks = data.map(item => {
-
-//   })
-//   return tracks;
-// };
-
 export const mapToPlaylist = async (
   data: ServerPlaylist,
   client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<Playlist> => {
+): Promise<Collection> => {
   const playlistInfo: PlaylistInfo = {
     id: data.data.id,
     name: data.data.attributes.name,
@@ -94,8 +102,9 @@ export const mapToPlaylist = async (
       spotifyTrack.playlistPosition = item.attributes.position;
       spotifyTrack.id = spotifyTrack.id += index; //guarantee individual ID
       return spotifyTrack;
+    } else {
+      return mapPlaylistItemToTrack(item);
     }
-    return mapPlaylistItemToTrack(item);
   });
 
   return {
@@ -104,8 +113,8 @@ export const mapToPlaylist = async (
   };
 };
 
-export const mapServerPlaylist = (data: ServerPlaylists): Playlist[] => {
-  const mappedData: Playlist[] = data.data.map((item) => {
+export const mapServerPlaylist = (data: ServerPlaylists): Collection[] => {
+  const mappedData: Collection[] = data.data.map((item) => {
     return {
       playlistInfo: {
         id: item.id,
@@ -119,8 +128,8 @@ export const mapServerPlaylist = (data: ServerPlaylists): Playlist[] => {
 };
 export const mapSpotifyToPlaylist = (
   data: SpotifyApi.ListOfUsersPlaylistsResponse
-): Playlist[] => {
-  const mappedData: Playlist[] = data.items.map((item) => {
+): Collection[] => {
+  const mappedData: Collection[] = data.items.map((item) => {
     return {
       playlistInfo: {
         id: item.id,
@@ -188,12 +197,13 @@ export const mapSpotifyTracktoTrack = (
     artists,
     img: data.album.images[0].url,
     time: data.duration_ms,
+    href: data.external_urls.spotify,
   };
 };
 
 export const mapSpotifyPlaylistToPlaylist = (
   data: SpotifyApi.SinglePlaylistResponse
-): Playlist => {
+): Collection => {
   const playlistInfo: PlaylistInfo = {
     id: data.id,
     name: data.name,
@@ -214,7 +224,7 @@ export const mapSpotifyPlaylistToPlaylist = (
   };
 };
 
-export const mapTrackToPlaylist = (track: Song): Playlist => ({
+export const mapTrackToPlaylist = (track: Song): Collection => ({
   playlistInfo: { name: track.name, id: track.id, service: track.service },
   tracks: [{ ...track }],
 });

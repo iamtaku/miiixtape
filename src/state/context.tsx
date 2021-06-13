@@ -1,26 +1,10 @@
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
-import { Song, Service, Playlist } from "../types/types";
 import { playbackReducer, PlaybackActions } from "./reducers";
 import { PlaybackType } from "./types";
 
 type InitialStateType = {
   player: PlaybackType;
 };
-
-const song: Song = {
-  name: "",
-  service: "",
-  uri: "",
-  id: "",
-  img: "",
-};
-
-const service: Service = "";
-
-const playlist = {
-  playlistInfo: { id: "", name: "", service: "" },
-  tracks: [],
-} as Playlist;
 
 export const player = {
   // currentPlaylist: playlist,

@@ -1,6 +1,8 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
+import { useQueryClient } from "react-query";
 import { Redirect } from "react-router";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
+import { UserAttributes } from "../../queries/types";
 import { useGlobalContext } from "../../state/context";
 
 interface SpotifyProps {
@@ -12,6 +14,7 @@ interface SpotifyProps {
 export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
+  const queryClient = useQueryClient();
 
   const handleCallback = (state: CallbackState) => {
     console.log(state);
@@ -37,7 +40,13 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
     if (state.error) {
       console.error(state);
       debugger;
-      <Redirect to="/app/error" />;
+      try {
+        console.log("refetching token");
+        queryClient.invalidateQueries(["userInfo"]);
+        state.needsUpdate = true;
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 

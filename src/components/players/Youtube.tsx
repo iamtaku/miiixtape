@@ -56,9 +56,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
   const handleOnPause = ({ target, data }: IYoutubeEvent) => {
     debugger;
     console.log("pausing youtube");
-    if (!state.player.nextSong || !state.player.previousSong) {
-      dispatch({ type: "PAUSE_CURRENT", payload: {} });
-    }
+    dispatch({ type: "PAUSE_CURRENT", payload: {} });
   };
 
   const handleOnStateChange = ({
