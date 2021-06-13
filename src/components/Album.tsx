@@ -1,7 +1,7 @@
 import React from "react";
-import { Redirect, useHistory } from "react-router";
-import { InnerGridTop } from "./grid/top/InnerGridTop";
-import { InnerGridBottom } from "./grid/bottom/InnerGridBottom";
+import { Redirect } from "react-router";
+import { InnerGridTop } from "./grid/top";
+import { InnerGridBottom } from "./grid/bottom";
 import { useQueryClient } from "react-query";
 import { useGetAlbum } from "../queries/hooks";
 import { InnerLayout } from "./Layout";

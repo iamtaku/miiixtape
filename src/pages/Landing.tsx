@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { LoginButton } from "../components/Buttons";
 import styled from "styled-components";
 

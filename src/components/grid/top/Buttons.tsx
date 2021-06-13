@@ -5,10 +5,9 @@ import { useLocation, useParams } from "react-router";
 import styled from "styled-components";
 import { device } from "../../../globalStyle";
 import { useIsCurrentPlaylist } from "../../../helpers/hooks";
-import { useGlobalContext } from "../../../state/context";
 import { Playlist } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
-import { PlaybackButton } from "../../PlaybackButton";
+import { PlaybackButton } from "../../Buttons";
 import { Modal } from "../Modal";
 
 interface ButtonsProps {
@@ -81,7 +80,6 @@ const PlayButton = styled(GridButton)`
 `;
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
-  const { state, dispatch } = useGlobalContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
 

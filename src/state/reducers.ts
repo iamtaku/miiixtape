@@ -33,9 +33,12 @@ const handlePlayPrevious = (state: PlaybackType) => {
   console.log("prev state: ", state);
   if (!state.previousSong) return state;
   const currentSong = state.previousSong;
-  const nextSong = nextTrack(state.currentPlaylist.tracks, currentSong);
-  const previousSong = previousTrack(state.currentPlaylist.tracks, currentSong);
-  if (currentIndex(state.currentPlaylist.tracks, currentSong) === 0) {
+  const nextSong = nextTrack(state.currentPlaylist?.tracks, currentSong);
+  const previousSong = previousTrack(
+    state.currentPlaylist?.tracks,
+    currentSong
+  );
+  if (currentIndex(state.currentPlaylist?.tracks, currentSong) === 0) {
     return {
       ...state,
       currentSong,
@@ -63,11 +66,18 @@ const handleSetNext = (state: PlaybackType) => {
   console.group("setting next...");
   console.log("before update,", state);
 
-  if (!state.nextSong) return state;
+  if (!state.nextSong) {
+    console.log("no next song", state);
+    console.groupEnd();
+    return state;
+  }
 
   const currentSong = state.nextSong;
-  const nextSong = nextTrack(state.currentPlaylist.tracks, currentSong);
-  const previousSong = previousTrack(state.currentPlaylist.tracks, currentSong);
+  const nextSong = nextTrack(state.currentPlaylist?.tracks, currentSong);
+  const previousSong = previousTrack(
+    state.currentPlaylist?.tracks,
+    currentSong
+  );
   const playBackPosition =
     currentSong.service === "spotify"
       ? (state.playbackPosition += 1)
@@ -90,13 +100,34 @@ const handleSetNext = (state: PlaybackType) => {
 };
 
 const handlePlay = (state: PlaybackType) => {
-  // if (state.nextSong) {
-  return { ...state, isPlaying: true, isFinished: true };
-  // }
-  // return state;
+  return { ...state, isPlaying: true };
 };
 
 const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
+
+const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
+  // debugger;
+  return {
+    ...state,
+    currentPlaylist: undefined,
+    currentSong: track,
+    isPlaying: true,
+  };
+};
+
+const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
+  // debugger;
+  console.log("setting track, ", newTrack.name);
+  const nextSong = nextTrack(state.currentPlaylist?.tracks, newTrack);
+  const previousSong = previousTrack(state.currentPlaylist?.tracks, newTrack);
+
+  return {
+    ...state,
+    currentSong: newTrack,
+    nextSong,
+    previousSong,
+  };
+};
 
 export const playbackReducer = (
   state: PlaybackType,
@@ -120,6 +151,10 @@ export const playbackReducer = (
       }
 
       return state;
+    case "PLAY_TRACK":
+      return handlePlayTrack(state, action.payload.track);
+    case "SET_TRACK":
+      return handleSetTrack(state, action.payload.track);
     case "SET_NEXT":
       return handleSetNext(state);
     case "SONG_END":

@@ -13,7 +13,7 @@ interface ControlsProps {
   soundcloud?: ReactHowler;
 }
 
-const ControllerWrapper = styled.div`
+const Wrapper = styled.div`
   border: solid 1px red;
   display: flex;
   justify-content: space-around;
@@ -28,11 +28,9 @@ export const Controls: React.FC<ControlsProps> = ({
 
   const handlePause = () => {
     dispatch({ type: "PAUSE_CURRENT", payload: {} });
-    // youtube && youtube.pauseVideo();
   };
   const handlePlay = () => {
     dispatch({ type: "PLAY", payload: {} });
-    // youtube && youtube.playVideo();
   };
 
   const handlePlayPause = () => {
@@ -54,8 +52,6 @@ export const Controls: React.FC<ControlsProps> = ({
         type: "PLAY",
         payload: {},
       });
-
-    // youtube && youtube.stopVideo();
   };
 
   const handlePrevious = () => {
@@ -66,7 +62,7 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   return (
-    <ControllerWrapper>
+    <Wrapper>
       <p>previous: {state.player.previousSong?.name}</p>
       <p>current: {state.player.currentSong?.name}</p>
       <p>next: {state.player.nextSong?.name}</p>
@@ -79,6 +75,6 @@ export const Controls: React.FC<ControlsProps> = ({
         )}
       </button>
       <button onClick={handleNext}>Next</button>
-    </ControllerWrapper>
+    </Wrapper>
   );
 };

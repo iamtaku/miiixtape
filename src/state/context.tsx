@@ -23,7 +23,9 @@ const playlist = {
 } as Playlist;
 
 export const player = {
-  currentPlaylist: playlist,
+  // currentPlaylist: playlist,
+  currentPlaylist: undefined,
+
   playbackPosition: 0,
   previousSong: undefined,
   currentSong: undefined,

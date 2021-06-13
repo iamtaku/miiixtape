@@ -4,7 +4,7 @@ import {
   mapSpotifyPlaylistToPlaylist,
   mapSpotifyToPlaylist,
 } from "../helpers/mappingHelpers";
-import { Playlist, Service, Song } from "../types/types";
+import { Playlist, Service } from "../types/types";
 import { UserAttributes } from "./types";
 
 export const getSpotifyAlbum = async (

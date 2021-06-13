@@ -2,8 +2,8 @@ import React from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { device } from "../globalStyle";
-import { Navbar } from "./navbar/Navbar";
-import Player from "./players/Player";
+import { Navbar } from "./navbar";
+import Player from "./players";
 import { Sidebar } from "./sidebar/Sidebar";
 
 const Container = styled.div`

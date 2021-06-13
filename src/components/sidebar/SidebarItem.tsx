@@ -1,25 +1,30 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import styled from "styled-components";
 import { useIsCurrentPlaylist } from "../../helpers/hooks";
 import { Playlist } from "../../types/types";
-import { PlaybackButton } from "../PlaybackButton";
+import { PlaybackButton } from "../Buttons";
 
 interface SideBarItemProps {
   playlist: Playlist;
 }
 
 const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
-  display: flex;
+  display: grid;
+  grid-template-columns: 0.05fr 1fr;
+  grid-template-areas: "button main ";
+  height: 40px;
+  width: 100%;
+  align-content: center;
   border: 1px solid transparent;
-  border-color: ${(props) =>
+  background-color: ${(props) =>
     props.isActive ? "var(--light-gray) !important" : "default"};
   border-radius: 4px;
   opacity: 0.8;
-  margin: 4px;
-  padding: 0 8px;
+  margin: 4px 0;
+
   a {
     padding: 4px 8px;
     display: block;
@@ -28,14 +33,15 @@ const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
     z-index: 10;
   }
 
-  &:hover {
+  /* &:hover {
     background-color: var(--light-gray);
-  }
+  } */
 `;
 
 const PlayButton = styled(PlaybackButton)<{
   isActive?: Boolean;
 }>`
+  grid-area: "button";
   display: ${(props) => (props.isActive ? "show" : "none")};
   background: none;
   border: none;
@@ -65,10 +71,12 @@ export const SidebarItem: React.FC<SideBarItemProps> = ({ playlist }) => {
         <FontAwesomeIcon icon={isPlaying && isCurrent ? faPause : faPlay} />
       </PlayButton>
       <Link
+        style={{ gridArea: "main" }}
         to={`/app/playlist/${playlist.playlistInfo.service}/${playlist.playlistInfo.id}`}
       >
         {playlist.playlistInfo.name}
       </Link>
+      {/* {isPlaying && isCurrent && <PlayingAnimation />} */}
     </Item>
   );
 };

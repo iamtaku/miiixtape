@@ -56,7 +56,7 @@ const setIcon = (service: Service, index: number) => {
   }
 };
 
-export const InnerGridDescription: React.FC<IProps> = ({ data, services }) => {
+export const Description: React.FC<IProps> = ({ data, services }) => {
   return (
     <Wrapper>
       <Container>

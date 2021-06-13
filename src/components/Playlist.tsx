@@ -1,8 +1,8 @@
 import React from "react";
 import { useHistory, useParams } from "react-router";
 import { useGetSinglePlaylist } from "../queries/hooks";
-import { InnerGridBottom } from "./grid/bottom/InnerGridBottom";
-import { InnerGridTop } from "./grid/top/InnerGridTop";
+import { InnerGridBottom } from "./grid/bottom";
+import { InnerGridTop } from "./grid/top";
 import { useQueryClient } from "react-query";
 import { Playlist as PlaylistType, PlaylistParam } from "../types/types";
 import { InnerLayout } from "./Layout";

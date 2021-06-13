@@ -15,6 +15,12 @@ export type PlaybackPayload = {
   PLAY_PLAYLIST: {
     playlist: Playlist;
   };
+  PLAY_TRACK: {
+    track: Song;
+  };
+  SET_TRACK: {
+    track: Song;
+  };
   SONG_END: {};
   SET_NEXT: {};
   PAUSE_CURRENT: {};
@@ -23,7 +29,7 @@ export type PlaybackPayload = {
 };
 
 export type PlaybackType = {
-  currentPlaylist: Playlist;
+  currentPlaylist?: Playlist;
   playbackPosition: number;
   previousSong?: Song;
   currentSong?: Song;

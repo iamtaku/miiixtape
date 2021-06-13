@@ -2,7 +2,6 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useGlobalContext } from "../../state/context";
 import { Playlist } from "../../types/types";
 import { SidebarItem } from "./SidebarItem";
 import { useSpring, animated } from "react-spring";
@@ -63,8 +62,6 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
       onMouseLeave={(e) => {
         setIsActive(false);
       }}
-
-      // isCurrent={isCurrent()}
     >
       <TitleSection>
         <Container>

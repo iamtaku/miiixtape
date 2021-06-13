@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UserAttributes } from "./types";
-import { Playlist as PlaylistType, PlaylistParam } from "../types/types";
+import { Playlist as PlaylistType } from "../types/types";
 import { useParams } from "react-router";
 import {
   getAllPlaylists,
@@ -39,7 +39,7 @@ export const useGetUser = () => {
   return useQuery<UserAttributes>("user", getUser, {
     enabled: !!token,
     refetchOnWindowFocus: false,
-    staleTime: 3200000,
+    // staleTime: 3300000,
     refetchInterval: 3300000,
   });
 };

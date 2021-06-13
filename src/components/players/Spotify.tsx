@@ -1,14 +1,15 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef } from "react";
 import { Redirect } from "react-router";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import { useGlobalContext } from "../../state/context";
 
 interface SpotifyProps {
   setSpotify: Dispatch<SetStateAction<SpotifyPlayer | undefined>>;
+  uri?: string;
   token: string;
 }
 
-export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token }) => {
+export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
 
@@ -35,6 +36,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token }) => {
 
     if (state.error) {
       console.error(state);
+      debugger;
       <Redirect to="/app/error" />;
     }
   };
@@ -44,10 +46,13 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token }) => {
       <SpotifyPlayer
         token={token}
         name="plaaaylist player"
-        uris={state.player.currentSong ? state.player.currentSong.uri : ""}
+        // uris={state.player.currentSong ? state.player.currentSong.uri : ""}
+
+        uris={uri}
         callback={handleCallback}
         play={
-          state.player.isPlaying && state.player.currentService === "spotify"
+          state.player.isPlaying &&
+          state.player.currentSong?.service === "spotify"
         }
         ref={ref}
       />

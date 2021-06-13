@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { Playlist, Service } from "../../../types/types";
-import { InnerGridDescription as Description } from "./InnerGridDescription";
+import { Description } from "./Description";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
 
-const InnerGridTopWrapper = styled.div`
+const Container = styled.div`
   grid-area: top;
   display: grid;
   max-width: 1440px;
@@ -42,13 +42,13 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, isLoading }) => {
   const services = Array.from(servicesSet);
 
   return (
-    <InnerGridTopWrapper>
+    <Container>
       <CoverImg
         src={data.playlistInfo.img || DefaultMusicImage}
         alt={data.playlistInfo.description}
       />
       <Description data={data} services={services} />
       <Buttons data={data} />
-    </InnerGridTopWrapper>
+    </Container>
   );
 };

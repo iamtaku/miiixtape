@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Song } from "../../../types/types";
-import { TrackImg } from "./TrackImg";
 import { timeConversion } from "../../../helpers/timeConversion";
 import { Link, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../../../state/context";
 import { mapTrackToPlaylist } from "../../../helpers/mappingHelpers";
-import { PlaybackButton } from "../../PlaybackButton";
+import { TrackPlaybackButton } from "../../Buttons";
+import { useIsCurrentTrack } from "../../../helpers/hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 
 interface TrackProps {
   track: Song;
@@ -30,15 +32,30 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
 
   &:hover {
     background-color: var(--light-gray);
+
+    .index {
+      display: none;
+    }
+    .play {
+      display: block;
+    }
+  }
+
+  .index {
+    margin: 0 auto;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-self: center;
+     */
+    text-align: center;
   }
 `;
 
 const Item = styled.span<{
   isRight?: Boolean;
   isCenter?: Boolean;
-  isHidden?: Boolean;
+  isActive?: Boolean;
 }>`
-  display: ${(props) => (props.isHidden ? "none" : "flex")};
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
@@ -51,14 +68,24 @@ const Item = styled.span<{
   }
 `;
 
+const Image = styled.img`
+  width: 40px;
+  justify-self: center;
+`;
+
+const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: Boolean }>`
+  /* display: ${(props) => (props.isActive ? "initial" : "none")}; */
+  display: none;
+`;
+
 export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
   const [isActive, setIsActive] = useState(false);
   const { state, dispatch } = useGlobalContext();
 
-  const isCurrent = state.player.currentSong?.id === track.id;
   const playlist = mapTrackToPlaylist(track);
   const isAlbum = location.pathname.includes("album");
+  const { isPlaying, isCurrent } = useIsCurrentTrack(track);
 
   return (
     <Draggable draggableId={track.id} index={index}>
@@ -76,15 +103,26 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           }}
           isCurrent={isCurrent}
         >
-          <Item isCenter isHidden={isActive}>
-            {index + 1}
+          <Item className="" isCenter>
+            <div className="index">{index + 1}</div>
+            <PlaybackButton className="play" data={track} isActive={isActive}>
+              <FontAwesomeIcon
+                icon={isPlaying && isCurrent ? faPause : faPlay}
+              />
+            </PlaybackButton>
           </Item>
-          {/* <PlaybackButton playlist={playlist} isActive={isActive} /> */}
+          {/* <Item isCenter> */}
+          {/* <TrackPlaybackButton data={track}>
+              <FontAwesomeIcon
+                icon={isPlaying && isCurrent ? faPause : faPlay}
+              />
+            </TrackPlaybackButton> */}
+          {/* </Item> */}
 
           {isAlbum ? (
             <Item>{` `}</Item>
           ) : (
-            <TrackImg img={track.img} alt={track.album?.name} />
+            <Image src={track.img} alt={track.album?.name} />
           )}
           <Item>{track.name}</Item>
           <Item>

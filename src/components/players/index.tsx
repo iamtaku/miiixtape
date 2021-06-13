@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Spotify } from "./Spotify";
 import styled from "styled-components";
 import { useGlobalContext } from "../../state/context";
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   grid-area: player;
   /* display: flex; */
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
 `;
 
 const Player = () => {
@@ -23,23 +23,23 @@ const Player = () => {
   const [youtube, setYoutube] = useState<YouTubePlayer>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer>();
   const [soundcloud, setSoundCloud] = useState<ReactHowler>();
+  const uri = state.player?.currentSong?.uri;
 
   return (
     <Wrapper>
       <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />
-      {state.player.currentService === "youtube" && (
-        <Youtube
-          play={
-            state.player.isPlaying && state.player.currentService === "youtube"
-          }
-          setYoutube={setYoutube}
+      {state.player.currentSong?.service === "youtube" && (
+        <Youtube setYoutube={setYoutube} uri={uri} />
+      )}
+      {state.player.currentSong?.service === "spotify" && userInfo && (
+        <Spotify
+          setSpotify={setSpotify}
+          token={userInfo.access_token}
+          uri={uri}
         />
       )}
-      {state.player.currentService === "spotify" && userInfo && (
-        <Spotify setSpotify={setSpotify} token={userInfo.access_token} />
-      )}
-      {state.player.currentService === "soundcloud" && (
-        <Soundcloud setSoundCloud={setSoundCloud} />
+      {state.player.currentSong?.service === "soundcloud" && (
+        <Soundcloud setSoundCloud={setSoundCloud} uri={uri} />
       )}
     </Wrapper>
   );

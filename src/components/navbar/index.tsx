@@ -8,24 +8,25 @@ const NavBar = styled.nav`
   grid-area: nav;
   display: flex;
   align-items: center;
-  h1 {
-    color: var(--accent);
-  }
-  ul {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-  }
 `;
 
+const List = styled.ul`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const Title = styled.h1`
+  color: var(--accent);
+`;
 export const Navbar: React.FC = () => {
   return (
     <NavBar>
-      <ul>
+      <List>
         <li>
           <Link to="/app">
-            <h1>PLAAAYLIST</h1>
+            <Title>PLAAAYLIST</Title>
           </Link>
         </li>
         <li>
@@ -34,7 +35,7 @@ export const Navbar: React.FC = () => {
         <li>
           <Profile />
         </li>
-      </ul>
+      </List>
     </NavBar>
   );
 };

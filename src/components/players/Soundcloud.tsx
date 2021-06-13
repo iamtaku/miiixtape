@@ -5,8 +5,9 @@ import { useGlobalContext } from "../../state/context";
 
 interface IProps {
   setSoundCloud: Dispatch<SetStateAction<ReactHowler | undefined>>;
+  uri?: string;
 }
-export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
+export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<ReactHowler>(null);
   const handleOnLoadError = () => {
@@ -34,10 +35,11 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
   //     fetchSpotify();
   //   }, []);
 
+  // src="https://api.soundcloud.com/tracks/296201059/stream?client_id=e38841b15b2059a39f261df195dfb430"
   return (
     <div>
       <ReactHowler
-        src="https://api.soundcloud.com/tracks/296201059/stream?client_id=e38841b15b2059a39f261df195dfb430"
+        src={`https://api.soundcloud.com/tracks/${uri}/stream?client_id=${KEY}`}
         playing={
           state.player.isPlaying && state.player.currentService === "soundcloud"
         }
