@@ -76,7 +76,7 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
   const queryClient = useQueryClient();
 
   const handlePlayback = async (data: Collection) => {
-    debugger;
+    // debugger;
     let cache = queryClient.getQueryData<Collection>([
       "collection",
       {
@@ -107,11 +107,11 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
           id: data.playlistInfo.id,
           service: data.playlistInfo.service,
         };
-        cache = await getPlaylist(params, user);
+        const playlist = await getPlaylist(params, user);
         dispatch({
           type: "PLAY_COLLECTION",
           payload: {
-            collection: cache,
+            collection: playlist,
           },
         });
         return;
@@ -131,7 +131,6 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
   };
 
   const handleClick = async (data: Collection) => {
-    debugger;
     try {
       await handlePlayback(data);
     } catch (err) {
@@ -140,9 +139,9 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
   };
 
   return (
-    <Button onClick={() => handleClick(data)} className={className}>
+    <BasicButton onClick={() => handleClick(data)} className={className}>
       {children}
-    </Button>
+    </BasicButton>
   );
 };
 
@@ -153,10 +152,11 @@ interface ITrackButtonProps {
 export const TrackPlaybackButton: React.FC<
   ITrackButtonProps & { className?: string }
 > = ({ data, children, className }) => {
-  const { dispatch, state } = useGlobalContext();
-  const { isPlaying, collection } = useIsCurrentTrack(data);
+  const { dispatch } = useGlobalContext();
+  const { isPlaying } = useIsCurrentTrack(data);
 
   const handleClick = (track: Song) => {
+    // debugger;
     if (isPlaying) {
       dispatch({
         type: "PAUSE_CURRENT",
@@ -178,7 +178,6 @@ export const TrackPlaybackButton: React.FC<
         type: "SET_TRACK",
         payload: { track },
       });
-      return;
     }
 
     if (!isPlaying) {

@@ -2,7 +2,7 @@ import { faPause, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { device } from "../../../globalStyle";
 import { useIsCurrentPlaylist } from "../../../helpers/hooks";
 import { Collection } from "../../../types/types";
@@ -25,7 +25,7 @@ const ButtonWrapper = styled.div`
   position: relative;
 `;
 
-const Btn = styled(BasicButton)`
+const buttonStyles = css`
   margin-left: 8px;
   padding: 8px;
   min-width: 60px;
@@ -48,27 +48,12 @@ const Btn = styled(BasicButton)`
   }
 `;
 
-const GridButton = styled(PlaybackButton)`
-  margin-left: 8px;
-  padding: 8px;
-  min-width: 60px;
-  span {
-    display: none;
-    margin-left: 8px;
-  }
+const Btn = styled(BasicButton)`
+  ${buttonStyles}
+`;
 
-  @media ${device.laptop} {
-    max-width: 60px;
-    span {
-      display: initial;
-    }
-  }
-  @media ${device.tablet} {
-    min-width: 90px;
-  }
-  @media ${device.laptopL} {
-    min-width: 120px;
-  }
+const GridButton = styled(PlaybackButton)`
+  ${buttonStyles}
 `;
 
 const ImportButton = styled(Btn)`
@@ -96,15 +81,15 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
 
   return (
     <ButtonWrapper>
-      {params.service === "spotify" && (
-        <ImportButton
-          onClick={() => setIsModalOpen(!isModalOpen)}
-          isPressed={isModalOpen}
-        >
-          <FontAwesomeIcon icon={faPlus} />
-          <span>ADD</span>
-        </ImportButton>
-      )}
+      {/* {params.service === "spotify" && ( */}
+      <ImportButton
+        onClick={() => setIsModalOpen(!isModalOpen)}
+        isPressed={isModalOpen}
+      >
+        <FontAwesomeIcon icon={faPlus} />
+        <span>ADD</span>
+      </ImportButton>
+      {/* )} */}
       <PlayButton data={data}>
         {isCurrent && isPlaying ? (
           <>

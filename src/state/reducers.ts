@@ -121,12 +121,18 @@ const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
   const nextSong = nextTrack(state.currentCollection?.tracks, newTrack);
   const previousSong = previousTrack(state.currentCollection?.tracks, newTrack);
 
-  return {
+  const newState = {
     ...state,
     currentSong: newTrack,
     nextSong,
     previousSong,
   };
+  // debugger;
+  if (!state.currentCollection?.tracks.includes(newTrack)) {
+    newState.currentCollection = undefined;
+  }
+
+  return newState;
 };
 
 export const playbackReducer = (

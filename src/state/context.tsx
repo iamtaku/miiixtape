@@ -6,10 +6,8 @@ type InitialStateType = {
   player: PlaybackType;
 };
 
-export const player = {
-  // currentPlaylist: playlist,
-  currentPlaylist: undefined,
-
+export const player: PlaybackType = {
+  currentCollection: undefined,
   playbackPosition: 0,
   previousSong: undefined,
   currentSong: undefined,

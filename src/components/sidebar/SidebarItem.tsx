@@ -21,7 +21,7 @@ const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
   border: 1px solid transparent;
   background-color: ${(props) =>
     props.isActive ? "var(--light-gray) !important" : "default"};
-  border-radius: 4px;
+  border-radius: 16px;
   opacity: 0.8;
   margin: 4px 0;
 
@@ -45,6 +45,7 @@ const PlayButton = styled(PlaybackButton)<{
   display: ${(props) => (props.isActive ? "show" : "none")};
   background: none;
   border: none;
+  min-width: 100%;
   color: var(--accent);
   &:hover {
     cursor: pointer;
