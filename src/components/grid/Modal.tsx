@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
+import { SoundCloud } from "../../queries/api";
 import { useGetAllPlaylists, usePostPlaylistItems } from "../../queries/hooks";
 import { Tracks } from "../../types/types";
 
@@ -34,17 +35,49 @@ export const ModalWrapper = styled.div`
 interface ModalProps {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   tracks: Tracks;
+  id: string;
 }
 
-export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks }) => {
+const mapSoundCloudTrackToTrack = (data: any): Tracks => {
+  // debugger;
+  return [
+    {
+      id: data.id.toString(),
+      name: data.title,
+      service: "soundcloud",
+      uri: data.id.toString(),
+    },
+  ];
+};
+
+export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks, id }) => {
   const { data: playlists } = useGetAllPlaylists();
   const mutation = usePostPlaylistItems();
   const handleClick = (id: string) => {
     mutation.mutate({ id, tracks });
     setIsModalOpen(false);
   };
+  const [input, setInput] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const data = await SoundCloud.getTrack(input);
+      const tracks = mapSoundCloudTrackToTrack(data);
+      mutation.mutate({ id, tracks });
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
   return (
     <ModalWrapper>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.currentTarget.value)}
+        />
+      </form>
       <h3>Select a Playlist</h3>
       <ul>
         {playlists &&

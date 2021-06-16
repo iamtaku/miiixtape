@@ -1,6 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import { Collection as PlaylistType, Tracks } from "../types/types";
-import api, { Playlist, PlaylistItems } from "./api";
+import api, { Playlist } from "./api";
 import { getSingleSpotifyPlaylist } from "./spotify-queries";
 import { ServerTokenResponse, UserAttributes } from "./types";
 
@@ -92,7 +92,7 @@ export const postPlaylistItems = async ({
     },
   };
 
-  return await PlaylistItems.createPlaylistItems(id, body);
+  return await Playlist.createPlaylistItems(id, body);
 };
 
 export const postPlaylist = async (name: string) => {

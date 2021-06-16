@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { Collection, Service } from "../../../types/types";
+import { Collection } from "../../../types/types";
 import { Description } from "./Description";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
+import { generateServices } from "../../../helpers/mappingHelpers";
 
 const Container = styled.div`
   grid-area: top;
@@ -37,9 +38,8 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, isLoading }) => {
   if (!data || isLoading) return <h1>loading...</h1>;
 
   //clean this up
-  const servicesSet = new Set<Service>();
-  data.tracks?.forEach((track) => servicesSet.add(track.service));
-  const services = Array.from(servicesSet);
+
+  const services = generateServices(data.tracks);
 
   return (
     <Container>

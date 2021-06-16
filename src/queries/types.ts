@@ -63,6 +63,7 @@ export type SongAttributes = {
   name: string;
   service: Service;
   uri: string;
+  id: string;
 };
 
 export interface PlaylistItemRelationship {

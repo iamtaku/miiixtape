@@ -76,7 +76,6 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
   const queryClient = useQueryClient();
 
   const handlePlayback = async (data: Collection) => {
-    // debugger;
     let cache = queryClient.getQueryData<Collection>([
       "collection",
       {
@@ -131,6 +130,7 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
   };
 
   const handleClick = async (data: Collection) => {
+    debugger;
     try {
       await handlePlayback(data);
     } catch (err) {

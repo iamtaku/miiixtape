@@ -37,7 +37,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
 
     if (state.error) {
       console.error(state);
-      // debugger;
+      debugger;
       console.log("refetching token");
       queryClient.invalidateQueries(["user"]);
       state.needsUpdate = true;

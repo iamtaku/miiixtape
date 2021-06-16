@@ -75,9 +75,9 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
     setIsModalOpen(false);
   }, [pathname]);
 
-  if (data.tracks.length === 0) {
-    return <p>No tracks</p>;
-  }
+  // if (data.tracks.length === 0) {
+  // return <p>No tracks</p>;
+  // }
 
   return (
     <ButtonWrapper>
@@ -105,7 +105,11 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
       </PlayButton>
 
       {isModalOpen && (
-        <Modal setIsModalOpen={setIsModalOpen} tracks={data.tracks} />
+        <Modal
+          setIsModalOpen={setIsModalOpen}
+          tracks={data.tracks}
+          id={data.playlistInfo.id}
+        />
       )}
     </ButtonWrapper>
   );
