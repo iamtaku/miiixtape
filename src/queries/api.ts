@@ -1,12 +1,18 @@
 import axios, { AxiosResponse } from "axios";
 import SpotifyWebApi from "spotify-web-api-js";
-import { mapServerPlaylist } from "../helpers/mappingHelpers";
+import {
+  mapServerPlaylist,
+  mapYoutubeToTrack,
+} from "../helpers/mappingHelpers";
 import { fetchSinglePlaylist } from "./fetchSinglePlaylist";
 import { Collection as PlaylistType, Tracks } from "../types/types";
 import { ServerPlaylist } from "./types";
 
-const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
+const SOUNDCLOUD_KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
 const SOUNDCLOUD = `https://api.soundcloud.com`;
+const YOUTUBE =
+  "https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails&id=";
+const YOUTUBE_KEY = process.env.REACT_APP_YOUTUBE_KEY;
 const SERVER = process.env.REACT_APP_BASE_URL;
 
 interface IPlaylistItems {
@@ -63,7 +69,7 @@ export const Playlist = {
 const soundcloudInstance = axios.create({
   baseURL: SOUNDCLOUD,
   params: {
-    client_id: KEY,
+    client_id: SOUNDCLOUD_KEY,
   },
 });
 
@@ -91,6 +97,26 @@ export const SoundCloud = {
     soundcloudRequests.get(`/tracks/${id}`).then((res) => res),
   getTracks: (uris: string[]): Promise<Soundcloud[]> =>
     fetchMultiple(uris, SoundCloud.getTrack).then((res) => res),
+};
+
+const youtubeInstance = axios.create({
+  baseURL: YOUTUBE,
+  params: {
+    key: YOUTUBE_KEY,
+  },
+});
+
+const youtubeRequests = {
+  get: (url: string) => youtubeInstance.get(url).then(responseBody),
+};
+
+export const Youtube = {
+  getVideos: (ids: string[]) =>
+    youtubeRequests
+      .get(`${ids.join(",")}`)
+      .then((res) => mapYoutubeToTrack(res)),
+  getVideo: (id: string) =>
+    youtubeRequests.get(`${id}`).then((res) => mapYoutubeToTrack(res)),
 };
 
 export default playlistInstance;

@@ -1,8 +1,5 @@
-import SpotifyWebApi from "spotify-web-api-js";
-import { SoundCloud } from "../queries/api";
 import {
   PlaylistItemItem,
-  ServerPlaylist,
   ServerPlaylists,
   SongAttributes,
 } from "../queries/types";
@@ -14,25 +11,37 @@ import {
   Album,
   Artists,
   Service,
+  Artist,
 } from "../types/types";
 import { stripURI } from "./stripURI";
 
-const generateURL = (song: SongAttributes): string => {
-  const YOUTUBE = "https://www.youtube.com/watch?v=";
-  let URL = "";
-  switch (song.service) {
-    case "youtube":
-      URL = `${YOUTUBE}${song.uri}`;
-      break;
-    default:
-      break;
-  }
+export const mapSpotifyArtistToArtist = (
+  data: SpotifyApi.SingleArtistResponse
+): Artist => {
+  debugger;
+  return {
+    data: {
+      playlistInfo: {
+        id: data.id,
+        name: data.name,
+        service: "spotify",
+        img: data.images[0].url,
+        type: "artist",
+      },
+      tracks: [],
+    },
+    name: data.name,
+    uri: data.uri,
+  };
+};
 
-  return URL;
+export const generateYoutubeURL = (uri: string): string => {
+  const YOUTUBE = "https://www.youtube.com/watch?v=";
+  return `${YOUTUBE}${uri}`;
 };
 
 export const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
-  let href = generateURL(item.attributes.song);
+  let href = generateYoutubeURL(item.attributes.song.uri);
 
   return {
     id: item.id,
@@ -44,10 +53,6 @@ export const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
   };
 };
 
-interface IHash {
-  [title: string]: Song;
-}
-
 export const mapSCTracktoTrack = (track: any): Song => {
   return {
     id: track.id,
@@ -57,7 +62,7 @@ export const mapSCTracktoTrack = (track: any): Song => {
     img: track.artwork_url,
     time: track.duration,
     href: track.permalink_url,
-    artists: [{ uri: track.user.id, name: "" }],
+    artists: [{ uri: track.user.id, name: track.user.username }],
   };
 };
 
@@ -182,3 +187,16 @@ export const generateServices = (tracks: Tracks): Service[] => {
   tracks?.forEach((track) => servicesSet.add(track.service));
   return Array.from(servicesSet);
 };
+
+export const mapYoutubeToTrack = (data: any): Song => {
+  debugger;
+  return {
+    id: data.id,
+    name: data.snippet.title,
+    service: "youtube",
+    uri: data.id,
+    // href: generateYoutubeURL(data.id),
+  };
+};
+
+// export const mapYoutubeTrackstoTrack

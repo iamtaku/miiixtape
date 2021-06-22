@@ -1,11 +1,43 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import {
   mapSpotifyAlbumtoPlaylist,
+  mapSpotifyArtistToArtist,
   mapSpotifyPlaylistToPlaylist,
   mapSpotifyToPlaylist,
 } from "../helpers/mappingHelpers";
-import { Collection as Playlist, Service } from "../types/types";
+import { Artist, Collection as Playlist, Service } from "../types/types";
 import { UserAttributes } from "./types";
+
+const fetchSpotifyArtistInfo = async (
+  id: string,
+  client: SpotifyWebApi.SpotifyWebApiJs
+) => {
+  const res: Promise<
+    | SpotifyApi.SingleArtistResponse
+    | SpotifyApi.ArtistsAlbumsResponse
+    | SpotifyApi.ArtistsRelatedArtistsResponse
+    | SpotifyApi.ArtistsTopTracksResponse
+  >[] = [];
+
+  // const fetchFunctions = ['getArtist','getArtistTopTracks','getArtistRelatedArtists','getArtistAlbums',]
+  const fetchFunctions = [
+    client.getArtist,
+    client.getArtistTopTracks,
+    client.getArtistRelatedArtists,
+    client.getArtistAlbums,
+  ];
+  const options = {};
+  fetchFunctions.forEach((fn) => res.push(fn(id)));
+};
+
+export const getSpotifyArtist = async (
+  artistId: string,
+  client: SpotifyWebApi.SpotifyWebApiJs
+): Promise<Artist> => {
+  client.getArti;
+  const data = await client.getArtist(artistId);
+  return mapSpotifyArtistToArtist(data);
+};
 
 export const getSpotifyAlbum = async (
   albumId: string,

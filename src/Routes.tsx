@@ -8,6 +8,7 @@ import { Playlist } from "./components/Playlist";
 import { Album } from "./components/Album";
 import { Layout } from "./components/Layout";
 import { NotFound } from "./pages/NotFound";
+import { Artist } from "./components/Artist";
 
 export const Routes = () => (
   <BrowserRouter>
@@ -50,6 +51,10 @@ const AppRoutes = () => {
         <Route path={`${path}/album/:service/:albumId`}>
           <Album />
         </Route>
+        <Route path={`${path}/artist/:service/:artistId`}>
+          <Artist />
+        </Route>
+
         <Route path={`${path}/error`}>
           <Error />
         </Route>

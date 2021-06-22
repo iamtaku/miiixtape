@@ -66,7 +66,7 @@ export const Description: React.FC<IProps> = ({ data, services }) => {
         </ServiceWrapper>
       </Container>
       <Title>{data.playlistInfo.name}</Title>
-      {data.tracks && <span>{`${data.tracks.length} Tracks`}</span>}
+      {data.tracks.length > 0 && <span>{`${data.tracks.length} Tracks`}</span>}
     </Wrapper>
   );
 };

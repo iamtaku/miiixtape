@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UserAttributes } from "./types";
-import { Collection as CollectionType } from "../types/types";
+import { Artist, Collection as CollectionType } from "../types/types";
 import { useParams } from "react-router";
 import {
+  ArtistParams,
   getAllPlaylists,
+  getArtist,
   getPlaylist,
   getToken,
   getUser,
@@ -17,6 +19,12 @@ import {
   getSpotifyInfo,
   getSpotifyPlaylists,
 } from "./spotify-queries";
+export const useGetArtist = (params: ArtistParams) => {
+  const { data: userInfo } = useGetUser();
+  return useQuery<Artist, Error>(["artist", params], () =>
+    getArtist(params, userInfo)
+  );
+};
 
 export const useGetSinglePlaylist = (id: string, service: string) => {
   const { data: userInfo } = useGetUser();
@@ -36,6 +44,7 @@ export const useGetUser = () => {
   const { data: token } = useGetToken();
   return useQuery<UserAttributes>("user", getUser, {
     enabled: !!token,
+    refetchInterval: 1000 * 60 * 59,
   });
 };
 

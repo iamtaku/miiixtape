@@ -21,7 +21,7 @@ const filterTracks = (data: PlaylistItemItem[], service: Service) =>
 
 const removeDuplicate = (data: any): string[] => Array.from(new Set(data));
 
-const fetchAllSpotifyTracks = async (
+export const fetchAllSpotifyTracks = async (
   uris: string[],
   client: SpotifyWebApi.SpotifyWebApiJs
 ) => {

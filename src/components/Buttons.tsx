@@ -130,7 +130,7 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
   };
 
   const handleClick = async (data: Collection) => {
-    debugger;
+    // debugger;
     try {
       await handlePlayback(data);
     } catch (err) {

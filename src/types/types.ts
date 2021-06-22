@@ -13,7 +13,12 @@ export type Song = {
 
 export type Artists = Artist[];
 
-export interface Artist extends Basic {}
+export interface Artist extends Basic {
+  data?: {
+    playlistInfo: PlaylistInfo;
+    tracks: Tracks;
+  };
+}
 export interface Album extends Basic {}
 
 export type Basic = {

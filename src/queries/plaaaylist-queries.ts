@@ -1,8 +1,27 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { Collection as PlaylistType, Tracks } from "../types/types";
+import { Artist, Collection as PlaylistType, Tracks } from "../types/types";
 import api, { Playlist } from "./api";
-import { getSingleSpotifyPlaylist } from "./spotify-queries";
+import { getSingleSpotifyPlaylist, getSpotifyArtist } from "./spotify-queries";
 import { ServerTokenResponse, UserAttributes } from "./types";
+
+export interface ArtistParams {
+  artistId: string;
+  service: string;
+}
+export const getArtist = async (
+  params: ArtistParams,
+  userInfo?: UserAttributes
+): Promise<Artist> => {
+  const client = new SpotifyWebApi();
+  userInfo && client.setAccessToken(userInfo.access_token);
+
+  switch (params.service) {
+    case "spotify":
+      return await getSpotifyArtist(params.artistId, client);
+    default:
+      throw new Error("something gone wrong");
+  }
+};
 
 export const getPlaaaylist = async (
   playlistId: string,
@@ -14,6 +33,8 @@ export const getPlaaaylist = async (
     throw new Error(error);
   }
 };
+
+// const callCorrectFunction = (params, callbackFunction:
 
 interface IParam {
   id: string;

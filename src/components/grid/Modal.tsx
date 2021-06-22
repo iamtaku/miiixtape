@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
-import { SoundCloud } from "../../queries/api";
+import { stripYoutubeURI } from "../../helpers/stripURI";
+import { SoundCloud, Youtube } from "../../queries/api";
 import { useGetAllPlaylists, usePostPlaylistItems } from "../../queries/hooks";
 import { Tracks } from "../../types/types";
 
@@ -61,13 +62,14 @@ export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks, id }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const data = await SoundCloud.getTrack(input);
-      const tracks = mapSoundCloudTrackToTrack(data);
-      mutation.mutate({ id, tracks });
-    } catch (err) {
-      throw new Error(err);
+    if (input.includes("youtube")) {
+      const uri = stripYoutubeURI(input);
+      debugger;
+      uri && Youtube.getVideo(uri).then((res) => console.log(res));
     }
+    //      const data = await SoundCloud.getTrack(input);
+    //      const tracks = mapSoundCloudTrackToTrack(data);
+    //      mutation.mutate({ id, tracks });
   };
   return (
     <ModalWrapper>

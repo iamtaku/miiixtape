@@ -146,8 +146,15 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           <Item>{track.name}</Item>
           <Item>
             {track.artists
-              ? track.artists?.map((artist) => (
-                  <span key={artist.uri}>{artist.name}</span>
+              ? track.artists?.map((artist, index) => (
+                  <Link
+                    key={index}
+                    to={`/app/artist/${track.service}/${artist.uri}`}
+                  >
+                    {artist.name}
+                  </Link>
+
+                  // <span key={artist.uri}>{artist.name}</span>
                 ))
               : "-"}
           </Item>
