@@ -27,14 +27,14 @@ const fetchSpotifyArtistInfo = async (
     client.getArtistAlbums,
   ];
   const options = {};
-  fetchFunctions.forEach((fn) => res.push(fn(id)));
+  fetchFunctions.forEach((fn) => fn 
 };
 
 export const getSpotifyArtist = async (
   artistId: string,
   client: SpotifyWebApi.SpotifyWebApiJs
 ): Promise<Artist> => {
-  client.getArti;
+  // client.getArti;
   const data = await client.getArtist(artistId);
   return mapSpotifyArtistToArtist(data);
 };
