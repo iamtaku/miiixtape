@@ -28,6 +28,7 @@ const LayoutWrapper = styled.div`
 
 export const InnerLayout = styled.div`
   grid-area: inner;
+  position: relative;
   display: grid;
   grid-template-areas:
     "top"

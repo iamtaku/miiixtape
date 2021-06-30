@@ -27,7 +27,7 @@ const ItemContainer = styled.li<{ isAlbum?: boolean }>`
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
-  opacity: 0.7;
+  /* opacity: 0.7; */
 `;
 
 const Item = styled.span<{ isRight?: boolean }>`

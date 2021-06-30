@@ -27,7 +27,7 @@ const fetchSpotifyArtistInfo = async (
     client.getArtistAlbums,
   ];
   const options = {};
-  fetchFunctions.forEach((fn) => fn 
+  // fetchFunctions.forEach((fn) => fn 
 };
 
 export const getSpotifyArtist = async (

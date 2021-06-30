@@ -156,7 +156,6 @@ export const TrackPlaybackButton: React.FC<
   const { isPlaying } = useIsCurrentTrack(data);
 
   const handleClick = (track: Song) => {
-    // debugger;
     if (isPlaying) {
       dispatch({
         type: "PAUSE_CURRENT",

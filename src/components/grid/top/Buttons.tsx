@@ -1,4 +1,4 @@
-import { faPause, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPause, faPlay, faPlus ,faShare} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
@@ -8,7 +8,7 @@ import { useIsCurrentPlaylist } from "../../../helpers/hooks";
 import { Collection } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
-import { Modal } from "../Modal";
+import { Modal } from "../../modal";
 
 interface ButtonsProps {
   data: Collection;
@@ -22,7 +22,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  /* position: relative; */
 `;
 
 const buttonStyles = css`
@@ -57,12 +57,13 @@ const GridButton = styled(PlaybackButton)`
 `;
 
 const ImportButton = styled(Btn)`
-  color: var(--secondary);
+  color: var(--accent);
 `;
 
 const PlayButton = styled(GridButton)`
-  color: var(--accent);
+  color: var(--secondary);
 `;
+
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -111,6 +112,7 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
           id={data.playlistInfo.id}
         />
       )}
+      {/* <Btn style={{ color: 'var(--accent)' }}><FontAwesomeIcon icon={faShare} />SHARE</Btn> */}
     </ButtonWrapper>
   );
 };

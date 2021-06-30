@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
-import { ModalWrapper } from "../grid/Modal";
+import { ModalWrapper } from "../modal";
 import { useGetSpotifyUser } from "../../queries/hooks";
 import { BasicButton } from "../Buttons";
 
