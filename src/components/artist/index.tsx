@@ -1,10 +1,10 @@
 import React from "react";
 import { useParams } from "react-router";
-import { useGetArtist } from "../queries/hooks";
-import { ArtistParams } from "../queries/plaaaylist-queries";
-import { ArtistGridBottom } from "./grid/bottom/ArtistGridBottom";
-import { InnerGridTop } from "./grid/top";
-import { InnerLayout } from "./Layout";
+import { useGetArtist } from "../../queries/hooks";
+import { ArtistParams } from "../../queries/plaaaylist-queries";
+import { ArtistGridBottom } from "./ArtistGridBottom";
+import { InnerGridTop } from "../grid/top";
+import { InnerLayout } from "../Layout";
 
 export const Artist = () => {
   const params = useParams<ArtistParams>();

@@ -29,7 +29,7 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
-  min-height: 40px;
+  max-height: 100ps;
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
 

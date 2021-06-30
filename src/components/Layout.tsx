@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { device } from "../globalStyle";
 import { Navbar } from "./navbar";
 import Player from "./players";
-import { Sidebar } from "./sidebar/Sidebar";
+import { Sidebar } from "./sidebar";
 
 const Container = styled.div`
   display: grid;
@@ -28,11 +28,10 @@ const LayoutWrapper = styled.div`
 
 export const InnerLayout = styled.div`
   grid-area: inner;
-  position: relative;
   display: grid;
   grid-template-areas:
     "top"
-    "bottom ";
+    "bottom";
   grid-template-rows: 20% 80%;
   grid-row-gap: 24px;
 

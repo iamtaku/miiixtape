@@ -8,7 +8,7 @@ import { Playlist } from "./components/Playlist";
 import { Album } from "./components/Album";
 import { Layout } from "./components/Layout";
 import { NotFound } from "./pages/NotFound";
-import { Artist } from "./components/Artist";
+import { Artist } from "./components/artist";
 
 export const Routes = () => (
   <BrowserRouter>

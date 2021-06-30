@@ -5,6 +5,7 @@ import { Collection } from "../../../types/types";
 import { Track } from "./Track";
 
 const Wrapper = styled.div`
+  position: relative;
   grid-area: bottom;
   overflow-y: scroll;
 `;
@@ -27,7 +28,6 @@ const ItemContainer = styled.li<{ isAlbum?: boolean }>`
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
-  /* opacity: 0.7; */
 `;
 
 const Item = styled.span<{ isRight?: boolean }>`

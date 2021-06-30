@@ -28,11 +28,11 @@ const ProfileImage = styled.img`
   object-fit: cover;
   width: 60px;
   height: 60px;
-  position: relative;
+  /* position: relative; */
 `;
 
 const Wrapper = styled.div`
-  position: relative;
+  /* position: relative; */
 `;
 
 export const Profile = () => {

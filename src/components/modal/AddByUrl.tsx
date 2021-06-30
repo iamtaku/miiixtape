@@ -1,6 +1,11 @@
 import React ,{useState}from 'react'
+import styled from 'styled-components';
 import { stripYoutubeURI } from '../../helpers/stripURI';
 import { SoundCloud, Youtube } from "../../queries/api";
+
+const Input = styled.input`
+  width: 50%;
+`;
 
 export const AddByUrl = () => {
 
@@ -21,7 +26,7 @@ export const AddByUrl = () => {
         <div>
 <h3>Add by URL</h3>           
 <form onSubmit={handleSubmit}>
-        <input
+        <Input
           type="text"
           value={input}
           onChange={(e) => setInput(e.currentTarget.value)}
