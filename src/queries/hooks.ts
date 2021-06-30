@@ -1,34 +1,39 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { UserAttributes } from "../types";
-import { Playlist as PlaylistType, PlaylistParam } from "../../types/types";
+import { UserAttributes } from "./types";
+import { Artist, Collection as CollectionType } from "../types/types";
 import { useParams } from "react-router";
 import {
+  ArtistParams,
   getAllPlaylists,
+  getArtist,
   getPlaylist,
   getToken,
   getUser,
   postPlaylist,
   postPlaylistItems,
   Token,
-} from "../plaaaylist-queries";
+} from "./plaaaylist-queries";
 import {
   AlbumParam,
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
-} from "../spotify-queries";
-
-export const useGetSinglePlaylist = () => {
-  const params = useParams<PlaylistParam>();
+} from "./spotify-queries";
+export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
+  return useQuery<Artist, Error>(["artist", params], () =>
+    getArtist(params, userInfo)
+  );
+};
 
-  return useQuery<PlaylistType, Error>(
-    ["playlist", { ...params }],
-    () => getPlaylist(params, userInfo),
+export const useGetSinglePlaylist = (id: string, service: string) => {
+  const { data: userInfo } = useGetUser();
+  return useQuery<CollectionType, Error>(
+    ["collection", { id, service }],
+    () => getPlaylist({ id, service }, userInfo),
     {
       enabled: !!userInfo,
-      staleTime: 360000,
-      refetchOnWindowFocus: false,
+      staleTime: Infinity,
     }
   );
 };
@@ -37,8 +42,9 @@ export const useGetToken = () => useQuery<Token>("token", getToken);
 
 export const useGetUser = () => {
   const { data: token } = useGetToken();
-  return useQuery<UserAttributes>("user", () => getUser(token), {
+  return useQuery<UserAttributes>("user", getUser, {
     enabled: !!token,
+    refetchInterval: 1000 * 60 * 59,
   });
 };
 
@@ -46,12 +52,11 @@ export const useGetAlbum = () => {
   const params = useParams<AlbumParam>();
   const { data: userInfo } = useGetUser();
 
-  return useQuery<PlaylistType, Error>(
-    ["album", { ...params }],
+  return useQuery<CollectionType, Error>(
+    ["collection", { id: params.albumId, service: params.service }],
     () => getAlbum(params, userInfo),
     {
       enabled: !!userInfo && !!params.albumId,
-      staleTime: 360000,
     }
   );
 };
@@ -61,7 +66,6 @@ export const useGetAllSpotifyPlaylist = () => {
   return useQuery("spotifyPlaylistAll", () => getSpotifyPlaylists(userInfo), {
     enabled: !!userInfo,
     staleTime: Infinity,
-    refetchOnWindowFocus: false,
   });
 };
 
@@ -70,21 +74,17 @@ export const useGetSpotifyUser = () => {
 
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
   });
 };
 
 export const useGetAllPlaylists = () =>
-  useQuery<PlaylistType[], Error>("playlistAll", getAllPlaylists, {
-    staleTime: Infinity,
-  });
+  useQuery<CollectionType[], Error>("playlistAll", getAllPlaylists, {});
 
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
   return useMutation(postPlaylistItems, {
     onSuccess: (data) => {
-      queryClient.invalidateQueries("playlist");
+      queryClient.invalidateQueries("collection");
       console.log("tracks have been added! ", data);
     },
     onError: (error) => {
@@ -98,7 +98,7 @@ export const usePostPlaylist = () => {
   return useMutation(postPlaylist, {
     onSuccess: (data) => {
       queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data
-      console.log("playlist created! : ", data);
+      console.log("collection created! : ", data);
     },
   });
 };

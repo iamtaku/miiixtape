@@ -1,88 +1,118 @@
+import { faPause, faPlay, faPlus ,faShare} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import styled from "styled-components";
-import { useGlobalContext } from "../../../state/context";
-import { Playlist, Tracks } from "../../../types/types";
-import { Modal } from "../Modal";
+import { useLocation, useParams } from "react-router";
+import styled, { css } from "styled-components";
+import { device } from "../../../globalStyle";
+import { useIsCurrentPlaylist } from "../../../helpers/hooks";
+import { Collection } from "../../../types/types";
+import { BasicButton } from "../../Buttons";
+import { PlaybackButton } from "../../Buttons";
+import { Modal } from "../../modal";
+
+interface ButtonsProps {
+  data: Collection;
+}
+
+interface IParam {
+  service: string;
+}
 
 const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  /* position: relative; */
 `;
 
-const ImportButton = styled.button`
-  background-color: transparent;
-  padding: 8px 24px;
-  color: var(--secondary);
-  border: none;
-  border-radius: 50px;
-  background: #353535;
-  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-  margin-right: 8px;
-  &:hover {
-    background: var(--secondary);
-    color: var(--primary);
+const buttonStyles = css`
+  margin-left: 8px;
+  padding: 8px;
+  min-width: 60px;
+  span {
+    display: none;
+    margin-left: 8px;
+  }
+
+  @media ${device.laptop} {
+    max-width: 60px;
+    span {
+      display: initial;
+    }
+  }
+  @media ${device.tablet} {
+    min-width: 90px;
+  }
+  @media ${device.laptopL} {
+    min-width: 120px;
   }
 `;
 
-const PlayButton = styled.button`
-  background-color: var(--accent);
-  padding: 8px 24px;
+const Btn = styled(BasicButton)`
+  ${buttonStyles}
+`;
+
+const GridButton = styled(PlaybackButton)`
+  ${buttonStyles}
+`;
+
+const ImportButton = styled(Btn)`
   color: var(--accent);
-  border: none;
-  border-radius: 50px;
-  background: #353535;
-  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-  &:hover {
-    background: var(--accent);
-    color: var(--primary);
-  }
 `;
 
-interface ButtonsProps {
-  data: Playlist;
-}
+const PlayButton = styled(GridButton)`
+  color: var(--secondary);
+`;
+
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
-  const { dispatch } = useGlobalContext();
-  const params = useParams<{ service: string; id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
+
+  const { pathname } = useLocation();
+  const params = useParams<IParam>();
 
   useEffect(() => {
     setIsModalOpen(false);
-  }, [params]);
+  }, [pathname]);
 
-  const handlePlay = (id: string, tracks?: Tracks) => {
-    if (tracks) {
-      dispatch({
-        type: "PLAY_PLAYLIST",
-        payload: {
-          id,
-          tracks,
-        },
-      });
-    }
-  };
-
-  if (data.tracks === undefined) {
-    return <p>No tracks</p>;
-  }
+  // if (data.tracks.length === 0) {
+  // return <p>No tracks</p>;
+  // }
 
   return (
     <ButtonWrapper>
-      {params.service === "spotify" && (
-        <ImportButton onClick={() => setIsModalOpen(!isModalOpen)}>
-          IMPORT
-        </ImportButton>
-      )}
-      <PlayButton onClick={() => handlePlay(data.playlistInfo.id, data.tracks)}>
-        PLAY
+      {/* {params.service === "spotify" && ( */}
+      <ImportButton
+        onClick={() => setIsModalOpen(!isModalOpen)}
+        isPressed={isModalOpen}
+      >
+        <FontAwesomeIcon icon={faPlus} />
+        <span>ADD</span>
+      </ImportButton>
+      {/* )} */}
+      <PlayButton data={data}>
+        {isCurrent && isPlaying ? (
+          <>
+            <FontAwesomeIcon icon={faPause} />
+            <span>PAUSE</span>
+          </>
+        ) : (
+          <>
+            <FontAwesomeIcon icon={faPlay} />
+            <span>PLAY</span>
+          </>
+        )}
       </PlayButton>
+
       {isModalOpen && (
-        <Modal setIsModalOpen={setIsModalOpen} tracks={data.tracks} />
+        <Modal
+          setIsModalOpen={setIsModalOpen}
+          tracks={data.tracks}
+          id={data.playlistInfo.id}
+        />
       )}
+      {/* <Btn style={{ color: 'var(--accent)' }}><FontAwesomeIcon icon={faShare} />SHARE</Btn> */}
     </ButtonWrapper>
   );
 };

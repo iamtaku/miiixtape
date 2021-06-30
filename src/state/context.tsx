@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
-import { Song, Service } from "../types/types";
 import { playbackReducer, PlaybackActions } from "./reducers";
 import { PlaybackType } from "./types";
 
@@ -7,22 +6,8 @@ type InitialStateType = {
   player: PlaybackType;
 };
 
-const song: Song = {
-  name: "",
-  service: "",
-  uri: "",
-  id: "",
-  img: "",
-};
-
-const service: Service = "";
-
-export const player = {
-  currentPlaylist: {
-    name: "",
-    description: "",
-  },
-  playlistTracks: [],
+export const player: PlaybackType = {
+  currentCollection: undefined,
   playbackPosition: 0,
   previousSong: undefined,
   currentSong: undefined,
@@ -32,8 +17,6 @@ export const player = {
   isPlaying: false,
   isFinished: false,
 };
-
-// const playlist: Playlist[] = [];
 
 export const initialState = {
   player,

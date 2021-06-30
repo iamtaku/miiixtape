@@ -4,26 +4,18 @@ import { AddPlaylistForm } from "./AddPlaylistForm";
 import {
   useGetAllSpotifyPlaylist,
   useGetAllPlaylists,
-} from "../../queries/hooks/plaaaylist";
+} from "../../queries/hooks";
 
-const SidebarWrapper = styled.div`
+const Wrapper = styled.div`
   grid-area: sidebar;
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 24px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-radius: 50px;
-  background: #353535;
-  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
-  span {
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    opacity: 0.8;
-    text-align: center;
-  }
+  background: transparent;
+  opacity: 0.8;
 `;
 
 export const Sidebar = () => {
@@ -34,18 +26,16 @@ export const Sidebar = () => {
   //add sidebar loading placeholder
   if (isLoading || spotifyLoading)
     return (
-      <SidebarWrapper>
+      <Wrapper>
         <h2>Loading...</h2>
-      </SidebarWrapper>
+      </Wrapper>
     );
 
   return (
-    <SidebarWrapper>
-      <span>Spotify Playlists</span>
-      <SidebarCollection data={spotifyPlaylists} />
-      <span>Plaaaylist</span>
-      <SidebarCollection data={playlists} />
+    <Wrapper>
+      <SidebarCollection data={spotifyPlaylists} title={"spotify"} />
+      <SidebarCollection data={playlists} title={"plaaaylist"} />
       <AddPlaylistForm />
-    </SidebarWrapper>
+    </Wrapper>
   );
 };

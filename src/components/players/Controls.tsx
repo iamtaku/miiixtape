@@ -4,41 +4,58 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
+import { YouTubePlayer } from "youtube-player/dist/types";
+import ReactHowler from "react-howler";
+import { useQueryClient } from "react-query";
 
 interface ControlsProps {
-  youtube: any;
+  youtube?: YouTubePlayer;
   spotify?: SpotifyWebPlayer;
+  soundcloud?: ReactHowler;
 }
 
-const ControllerWrapper = styled.div`
+const Wrapper = styled.div`
   border: solid 1px red;
   display: flex;
   justify-content: space-around;
 `;
 
-export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
+export const Controls: React.FC<ControlsProps> = ({
+  youtube,
+  spotify,
+  soundcloud,
+}) => {
   const { state, dispatch } = useGlobalContext();
+  const queryClient = useQueryClient();
+  const data = queryClient.getQueryData("user");
 
   const handlePause = () => {
     dispatch({ type: "PAUSE_CURRENT", payload: {} });
-    youtube.pauseVideo();
   };
   const handlePlay = () => {
     dispatch({ type: "PLAY", payload: {} });
-    youtube.playVideo();
   };
 
   const handlePlayPause = () => {
+    debugger;
     state.player.isPlaying ? handlePause() : handlePlay();
   };
 
   const handleNext = () => {
-    console.log("playing next");
     dispatch({
-      type: "PLAY_NEXT",
+      type: "SONG_END",
       payload: {},
     });
-    youtube.stopVideo();
+    dispatch({
+      type: "SET_NEXT",
+      payload: {},
+    });
+
+    state.player.isPlaying &&
+      dispatch({
+        type: "PLAY",
+        payload: {},
+      });
   };
 
   const handlePrevious = () => {
@@ -47,8 +64,9 @@ export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
       payload: {},
     });
   };
+
   return (
-    <ControllerWrapper>
+    <Wrapper>
       <p>previous: {state.player.previousSong?.name}</p>
       <p>current: {state.player.currentSong?.name}</p>
       <p>next: {state.player.nextSong?.name}</p>
@@ -61,6 +79,6 @@ export const Controls: React.FC<ControlsProps> = ({ youtube }) => {
         )}
       </button>
       <button onClick={handleNext}>Next</button>
-    </ControllerWrapper>
+    </Wrapper>
   );
 };

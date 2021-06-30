@@ -1,109 +1,95 @@
-import SpotifyWebApi from "spotify-web-api-js";
 import {
   PlaylistItemItem,
-  ServerPlaylist,
   ServerPlaylists,
+  SongAttributes,
 } from "../queries/types";
 import {
   PlaylistInfo,
   Song,
-  Playlist,
+  Collection,
   Tracks,
   Album,
   Artists,
+  Service,
+  Artist,
 } from "../types/types";
 import { stripURI } from "./stripURI";
 
-const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
+export const mapSpotifyArtistToArtist = (
+  data: SpotifyApi.SingleArtistResponse
+): Artist => {
+  debugger;
+  return {
+    data: {
+      playlistInfo: {
+        id: data.id,
+        name: data.name,
+        service: "spotify",
+        img: data.images[0].url,
+        type: "artist",
+      },
+      tracks: [],
+    },
+    name: data.name,
+    uri: data.uri,
+  };
+};
+
+export const generateYoutubeURL = (uri: string): string => {
+  const YOUTUBE = "https://www.youtube.com/watch?v=";
+  return `${YOUTUBE}${uri}`;
+};
+
+export const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
+  let href = generateYoutubeURL(item.attributes.song.uri);
+
   return {
     id: item.id,
     name: item.attributes.song.name,
     service: item.attributes.song.service,
     uri: item.attributes.song.uri,
     playlistPosition: item.attributes.position,
+    href,
   };
 };
 
-const generateSpotifyHash = async (
-  data: PlaylistItemItem[],
-  client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<IHash> => {
-  const spotifyTracks = data.filter(
-    (item) => item.attributes.song.service === "spotify"
-  );
-  //fetch them 50 at a time
-  const spotifyURIS = spotifyTracks.map((track) => {
-    return stripURI(track.attributes.song.uri);
-  });
-  const res = await client.getTracks(spotifyURIS);
-  const spotifyHash: IHash = {};
-
-  res.tracks.forEach((track) => {
-    const mapped = mapSpotifyTracktoTrack(track);
-    spotifyHash[mapped.name] = mapped;
-  });
-  return spotifyHash;
-};
-
-interface IHash {
-  [title: string]: Song;
-}
-
-export const mapToPlaylist = async (
-  data: ServerPlaylist,
-  client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<Playlist> => {
-  const playlistInfo: PlaylistInfo = {
-    id: data.data.id,
-    name: data.data.attributes.name,
-    description: data.data.attributes.description,
-    type: "playlist",
-    service: "plaaaylist",
-  };
-  if (data.included.length === 0) {
-    return {
-      playlistInfo,
-      tracks: [],
-    };
-  }
-
-  const spotifyHash = await generateSpotifyHash(data.included, client);
-  const tracks = data.included.map((item) => {
-    if (item.attributes.song.service === "spotify") {
-      const res = spotifyHash[item.attributes.song.name];
-      res.playlistPosition = item.attributes.position;
-      return res;
-    }
-    return mapPlaylistItemToTrack(item);
-  });
-
+export const mapSCTracktoTrack = (track: any): Song => {
   return {
-    playlistInfo,
-    tracks,
+    id: track.id,
+    name: track.title,
+    service: "soundcloud",
+    uri: track.id,
+    img: track.artwork_url,
+    time: track.duration,
+    href: track.permalink_url,
+    artists: [{ uri: track.user.id, name: track.user.username }],
   };
 };
-export const mapServerPlaylist = (data: ServerPlaylists): Playlist[] => {
-  const mappedData: Playlist[] = data.data.map((item) => {
+
+export const mapServerPlaylist = (data: ServerPlaylists): Collection[] => {
+  const mappedData: Collection[] = data.data.map((item) => {
     return {
       playlistInfo: {
         id: item.id,
         name: item.attributes.name,
         service: "plaaaylist",
       },
+      tracks: [],
     };
   });
   return mappedData;
 };
 export const mapSpotifyToPlaylist = (
   data: SpotifyApi.ListOfUsersPlaylistsResponse
-): Playlist[] => {
-  const mappedData: Playlist[] = data.items.map((item) => {
+): Collection[] => {
+  const mappedData: Collection[] = data.items.map((item) => {
     return {
       playlistInfo: {
         id: item.id,
         name: item.name,
         service: "spotify",
       },
+      tracks: [],
     };
   });
   return mappedData;
@@ -143,33 +129,34 @@ export const mapSpotifyAlbumtoPlaylist = (
 };
 
 export const mapSpotifyTracktoTrack = (
-  data: SpotifyApi.SingleTrackResponse | SpotifyApi.TrackObjectFull
+  data: SpotifyApi.SingleTrackResponse | SpotifyApi.TrackObjectFull,
+  index?: number
 ): Song => {
   const album: Album = {
     name: data.album.name,
-    uri: data.album.uri,
+    uri: stripURI(data.album.uri),
   };
 
   const artists: Artists = data.artists.map((artist) => ({
     name: artist.name,
-    uri: artist.uri,
+    uri: stripURI(artist.uri),
   }));
-
   return {
     name: data.name,
-    id: data.id,
+    id: data.id + index,
     service: "spotify",
     uri: data.uri,
     album,
     artists,
     img: data.album.images[0].url,
     time: data.duration_ms,
+    href: data.external_urls.spotify,
   };
 };
 
 export const mapSpotifyPlaylistToPlaylist = (
   data: SpotifyApi.SinglePlaylistResponse
-): Playlist => {
+): Collection => {
   const playlistInfo: PlaylistInfo = {
     id: data.id,
     name: data.name,
@@ -179,9 +166,9 @@ export const mapSpotifyPlaylistToPlaylist = (
     type: "playlist",
     service: "spotify",
   };
-  const tracks: Song[] = data.tracks.items.map((item) => {
+  const tracks: Song[] = data.tracks.items.map((item, index) => {
     const newItem = item.track as SpotifyApi.TrackObjectFull;
-    return mapSpotifyTracktoTrack(newItem);
+    return mapSpotifyTracktoTrack(newItem, index);
   });
 
   return {
@@ -189,3 +176,27 @@ export const mapSpotifyPlaylistToPlaylist = (
     tracks,
   };
 };
+
+export const mapTrackToPlaylist = (track: Song): Collection => ({
+  playlistInfo: { name: track.name, id: track.id, service: track.service },
+  tracks: [{ ...track }],
+});
+
+export const generateServices = (tracks: Tracks): Service[] => {
+  const servicesSet = new Set<Service>();
+  tracks?.forEach((track) => servicesSet.add(track.service));
+  return Array.from(servicesSet);
+};
+
+export const mapYoutubeToTrack = (data: any): Song => {
+  debugger;
+  return {
+    id: data.id,
+    name: data.snippet.title,
+    service: "youtube",
+    uri: data.id,
+    // href: generateYoutubeURL(data.id),
+  };
+};
+
+// export const mapYoutubeTrackstoTrack

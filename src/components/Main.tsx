@@ -1,15 +1,10 @@
 import { useLocation, useHistory } from "react-router";
 import { LoginButton } from "./Buttons";
-// import { GetToken } from "../queries/hooks/GetToken";
-import { InnerLayout } from "./grid/InnerLayout";
-import React from "react";
-import { Layout } from "./Layout";
-import { useGetUser } from "../queries/hooks/plaaaylist";
+import { useGetUser } from "../queries/hooks";
 
 export const Main = () => {
   const { search } = useLocation();
   const history = useHistory();
-  // GetToken();
 
   const { isLoading, error, data } = useGetUser();
   if (search === "?error=access_denied") {
@@ -25,11 +20,5 @@ export const Main = () => {
         <LoginButton>Login</LoginButton>
       </>
     );
-  return (
-    <Layout>
-      <InnerLayout>
-        <p>Hello {data?.username}</p>
-      </InnerLayout>
-    </Layout>
-  );
+  return <p>Hello {data?.username}</p>;
 };

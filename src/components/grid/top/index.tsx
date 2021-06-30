@@ -1,15 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-import { Playlist, Service } from "../../../types/types";
-import { InnerGridDescription } from "./InnerGridDescription";
+import { Collection } from "../../../types/types";
+import { Description } from "./Description";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
+import { generateServices } from "../../../helpers/mappingHelpers";
 
-const InnerGridTopWrapper = styled.div`
+const Container = styled.div`
   grid-area: top;
   display: grid;
+  max-width: 1440px;
   grid-template-columns: 30% 40% 30%;
   grid-template-rows: 100%;
+  grid-column-gap: 8px;
+  align-items: center;
   padding: 24px;
   border-radius: 50px;
   background: #353535;
@@ -20,10 +24,12 @@ const CoverImg = styled.img`
   justify-self: center;
   max-width: 100%;
   max-height: 100%;
+  background: var(--primary);
+  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
 `;
 
 interface PropTypes {
-  data?: Playlist;
+  data?: Collection;
   isLoading: boolean;
 }
 
@@ -32,18 +38,17 @@ export const InnerGridTop: React.FC<PropTypes> = ({ data, isLoading }) => {
   if (!data || isLoading) return <h1>loading...</h1>;
 
   //clean this up
-  const servicesSet = new Set<Service>();
-  data.tracks?.forEach((track) => servicesSet.add(track.service));
-  const services = Array.from(servicesSet);
+
+  const services = generateServices(data.tracks);
 
   return (
-    <InnerGridTopWrapper>
+    <Container>
       <CoverImg
         src={data.playlistInfo.img || DefaultMusicImage}
         alt={data.playlistInfo.description}
       />
-      <InnerGridDescription data={data} services={services} />
+      <Description data={data} services={services} />
       <Buttons data={data} />
-    </InnerGridTopWrapper>
+    </Container>
   );
 };

@@ -8,11 +8,17 @@ export type Song = {
   artists?: Artists;
   album?: Album;
   time?: number;
+  href?: string;
 };
 
 export type Artists = Artist[];
 
-export interface Artist extends Basic {}
+export interface Artist extends Basic {
+  data?: {
+    playlistInfo: PlaylistInfo;
+    tracks: Tracks;
+  };
+}
 export interface Album extends Basic {}
 
 export type Basic = {
@@ -22,9 +28,9 @@ export type Basic = {
 
 export type Tracks = Song[];
 
-export type Playlist = {
+export type Collection = {
   playlistInfo: PlaylistInfo;
-  tracks?: Tracks;
+  tracks: Tracks;
 };
 
 export type PlaylistInfo = {
@@ -44,4 +50,4 @@ export interface PlaylistParam {
 
 export type ContentType = "playlist" | "album" | "artist";
 
-export type Service = "plaaaylist" | "spotify" | "youtube" | "";
+export type Service = "plaaaylist" | "spotify" | "youtube" | "soundcloud";

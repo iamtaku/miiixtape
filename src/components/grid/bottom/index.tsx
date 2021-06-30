@@ -1,7 +1,7 @@
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { Playlist } from "../../../types/types";
+import { Collection } from "../../../types/types";
 import { Track } from "./Track";
 
 const Wrapper = styled.div`
@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   overflow-y: scroll;
 `;
 interface PropTypes {
-  data?: Playlist;
+  data?: Collection;
   isLoading: boolean;
 }
 
@@ -21,13 +21,13 @@ const ItemContainer = styled.li<{ isAlbum?: boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
-      ? "15px 50px 2.5fr 1fr 0.5fr 0.5fr"
+      ? "15px 50px 2.5fr 1fr 0.5fr "
       : "15px 50px 2fr 1fr 1fr 0.5fr 0.5fr"};
   grid-column-gap: 8px;
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
-  opacity: 0.7;
+  /* opacity: 0.7; */
 `;
 
 const Item = styled.span<{ isRight?: boolean }>`
@@ -36,6 +36,7 @@ const Item = styled.span<{ isRight?: boolean }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-transform: uppercase;
   justify-content: ${(props) => (props.isRight ? "flex-end" : "default")};
 
   a:hover {
@@ -58,22 +59,22 @@ export const InnerGridBottom: React.FC<PropTypes> = ({ data, isLoading }) => {
     <Wrapper>
       {data.playlistInfo.type === "album" ? (
         <ItemContainer isAlbum>
-          <Item>{` `}</Item>
+          <Item>#</Item>
           {data.playlistInfo.type === "album" && <Item>{` `}</Item>}
           <Item>Title</Item>
           <Item>Artist</Item>
           <Item isRight>Length</Item>
-          <Item isRight>Service</Item>
+          {/* <Item isRight>Service</Item> */}
         </ItemContainer>
       ) : (
         <ItemContainer>
-          <Item>{` `}</Item>
+          <Item isRight>#</Item>
           <Item>{` `}</Item>
           <Item>Title</Item>
           <Item>Artist</Item>
           <Item>Album</Item>
           <Item isRight>Length</Item>
-          <Item isRight>Service</Item>
+          <Item isRight>URL</Item>
         </ItemContainer>
       )}
       <Droppable droppableId={"tracks"}>

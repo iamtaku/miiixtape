@@ -4,38 +4,43 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
-import { ModalWrapper } from "../grid/Modal";
-import { useGetSpotifyUser } from "../../queries/hooks/plaaaylist";
-
-const ProfileButton = styled.button`
-  background: none;
-  border: none;
-  border-radius: 50px;
-  padding: 12px;
-  background: #353535;
-  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
-  img {
-    border-radius: 50%;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
-    object-fit: cover;
-    width: 60px;
-    height: 60px;
-  }
-  position: relative;
-`;
+import { ModalWrapper } from "../modal";
+import { useGetSpotifyUser } from "../../queries/hooks";
+import { BasicButton } from "../Buttons";
 
 const ProfileActionsWrapper = styled(ModalWrapper)`
   ul {
     flex-direction: column;
+    /* background-color: white; */
   }
+`;
+
+const Button = styled(BasicButton)`
+  min-width: initial;
+  padding: 4px;
+`;
+
+const ProfileImage = styled.img`
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  object-fit: cover;
+  width: 60px;
+  height: 60px;
+  position: relative;
+`;
+
+const Wrapper = styled.div`
+  position: relative;
 `;
 
 export const Profile = () => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { data, isLoading } = useGetSpotifyUser();
+  // const data = {} as any;
+  // const isLoading = true;
 
   const logOut = () => {
     window.localStorage.removeItem("token");
@@ -49,12 +54,19 @@ export const Profile = () => {
   if (!data || isLoading) return <ProfilePlaceholder />;
 
   return (
-    <ProfileButton onClick={handleClick}>
-      {data.images ? (
-        [0] && <img src={data.images[0].url || ""} alt={data.display_name} />
-      ) : (
-        <img src={""} alt={data.display_name} />
-      )}
+    <Wrapper>
+      <Button onClick={handleClick} isPressed={isProfileOpen}>
+        {data.images ? (
+          [0] && (
+            <ProfileImage
+              src={data.images[0].url || ""}
+              alt={data.display_name}
+            />
+          )
+        ) : (
+          <ProfileImage src={""} alt={data.display_name} />
+        )}
+      </Button>
       {isProfileOpen ? (
         <ProfileActionsWrapper>
           <ul>
@@ -70,6 +82,6 @@ export const Profile = () => {
           </ul>
         </ProfileActionsWrapper>
       ) : null}
-    </ProfileButton>
+    </Wrapper>
   );
 };

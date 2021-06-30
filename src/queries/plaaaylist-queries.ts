@@ -1,12 +1,27 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import {
-  Playlist as PlaylistType,
-  PlaylistParam,
-  Tracks,
-} from "../types/types";
-import api, { Playlist, PlaylistItems } from "./api";
-import { getSingleSpotifyPlaylist } from "./spotify-queries";
+import { Artist, Collection as PlaylistType, Tracks } from "../types/types";
+import api, { Playlist } from "./api";
+import { getSingleSpotifyPlaylist, getSpotifyArtist } from "./spotify-queries";
 import { ServerTokenResponse, UserAttributes } from "./types";
+
+export interface ArtistParams {
+  artistId: string;
+  service: string;
+}
+export const getArtist = async (
+  params: ArtistParams,
+  userInfo?: UserAttributes
+): Promise<Artist> => {
+  const client = new SpotifyWebApi();
+  userInfo && client.setAccessToken(userInfo.access_token);
+
+  switch (params.service) {
+    case "spotify":
+      return await getSpotifyArtist(params.artistId, client);
+    default:
+      throw new Error("something gone wrong");
+  }
+};
 
 export const getPlaaaylist = async (
   playlistId: string,
@@ -19,8 +34,14 @@ export const getPlaaaylist = async (
   }
 };
 
+// const callCorrectFunction = (params, callbackFunction:
+
+interface IParam {
+  id: string;
+  service: string;
+}
 export const getPlaylist = async (
-  params: PlaylistParam,
+  params: IParam,
   userInfo?: UserAttributes
 ): Promise<PlaylistType> => {
   const token = window.localStorage.getItem("token");
@@ -32,9 +53,9 @@ export const getPlaylist = async (
 
   switch (params.service) {
     case "plaaaylist":
-      return await getPlaaaylist(params.playlistId, client);
+      return await getPlaaaylist(params.id, client);
     case "spotify":
-      return await getSingleSpotifyPlaylist(params.playlistId, client);
+      return await getSingleSpotifyPlaylist(params.id, client);
     default:
       throw new Error("something gone wrong");
   }
@@ -42,7 +63,6 @@ export const getPlaylist = async (
 
 export type Token = string;
 export const getToken = async (): Promise<Token> => {
-  //if we have a token in localstorage return it
   const token = window.localStorage.getItem("token");
   if (token) {
     return token;
@@ -63,7 +83,7 @@ export const getToken = async (): Promise<Token> => {
   throw new Error("no token");
 };
 
-export const getUser = async (token?: string) => {
+export const getUser = async () => {
   try {
     const data = await api().get("/users");
     return data.data.data.attributes;
@@ -93,7 +113,7 @@ export const postPlaylistItems = async ({
     },
   };
 
-  return await PlaylistItems.createPlaylistItems(id, body);
+  return await Playlist.createPlaylistItems(id, body);
 };
 
 export const postPlaylist = async (name: string) => {

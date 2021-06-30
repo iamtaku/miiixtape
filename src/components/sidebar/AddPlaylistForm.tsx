@@ -2,35 +2,26 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { usePostPlaylist } from "../../queries/hooks/plaaaylist";
+import { usePostPlaylist } from "../../queries/hooks";
+import { BasicButton } from "../Buttons";
 
-const AddPlaylistButton = styled.button`
-  border: 1px solid transparent;
+const AddPlaylistButton = styled(BasicButton)`
   width: 100%;
   margin: 0 auto;
   margin-top: 4px;
-  background: transparent;
-  border-radius: 50px;
-  /* background: #353535; */
-  box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
   color: var(--accent);
-  &:hover {
-    border: 1px solid var(--accent);
-  }
 `;
 
-const AddPlaylistFormWrapper = styled.form`
-  input {
-    width: 100%;
-    border: none;
-    background: transparent;
-    color: var(--secondary);
-    outline: none;
-    border-bottom: 1px solid var(--accent);
-    margin: 4px;
-    padding: 4px 8px;
-    outline-color: var(--accent);
-  }
+const Input = styled.input`
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--secondary);
+  outline: none;
+  border-bottom: 1px solid var(--accent);
+  margin: 4px;
+  padding: 4px 8px;
+  outline-color: var(--accent);
 `;
 
 export const AddPlaylistForm = () => {
@@ -53,8 +44,8 @@ export const AddPlaylistForm = () => {
   return (
     <>
       {isInputOpen ? (
-        <AddPlaylistFormWrapper onSubmit={handleSubmit}>
-          <input
+        <form onSubmit={handleSubmit}>
+          <Input
             type="text"
             value={input}
             autoFocus={true}
@@ -62,7 +53,7 @@ export const AddPlaylistForm = () => {
             onChange={(e) => setInput(e.currentTarget.value)}
             placeholder="Create a new plaaaylist"
           />
-        </AddPlaylistFormWrapper>
+        </form>
       ) : (
         <AddPlaylistButton onClick={() => setIsInputOpen(true)}>
           <FontAwesomeIcon icon={faPlus} />

@@ -1,12 +1,43 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import {
   mapSpotifyAlbumtoPlaylist,
+  mapSpotifyArtistToArtist,
   mapSpotifyPlaylistToPlaylist,
   mapSpotifyToPlaylist,
-  mapSpotifyTracktoTrack,
 } from "../helpers/mappingHelpers";
-import { Playlist, Service, Song } from "../types/types";
+import { Artist, Collection as Playlist, Service } from "../types/types";
 import { UserAttributes } from "./types";
+
+const fetchSpotifyArtistInfo = async (
+  id: string,
+  client: SpotifyWebApi.SpotifyWebApiJs
+) => {
+  const res: Promise<
+    | SpotifyApi.SingleArtistResponse
+    | SpotifyApi.ArtistsAlbumsResponse
+    | SpotifyApi.ArtistsRelatedArtistsResponse
+    | SpotifyApi.ArtistsTopTracksResponse
+  >[] = [];
+
+  // const fetchFunctions = ['getArtist','getArtistTopTracks','getArtistRelatedArtists','getArtistAlbums',]
+  const fetchFunctions = [
+    client.getArtist,
+    client.getArtistTopTracks,
+    client.getArtistRelatedArtists,
+    client.getArtistAlbums,
+  ];
+  const options = {};
+  // fetchFunctions.forEach((fn) => fn 
+};
+
+export const getSpotifyArtist = async (
+  artistId: string,
+  client: SpotifyWebApi.SpotifyWebApiJs
+): Promise<Artist> => {
+  // client.getArti;
+  const data = await client.getArtist(artistId);
+  return mapSpotifyArtistToArtist(data);
+};
 
 export const getSpotifyAlbum = async (
   albumId: string,
@@ -25,8 +56,12 @@ export const getSpotifyPlaylists = async (
   if (userInfo?.access_token) {
     const client = new SpotifyWebApi();
     client.setAccessToken(userInfo?.access_token);
-    const res = await client.getUserPlaylists();
-    return mapSpotifyToPlaylist(res);
+    try {
+      const res = await client.getUserPlaylists();
+      return mapSpotifyToPlaylist(res);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
   throw new Error("something wrong");
 };
@@ -34,9 +69,13 @@ export const getSpotifyPlaylists = async (
 export const getSpotifyInfo = async (userInfo?: UserAttributes) => {
   if (!userInfo) throw new Error("auth failed");
   if (userInfo.access_token && userInfo.spotify_id) {
-    const client = new SpotifyWebApi();
-    client.setAccessToken(userInfo.access_token);
-    return await client.getUser(userInfo.spotify_id);
+    try {
+      const client = new SpotifyWebApi();
+      client.setAccessToken(userInfo.access_token);
+      return await client.getUser(userInfo.spotify_id);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 };
 
@@ -57,7 +96,11 @@ export const getAlbum = async (
 
   // switch (params.service) {
   // case "spotify":
-  return await getSpotifyAlbum(params.albumId, client);
+  try {
+    return await getSpotifyAlbum(params.albumId, client);
+  } catch (err) {
+    throw new Error(err);
+  }
   // default:
   // throw new Error("something gone wrong");
   // }
@@ -71,16 +114,5 @@ export const getSingleSpotifyPlaylist = async (
     return mapSpotifyPlaylistToPlaylist(data);
   } catch (error) {
     throw new Error(error);
-  }
-};
-export const getSpotifySingleTrack = async (
-  id: string,
-  client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<Song> => {
-  try {
-    const data = await client.getTrack(id);
-    return mapSpotifyTracktoTrack(data);
-  } catch (error) {
-    throw new Error(error.message);
   }
 };
