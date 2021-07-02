@@ -1,7 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import { Artist, Collection as PlaylistType, Tracks } from "../types/types";
 import api, { Playlist } from "./api";
-import { getSingleSpotifyPlaylist, getSpotifyArtist } from "./spotify-queries";
+import { Spotify } from "./api/spotify/api";
 import { ServerTokenResponse, UserAttributes } from "./types";
 
 export interface ArtistParams {
@@ -17,24 +17,11 @@ export const getArtist = async (
 
   switch (params.service) {
     case "spotify":
-      return await getSpotifyArtist(params.artistId, client);
+      return await Spotify.getArtist(params.artistId, client);
     default:
       throw new Error("something gone wrong");
   }
 };
-
-export const getPlaaaylist = async (
-  playlistId: string,
-  client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<PlaylistType> => {
-  try {
-    return await Playlist.getPlaylist(playlistId, client);
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-// const callCorrectFunction = (params, callbackFunction:
 
 interface IParam {
   id: string;
@@ -53,9 +40,9 @@ export const getPlaylist = async (
 
   switch (params.service) {
     case "plaaaylist":
-      return await getPlaaaylist(params.id, client);
+      return await Playlist.getPlaylist(params.id, client);
     case "spotify":
-      return await getSingleSpotifyPlaylist(params.id, client);
+      return await Spotify.getPlaylist(params.id, client);
     default:
       throw new Error("something gone wrong");
   }

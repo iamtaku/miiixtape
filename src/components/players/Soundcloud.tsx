@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Dispatch, SetStateAction, useRef } from "react";
 import ReactHowler from "react-howler";
-import { SoundCloud } from "../../queries/api";
+import { SoundCloud } from "../../queries/api/";
 import { useGlobalContext } from "../../state/context";
 
 interface IProps {

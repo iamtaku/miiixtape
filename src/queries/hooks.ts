@@ -18,7 +18,8 @@ import {
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
-} from "./spotify-queries";
+} from "./api/spotify/api";
+
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
   return useQuery<Artist, Error>(["artist", params], () =>
@@ -71,7 +72,6 @@ export const useGetAllSpotifyPlaylist = () => {
 
 export const useGetSpotifyUser = () => {
   const { data: userInfo } = useGetUser();
-
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,
   });

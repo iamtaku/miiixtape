@@ -34,7 +34,7 @@ export const InnerLayout = styled.div`
     "bottom";
   grid-template-rows: 20% 80%;
   grid-row-gap: 24px;
-
+  position: relative;
   ${device.laptop} {
     grid-template-rows: 30% 70%;
   }

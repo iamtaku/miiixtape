@@ -13,6 +13,7 @@ import {
   faPlay,
   faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import DefaultMusicImage from "../../..//assets/music-cover.png";
 
 interface TrackProps {
   track: Song;
@@ -29,7 +30,7 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
-  max-height: 100ps;
+  min-height: 44px;
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
 
@@ -110,6 +111,8 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
     }
   };
 
+  const trackImg = track.img ? track.img : DefaultMusicImage;
+
   return (
     <Draggable draggableId={track.id} index={index}>
       {(provided) => (
@@ -141,7 +144,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           {isAlbum ? (
             <Item>{` `}</Item>
           ) : (
-            <Image src={track.img} alt={track.album?.name} />
+            <Image src={trackImg} alt={track.album?.name} />
           )}
           <Item>{track.name}</Item>
           <Item>

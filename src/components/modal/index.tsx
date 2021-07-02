@@ -1,4 +1,4 @@
-import {faTimes} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";
 
 const Container = styled.div`
+  z-index: 10;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -14,13 +15,12 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   /* background-color: rgba(255, 255, 255, 0.5);   */
-  border-radius: 25px;
+  /* border-radius: 25px; */
   padding: 16px 24px;
-   -webkit-backdrop-filter: blur(10px);
-  background-color: rgba(15, 11, 11, 0.2);  
-  backdrop-filter: blur(10px) contrast(.8);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(15, 11, 11, 0.2);
+  backdrop-filter: blur(10px) contrast(0.8);
   display: grid;
-
 `;
 
 export const ModalWrapper = styled.div`
@@ -51,24 +51,23 @@ export const ModalWrapper = styled.div`
 `;
 
 const Title = styled.h3`
-font-size: 3rem;
+  font-size: 3rem;
 `;
 
 const CloseBtn = styled.button`
-background: none;
-border: none;
-width: 40px;
-height: 40px;
-  padding: 8px;
+  background: none;
+  border: none;
+  font-size: 2rem;
   &:hover {
     cursor: pointer;
+    color: var(--accent);
   }
 `;
 
 const TitleWrapper = styled.div`
-display: flex;
-justify-content: space-between;
-align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 interface ModalProps {
@@ -90,19 +89,18 @@ const mapSoundCloudTrackToTrack = (data: any): Tracks => {
 };
 
 export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks, id }) => {
-
-
   return (
-  <Container>
-    <ModalWrapper>
-      <TitleWrapper>
-        
-      <Title>Add Tracks</Title>
-      <CloseBtn onClick={() => setIsModalOpen(false)}><FontAwesomeIcon icon={faTimes}/> </CloseBtn>
-      </TitleWrapper>
-      <AddByUrl />
-      <AddbyExisting tracks={tracks}/>
-          </ModalWrapper>
-</Container>
+    <Container>
+      <ModalWrapper>
+        <TitleWrapper>
+          <Title>Add Tracks</Title>
+          <CloseBtn onClick={() => setIsModalOpen(false)}>
+            <FontAwesomeIcon icon={faTimes} />{" "}
+          </CloseBtn>
+        </TitleWrapper>
+        <AddByUrl id={id} />
+        <AddbyExisting tracks={tracks} />
+      </ModalWrapper>
+    </Container>
   );
 };

@@ -57,6 +57,7 @@ const setIcon = (service: Service, index: number) => {
 };
 
 export const Description: React.FC<IProps> = ({ data, services }) => {
+  const tracks = (length: number) => (length === 1 ? "Track" : "Tracks");
   return (
     <Wrapper>
       <Container>
@@ -66,7 +67,9 @@ export const Description: React.FC<IProps> = ({ data, services }) => {
         </ServiceWrapper>
       </Container>
       <Title>{data.playlistInfo.name}</Title>
-      {data.tracks.length > 0 && <span>{`${data.tracks.length} Tracks`}</span>}
+      {data.tracks.length > 0 && (
+        <span>{`${data.tracks.length} ${tracks(data.tracks.length)}`}</span>
+      )}
     </Wrapper>
   );
 };

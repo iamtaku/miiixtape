@@ -54,7 +54,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
   };
 
   const handleOnPause = ({ target, data }: IYoutubeEvent) => {
-    debugger;
+    // debugger;
     console.log("pausing youtube");
     dispatch({ type: "PAUSE_CURRENT", payload: {} });
   };
@@ -67,7 +67,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
     data: number;
   }) => {
     console.log("handling youtube state change", state.player.currentService);
-    if (state.player.currentService !== "youtube") {
+    if (state.player.currentSong?.service !== "youtube") {
       target.seekTo(0, true);
     }
   };
