@@ -9,7 +9,6 @@ import {
   Service,
   Artist,
 } from "../types/types";
-import { stripURI } from "./stripURI";
 
 export const generateYoutubeURL = (uri: string): string => {
   const YOUTUBE = "https://www.youtube.com/watch?v=";

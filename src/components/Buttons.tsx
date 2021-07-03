@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Collection, Song } from "../types/types";
 import { useGlobalContext } from "../state/context";
-import { getPlaylist } from "../queries/plaaaylist-queries";
+import { getPlaylist } from "../queries/api";
 import { useGetUser } from "../queries/hooks";
 import { useIsCurrentPlaylist, useIsCurrentTrack } from "../helpers/hooks";
 import { useQueryClient } from "react-query";

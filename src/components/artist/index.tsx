@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router";
 import { useGetArtist } from "../../queries/hooks";
-import { ArtistParams } from "../../queries/plaaaylist-queries";
+import { ArtistParams } from "../../queries/api";
 import { ArtistGridBottom } from "./ArtistGridBottom";
 import { InnerGridTop } from "../grid/top";
 import { InnerLayout } from "../Layout";

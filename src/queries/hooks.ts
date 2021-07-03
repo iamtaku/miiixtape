@@ -12,13 +12,11 @@ import {
   postPlaylist,
   postPlaylistItems,
   Token,
-} from "./plaaaylist-queries";
-import {
   AlbumParam,
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
-} from "./api/spotify/api";
+} from "./api/";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();

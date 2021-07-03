@@ -3,9 +3,11 @@ import SpotifyWebApi from "spotify-web-api-js";
 import { mapServerPlaylist } from "../../helpers/mappingHelpers";
 import { Collection as PlaylistType, Tracks } from "../../types/types";
 import { ServerPlaylist } from "../types";
-import { generatePlaylistData } from "../generatePlaylistData";
+import { generatePlaylistData } from "./miiixtape/generatePlaylistData";
 export { SoundCloud } from "./soundcloud/api";
 export { Youtube } from "./youtube/api";
+export * from "./spotify/api";
+export * from "./miiixtape/api";
 
 const SERVER = process.env.REACT_APP_BASE_URL;
 

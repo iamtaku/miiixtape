@@ -7,6 +7,7 @@ import { Track } from "./Track";
 const Wrapper = styled.div`
   position: relative;
   grid-area: bottom;
+  min-height: 0;
   overflow-y: scroll;
 `;
 interface PropTypes {

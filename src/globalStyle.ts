@@ -21,7 +21,7 @@ export const Global = createGlobalStyle`
     background-color: var(--primary);
     color: var(--secondary);
     font-family: 'Helvetica';
-
+    overflow: hidden;
   }
   *,
 *::before,

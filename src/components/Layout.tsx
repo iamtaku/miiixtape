@@ -9,6 +9,7 @@ import { Sidebar } from "./sidebar";
 const Container = styled.div`
   display: grid;
   height: 100vh;
+  width: 100vw;
   margin: 0 8px;
   grid-template-rows: 100px 1fr 100px;
   grid-template-areas:
@@ -20,6 +21,7 @@ const Container = styled.div`
 const LayoutWrapper = styled.div`
   grid-area: main;
   display: grid;
+  overflow: hidden;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 3fr;
   grid-column-gap: 15px;
@@ -29,6 +31,7 @@ const LayoutWrapper = styled.div`
 export const InnerLayout = styled.div`
   grid-area: inner;
   display: grid;
+  overflow: hidden;
   grid-template-areas:
     "top"
     "bottom";

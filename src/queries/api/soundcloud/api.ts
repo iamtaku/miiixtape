@@ -25,7 +25,6 @@ const soundcloudRequests = {
 interface Soundcloud {}
 
 const fetchMultiple = async (data: string[], fetchFunction?: any) => {
-  debugger;
   const results: Promise<any>[] = [];
   data.forEach((item) => results.push(fetchFunction(item)));
   return await Promise.all(results);

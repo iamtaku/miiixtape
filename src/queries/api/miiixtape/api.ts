@@ -1,8 +1,11 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { Artist, Collection as PlaylistType, Tracks } from "../types/types";
-import api, { Playlist } from "./api";
-import { Spotify } from "./api/spotify/api";
-import { ServerTokenResponse, UserAttributes } from "./types";
+import {
+  Artist,
+  Collection as PlaylistType,
+  Tracks,
+} from "../../../types/types";
+import api, { Playlist, Spotify } from "../";
+import { ServerTokenResponse, UserAttributes } from "../../types";
 
 export interface ArtistParams {
   artistId: string;
