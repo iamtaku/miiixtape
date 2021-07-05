@@ -1,12 +1,14 @@
 import SpotifyWebApi from "spotify-web-api-js";
 import {
+  flattenSpotifyTracks,
   mapSpotifyAlbumtoPlaylist,
   mapSpotifyArtistToArtist,
   mapSpotifyPlaylistToPlaylist,
   mapSpotifyToPlaylist,
+  mapSpotifyTrackstoTracks,
 } from "./mapping";
 import { UserAttributes } from "../../types";
-import { Artist, Service, Collection } from "../../../types/types";
+import { Artist, Service, Collection, Tracks } from "../../../types/types";
 
 export const getSpotifyPlaylists = async (
   userInfo?: UserAttributes
@@ -54,6 +56,18 @@ export const getSingleSpotifyPlaylist = async (
   }
 };
 
+const fetchAllSpotifyTracks = async (
+  uris: string[],
+  client: SpotifyWebApi.SpotifyWebApiJs
+) => {
+  const NUM_TIMES = 50;
+  const results: Promise<SpotifyApi.MultipleTracksResponse>[] = [];
+  for (let i = 0; i < uris.length; i += NUM_TIMES) {
+    results.push(client.getTracks(uris.slice(i, i + NUM_TIMES)));
+  }
+  return await Promise.all(results).then((res) => flattenSpotifyTracks(res));
+};
+
 export const Spotify = {
   getPlaylist: (
     id: string,
@@ -78,6 +92,13 @@ export const Spotify = {
     id: string,
     client: SpotifyWebApi.SpotifyWebApiJs
   ): Promise<SpotifyApi.UserProfileResponse> => client.getUser(id),
+  getTracks: (
+    uris: string[],
+    client: SpotifyWebApi.SpotifyWebApiJs
+  ): Promise<Tracks> =>
+    fetchAllSpotifyTracks(uris, client).then((res) =>
+      mapSpotifyTrackstoTracks(res)
+    ),
 };
 
 const client = (accessToken: string): SpotifyWebApi.SpotifyWebApiJs => {

@@ -22,7 +22,9 @@ const soundcloudRequests = {
   delete: (url: string) => soundcloudInstance.delete(url).then(responseBody),
 };
 
-interface Soundcloud {}
+interface Soundcloud {
+  tracks: any;
+}
 
 const fetchMultiple = async (data: string[], fetchFunction?: any) => {
   const results: Promise<any>[] = [];

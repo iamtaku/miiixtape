@@ -12,25 +12,13 @@ import {
   Tracks,
 } from "../../../types/types";
 import { SoundCloud } from "..";
-import { mapSpotifyTracktoTrack } from "../spotify/mapping";
 import { PlaylistItemItem, ServerPlaylist } from "../../types";
+import { Spotify } from "../spotify/api";
 
 const filterTracks = (data: PlaylistItemItem[], service: Service) =>
   data.filter((item) => item.attributes.song.service === service);
 
 const removeDuplicate = (data: any): string[] => Array.from(new Set(data));
-
-const fetchAllSpotifyTracks = async (
-  uris: string[],
-  client: SpotifyWebApi.SpotifyWebApiJs
-) => {
-  const NUM_TIMES = 50;
-  const results: Promise<SpotifyApi.MultipleTracksResponse>[] = [];
-  for (let i = 0; i < uris.length; i += NUM_TIMES) {
-    results.push(client.getTracks(uris.slice(i, i + NUM_TIMES)));
-  }
-  return await Promise.all(results);
-};
 
 const fetchSpotifyTracks = async (
   data: PlaylistItemItem[],
@@ -41,14 +29,7 @@ const fetchSpotifyTracks = async (
       stripURI(track.attributes.song.uri)
     )
   ); //fetch them 50 at a time
-  const res = await fetchAllSpotifyTracks(spotifyTracks, client);
-  const tracks: Tracks = [];
-  res.forEach((item) =>
-    item.tracks.forEach((track) => {
-      const mapped = mapSpotifyTracktoTrack(track);
-      tracks.push(mapped);
-    })
-  );
+  const tracks = await Spotify.getTracks(spotifyTracks, client);
   return tracks;
 };
 

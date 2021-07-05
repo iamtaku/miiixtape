@@ -99,7 +99,7 @@ export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks, id }) => {
           </CloseBtn>
         </TitleWrapper>
         <AddByUrl id={id} />
-        <AddbyExisting tracks={tracks} />
+        {/* <AddbyExisting tracks={tracks} /> */}
       </ModalWrapper>
     </Container>
   );

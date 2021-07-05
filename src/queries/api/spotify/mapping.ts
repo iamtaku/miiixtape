@@ -104,6 +104,13 @@ export const mapSpotifyTracktoTrack = (
   };
 };
 
+export const mapSpotifyTrackstoTracks = (
+  data: Array<SpotifyApi.SingleTrackResponse | SpotifyApi.TrackObjectFull>
+): Tracks => {
+  const res = data.map((item) => mapSpotifyTracktoTrack(item));
+  return res;
+};
+
 export const mapSpotifyPlaylistToPlaylist = (
   data: SpotifyApi.SinglePlaylistResponse
 ): Collection => {
@@ -125,4 +132,12 @@ export const mapSpotifyPlaylistToPlaylist = (
     playlistInfo,
     tracks,
   };
+};
+
+export const flattenSpotifyTracks = (
+  data: SpotifyApi.MultipleTracksResponse[]
+): Array<SpotifyApi.TrackObjectFull> => {
+  const res: SpotifyApi.TrackObjectFull[] = [];
+  data.forEach((item) => res.push(...item.tracks));
+  return res;
 };
