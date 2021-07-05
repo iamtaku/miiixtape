@@ -1,7 +1,7 @@
 import axios from "axios";
 import { responseBody } from "..";
-import { Song, Tracks } from "../../../types/types";
-import { mapSCTracktoTrack } from "./mapping";
+import { Artist, Song, Tracks } from "../../../types/types";
+import { mapSCArtistToArtist, mapSCTracktoTrack } from "./mapping";
 
 const SOUNDCLOUD_KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
 const SOUNDCLOUD = `https://api.soundcloud.com`;
@@ -13,7 +13,7 @@ const soundcloudInstance = axios.create({
   },
 });
 
-const soundcloudRequests = {
+export const soundcloudRequests = {
   get: (url: string) => soundcloudInstance.get(url).then(responseBody),
   post: (url: string, body: {}) =>
     soundcloudInstance.post(url, body).then(responseBody),
@@ -32,6 +32,13 @@ const fetchMultiple = async (data: string[], fetchFunction?: any) => {
   return await Promise.all(results);
 };
 
+const fetchArtistInfo = async (id: string): Promise<any> => {
+  const results: Promise<any>[] = [];
+  const fetchFns = [`/users/${id}`, `/users/${id}/tracks&limit=50`];
+  fetchFns.forEach((item) => results.push(soundcloudRequests.get(item)));
+  return await Promise.all(results);
+};
+
 export const SoundCloud = {
   getTrackInfo: (url: string): Promise<Soundcloud> =>
     soundcloudRequests.get(`/resolve?url=${url}`).then((res) => res),
@@ -41,4 +48,6 @@ export const SoundCloud = {
       .then((res) => mapSCTracktoTrack(res)),
   getTracks: (uris: string[]): Promise<Tracks> =>
     fetchMultiple(uris, SoundCloud.getTrack),
+  getArtist: (id: string): Promise<Artist> =>
+    fetchArtistInfo(id).then((res) => mapSCArtistToArtist(res)),
 };

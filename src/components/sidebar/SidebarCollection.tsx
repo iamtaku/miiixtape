@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Collection } from "../../types/types";
 import { SidebarItem } from "./SidebarItem";
-import { useSpring, animated } from "react-spring";
 
 interface SidebarCollectionProps {
   data?: Collection[];
@@ -52,7 +51,6 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
-  const props = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
   return (
     <List

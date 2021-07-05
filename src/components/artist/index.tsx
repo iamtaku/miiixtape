@@ -11,7 +11,6 @@ export const Artist = () => {
   const { data, isLoading, error } = useGetArtist(params);
   console.log(data);
 
-  // return <>{JSON.stringify(data)}</>;
   if (!data || isLoading) return <h2>loading...</h2>;
   if (error) return <p>something gone wrong</p>;
   return (

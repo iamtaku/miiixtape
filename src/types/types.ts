@@ -17,6 +17,7 @@ export interface Artist extends Basic {
   data?: {
     playlistInfo: PlaylistInfo;
     tracks: Tracks;
+    albums?: Album[];
   };
 }
 export interface Album extends Basic {}

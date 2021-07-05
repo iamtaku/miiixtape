@@ -95,7 +95,6 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
   const fetchSC = async (uri: string): Promise<Tracks> => {
     const trackInfo = await SoundCloud.getTrackInfo(uri);
     const data = trackInfo.tracks.map((item: any) => mapSCTracktoTrack(item));
-    debugger;
     return data;
   };
 

@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { Collection, Service } from "../../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faYoutube, faSpotify } from "@fortawesome/free-brands-svg-icons";
+import {
+  faYoutube,
+  faSpotify,
+  faSoundcloud,
+} from "@fortawesome/free-brands-svg-icons";
 import { device } from "../../../globalStyle";
 
 interface IProps {
@@ -53,6 +57,8 @@ const setIcon = (service: Service, index: number) => {
       return <FontAwesomeIcon icon={faSpotify} key={index} />;
     case "youtube":
       return <FontAwesomeIcon icon={faYoutube} key={index} />;
+    case "soundcloud":
+      return <FontAwesomeIcon icon={faSoundcloud} key={index} />;
   }
 };
 

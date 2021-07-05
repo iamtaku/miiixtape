@@ -4,7 +4,7 @@ import {
   Collection as PlaylistType,
   Tracks,
 } from "../../../types/types";
-import api, { Playlist, Spotify } from "../";
+import api, { Playlist, Spotify, SoundCloud } from "../";
 import { ServerTokenResponse, UserAttributes } from "../../types";
 
 export interface ArtistParams {
@@ -18,11 +18,17 @@ export const getArtist = async (
   const client = new SpotifyWebApi();
   userInfo && client.setAccessToken(userInfo.access_token);
 
-  switch (params.service) {
-    case "spotify":
-      return await Spotify.getArtist(params.artistId, client);
-    default:
-      throw new Error("something gone wrong");
+  try {
+    switch (params.service) {
+      case "spotify":
+        return await Spotify.getArtist(params.artistId, client);
+      case "soundcloud":
+        return await SoundCloud.getArtist(params.artistId);
+      default:
+        throw new Error("something gone wrong");
+    }
+  } catch {
+    throw new Error("something gone wrong");
   }
 };
 
