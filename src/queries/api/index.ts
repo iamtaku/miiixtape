@@ -1,8 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import SpotifyWebApi from "spotify-web-api-js";
-import { mapServerPlaylist } from "../../helpers/mappingHelpers";
+import {
+  mapServerPlaylist,
+  mapUserAttributes,
+} from "./miiixtape/mappingHelpers";
 import { Collection as PlaylistType, Tracks } from "../../types/types";
-import { ServerPlaylist } from "../types";
+import { ServerPlaylist, UserAttributes } from "../types";
 import { generatePlaylistData } from "./miiixtape/generatePlaylistData";
 export { SoundCloud } from "./soundcloud/api";
 export { Youtube } from "./youtube/api";
@@ -17,29 +20,31 @@ interface IPlaylistItems {
   };
 }
 
-const playlistInstance = () => {
-  const token = window.localStorage.getItem("token");
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
-  return axios.create({
-    baseURL: SERVER,
-    headers,
-  });
+const token = window.localStorage.getItem("token");
+const headers = {
+  Authorization: `Bearer ${token}`,
+};
+const playlistInstance = axios.create({
+  baseURL: SERVER,
+  headers,
+});
+
+export const responseBody = (response: AxiosResponse) => {
+  return response.data;
 };
 
-export const responseBody = (response: AxiosResponse) => response.data;
-
 const requests = {
-  get: (url: string) => playlistInstance().get(url).then(responseBody),
+  get: (url: string) => playlistInstance.get(url).then(responseBody),
   post: (url: string, body: {}) =>
-    playlistInstance().post(url, body).then(responseBody),
+    playlistInstance.post(url, body).then(responseBody),
   put: (url: string, body: {}) =>
-    playlistInstance().put(url, body).then(responseBody),
-  delete: (url: string) => playlistInstance().delete(url).then(responseBody),
+    playlistInstance.put(url, body).then(responseBody),
+  delete: (url: string) => playlistInstance.delete(url).then(responseBody),
 };
 
 export const Playlist = {
+  getUser: (): Promise<UserAttributes> =>
+    requests.get("/users").then((data) => mapUserAttributes(data)),
   getPlaylists: (): Promise<PlaylistType[]> =>
     requests.get("/playlists").then((data) => mapServerPlaylist(data)),
   getPlaylist: (

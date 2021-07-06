@@ -2,13 +2,29 @@ import { render } from "@testing-library/react";
 import { rest } from "msw";
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-
 export const handlers = [
-  rest.get("*/react-query", (req, res, ctx) => {
+  rest.get(`*/users`, (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
-        name: "mocked-react-query",
+        data: {
+          id: "95bfe1ab-837e-413e-80a8-4165fb6af580",
+          type: "user",
+          attributes: {
+            username: "mocked-username",
+            spotify_id: null,
+            access_token: null,
+            refresh_token: null,
+          },
+        },
+      })
+    );
+  }),
+  rest.get("*/test", (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        working: "yes",
       })
     );
   }),

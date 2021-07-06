@@ -9,6 +9,8 @@ import { Album } from "./components/Album";
 import { Layout } from "./components/Layout";
 import { NotFound } from "./pages/NotFound";
 import { Artist } from "./components/artist";
+import { Login } from "./pages/Login";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 export const Routes = () => (
   <BrowserRouter>
@@ -16,7 +18,6 @@ export const Routes = () => (
       <Route path="/app">
         <AppRoutes />
       </Route>
-
       <PageRoutes />
     </Switch>
   </BrowserRouter>
@@ -26,6 +27,9 @@ const PageRoutes = () => (
   <Switch>
     <Route exact path="/">
       <Landing />
+    </Route>
+    <Route path="/login">
+      <Login />
     </Route>
     <Route path="*">
       <NotFound />
@@ -39,9 +43,9 @@ const AppRoutes = () => {
   return (
     <Layout>
       <Switch>
-        <Route exact path={path}>
+        <ProtectedRoute exact path={path}>
           <Main />
-        </Route>
+        </ProtectedRoute>
         <Route path={`${path}/search/:search`}>
           <Search />
         </Route>

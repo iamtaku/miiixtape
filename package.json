@@ -58,6 +58,7 @@
     "@types/jest": "^26.0.23",
     "@types/styled-components": "^5.1.9",
     "jest-environment-jsdom": "~27.0",
+    "jest-localstorage-mock": "^2.4.14",
     "msw": "^0.30.1",
     "react-test-renderer": "^17.0.2",
     "ts-jest": "^27.0.3",
@@ -68,5 +69,11 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "msw": {
+    "workerDirectory": "public"
+  },
+  "jest": {
+    "resetMocks": false
   }
 }

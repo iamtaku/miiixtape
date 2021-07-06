@@ -2,11 +2,21 @@ import "@testing-library/jest-dom";
 import { setupServer } from "msw/node";
 import { handlers } from "./tests/queries/utils";
 import { setLogger } from "react-query";
+require("jest-localstorage-mock");
 
 export const server = setupServer(...handlers);
 
+beforeEach(() => {
+  // to fully reset the state between tests, clear the storage
+  localStorage.clear();
+  // and reset all mocks
+  jest.clearAllMocks();
+  localStorage.setItem("token", "testToken");
+});
 // Establish API mocking before all tests.
-beforeAll(() => server.listen());
+beforeAll(() => {
+  server.listen();
+});
 // Reset any request handlers that we may add during the tests,
 // so they don't affect other tests.
 afterEach(() => server.resetHandlers());
@@ -19,3 +29,11 @@ setLogger({
   warn: console.warn,
   error: () => {},
 });
+
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+};
+global.localStorage = localStorageMock;

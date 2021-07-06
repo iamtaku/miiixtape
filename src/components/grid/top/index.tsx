@@ -4,7 +4,7 @@ import { Collection } from "../../../types/types";
 import { Description } from "./Description";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
-import { generateServices } from "../../../helpers/mappingHelpers";
+import { generateServices } from "../../../queries/api/miiixtape/mappingHelpers";
 
 const Container = styled.div`
   grid-area: top;

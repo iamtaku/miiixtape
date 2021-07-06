@@ -5,7 +5,7 @@ import {
   Tracks,
 } from "../../../types/types";
 import api, { Playlist, Spotify, SoundCloud } from "../";
-import { ServerTokenResponse, UserAttributes } from "../../types";
+import { UserAttributes } from "../../types";
 
 export interface ArtistParams {
   artistId: string;
@@ -57,43 +57,8 @@ export const getPlaylist = async (
   }
 };
 
-export type Token = string;
-export const getToken = async (): Promise<Token> => {
-  const token = window.localStorage.getItem("token");
-  if (token) {
-    return token;
-  } //otherwise, fetch a token
-
-  const code = window.location.search;
-  if (code && !token) {
-    try {
-      const data = await api().get<ServerTokenResponse>(`/callback/${code}`);
-      window.localStorage.setItem("token", data.data.token);
-      window.history.replaceState(null, "new page title", "/app");
-      return data.data.token;
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
-
-  throw new Error("no token");
-};
-
-export const getUser = async () => {
-  try {
-    const data = await api().get("/users");
-    return data.data.data.attributes;
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-
-export const getAllPlaylists = async (): Promise<PlaylistType[]> => {
-  try {
-    return await Playlist.getPlaylists();
-  } catch (error) {
-    throw new Error(error);
-  }
+export const getUser = async (): Promise<UserAttributes> => {
+  return await Playlist.getUser();
 };
 
 export const postPlaylistItems = async ({
@@ -118,10 +83,5 @@ export const postPlaylist = async (name: string) => {
       name,
     },
   };
-
-  try {
-    return await Playlist.createPlaylist(payload);
-  } catch (err) {
-    throw new Error(err);
-  }
+  return await Playlist.createPlaylist(payload);
 };

@@ -4,18 +4,16 @@ import { Artist, Collection as CollectionType } from "../types/types";
 import { useParams } from "react-router";
 import {
   ArtistParams,
-  getAllPlaylists,
   getArtist,
   getPlaylist,
-  getToken,
   getUser,
   postPlaylist,
   postPlaylistItems,
-  Token,
   AlbumParam,
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
+  Playlist,
 } from "./api/";
 
 export const useGetArtist = (params: ArtistParams) => {
@@ -37,12 +35,8 @@ export const useGetSinglePlaylist = (id: string, service: string) => {
   );
 };
 
-export const useGetToken = () => useQuery<Token>("token", getToken);
-
 export const useGetUser = () => {
-  const { data: token } = useGetToken();
   return useQuery<UserAttributes>("user", getUser, {
-    enabled: !!token,
     refetchInterval: 1000 * 60 * 59,
   });
 };
@@ -76,7 +70,7 @@ export const useGetSpotifyUser = () => {
 };
 
 export const useGetAllPlaylists = () =>
-  useQuery<CollectionType[], Error>("playlistAll", getAllPlaylists, {});
+  useQuery<CollectionType[], Error>("playlistAll", Playlist.getPlaylists);
 
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();

@@ -1,14 +1,5 @@
-import { PlaylistItemItem, ServerPlaylists } from "../queries/types";
-import {
-  PlaylistInfo,
-  Song,
-  Collection,
-  Tracks,
-  Album,
-  Artists,
-  Service,
-  Artist,
-} from "../types/types";
+import { PlaylistItemItem, ServerPlaylists, UserAttributes } from "../../types";
+import { Song, Collection, Tracks, Service } from "../../../types/types";
 
 export const generateYoutubeURL = (uri: string): string => {
   const YOUTUBE = "https://www.youtube.com/watch?v=";
@@ -50,4 +41,10 @@ export const generateServices = (tracks: Tracks): Service[] => {
   const servicesSet = new Set<Service>();
   tracks?.forEach((track) => servicesSet.add(track.service));
   return Array.from(servicesSet);
+};
+
+export const mapUserAttributes = (data: any): UserAttributes => {
+  return {
+    ...data.data.attributes,
+  } as UserAttributes;
 };
