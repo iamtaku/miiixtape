@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 
 const NavBar = styled.nav`
   grid-area: nav;
-  display: flex;
-  align-items: center;
 `;
 
 const List = styled.ul`

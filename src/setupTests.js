@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { setupServer } from "msw/node";
-import { handlers } from "./tests/mocks/utils";
+import { handlers } from "./tests/mocks/handlers";
 import { setLogger } from "react-query";
 require("jest-localstorage-mock");
 

@@ -8,10 +8,13 @@ import { ModalWrapper } from "../modal";
 import { useGetSpotifyUser } from "../../queries/hooks";
 import { BasicButton } from "../Buttons";
 
-const ProfileActionsWrapper = styled(ModalWrapper)`
+const ProfileActionsWrapper = styled.div`
+  position: absolute;
+  left: -50px;
+  z-index: 20;
+  width: 100%;
   ul {
     flex-direction: column;
-    /* background-color: white; */
   }
 `;
 
@@ -32,7 +35,7 @@ const ProfileImage = styled.img`
 `;
 
 const Wrapper = styled.div`
-  /* position: relative; */
+  position: relative;
 `;
 
 export const Profile = () => {

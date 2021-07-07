@@ -11,7 +11,7 @@ import { Youtube, SoundCloud, Spotify } from "../../queries/api/";
 import { mapSCTracktoTrack } from "../../queries/api/soundcloud/mapping";
 import client from "../../queries/api/spotify/api";
 import { useGetUser, usePostPlaylistItems } from "../../queries/hooks";
-import { Service, Song, Tracks } from "../../types/types";
+import { Service, Tracks } from "../../types/types";
 
 interface IAddByUrl {
   id: string;

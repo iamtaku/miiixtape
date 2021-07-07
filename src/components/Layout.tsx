@@ -9,9 +9,9 @@ import { Sidebar } from "./sidebar";
 const Container = styled.div`
   display: grid;
   height: 100vh;
-  width: 100vw;
-  margin: 0 8px;
-  grid-template-rows: 100px 1fr 100px;
+  width: 100%;
+  padding: 0 8px;
+  grid-template-rows: 60px 1fr 100px;
   grid-template-areas:
     "nav"
     "main"
@@ -23,13 +23,14 @@ const LayoutWrapper = styled.div`
   display: grid;
   overflow: hidden;
   grid-template-rows: 1fr;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 0.5fr 3fr;
   grid-column-gap: 15px;
   grid-template-areas: "sidebar inner";
 `;
 
 export const InnerLayout = styled.div`
   grid-area: inner;
+  border: 1px solid red;
   display: grid;
   overflow: hidden;
   grid-template-areas:
@@ -38,7 +39,7 @@ export const InnerLayout = styled.div`
   grid-template-rows: 20% 80%;
   grid-row-gap: 24px;
   position: relative;
-  ${device.laptop} {
+  @media ${device.laptop} {
     grid-template-rows: 30% 70%;
   }
 `;

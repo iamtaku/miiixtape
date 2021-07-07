@@ -15,8 +15,7 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   /* background-color: rgba(255, 255, 255, 0.5);   */
-  /* border-radius: 25px; */
-  padding: 16px 24px;
+  /* padding: 16px 24px; */
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(15, 11, 11, 0.2);
   backdrop-filter: blur(10px) contrast(0.8);

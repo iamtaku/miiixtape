@@ -23,7 +23,6 @@ const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
     props.isActive ? "var(--light-gray) !important" : "default"};
   border-radius: 16px;
   opacity: 0.8;
-  margin: 4px 0;
 
   a {
     padding: 4px 8px;
