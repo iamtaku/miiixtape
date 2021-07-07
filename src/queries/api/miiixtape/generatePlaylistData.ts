@@ -26,21 +26,14 @@ const fetchSpotifyTracks = async (
       stripURI(track.attributes.song.uri)
     )
   ); //fetch them 50 at a time
-  const tracks = await Spotify.getTracks(spotifyTracks, client);
+  const tracks = Spotify.getTracks(spotifyTracks, client);
   return tracks;
 };
 
 const fetchSCTracks = async (data: PlaylistItemItem[]): Promise<Tracks> => {
   const soundcloudTracks = filterTracks(data, "soundcloud");
   const uris = soundcloudTracks.map((item) => item.attributes.song.uri);
-  const res = await SoundCloud.getTracks(uris);
-  // const tracks: Tracks = [];
-  // res.forEach((track) => {
-  // const mapped = mapSCTracktoTrack(track);
-  // tracks.push(mapped);
-  // });
-
-  // return tracks;
+  const res = SoundCloud.getTracks(uris);
   return res;
 };
 

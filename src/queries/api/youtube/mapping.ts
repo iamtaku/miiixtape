@@ -1,7 +1,6 @@
 import { Song, Tracks } from "../../../types/types";
 
 export const mapYoutubeToTrack = (data: any): Song => {
-  debugger;
   return {
     id: data.id,
     name: data.snippet.title,

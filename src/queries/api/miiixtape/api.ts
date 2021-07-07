@@ -40,8 +40,7 @@ export const getPlaylist = async (
   params: IParam,
   userInfo?: UserAttributes
 ): Promise<PlaylistType> => {
-  const token = window.localStorage.getItem("token");
-  if (!token || !userInfo) {
+  if (!userInfo) {
     throw new Error("auth error");
   }
   const client = new SpotifyWebApi();

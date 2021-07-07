@@ -63,7 +63,7 @@ export const Playlist = {
   createPlaylistItems: (
     id: string,
     playlist_items: IPlaylistItems
-  ): Promise<PlaylistType> =>
+  ): Promise<ServerPlaylist> =>
     requests.post(`/playlists/${id}/playlist_items`, playlist_items),
 };
 

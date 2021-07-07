@@ -60,7 +60,6 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
     }
     const fetchURI = stripYoutubeURI(input);
     const data = await Youtube.getVideo(fetchURI);
-    console.log(data);
     return [data];
   };
   const fetchSpotify = async (uri: string): Promise<Tracks | undefined> => {
@@ -102,6 +101,7 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
     service: Service,
     uri: string
   ): Promise<Tracks | undefined> => {
+    if (!uri.includes("playlist/playlist")) return;
     switch (service) {
       case "youtube":
         return await fetchYoutube(uri);
@@ -118,34 +118,25 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
     event.preventDefault();
     setIsLoading(true);
     setIsError(false);
-    const service = findService(input);
-    if (!service) {
-      setIsLoading(false);
-      setIsError(true);
-      return;
-    }
     try {
+      const service = findService(input);
+      if (!service) {
+        throw Error();
+      }
       const data = await fetchURL(service, input);
-      setIsLoading(false);
-      if (data === undefined) throw Error();
+      if (!data) {
+        throw Error();
+      }
       const tracks = Array.isArray(data) ? data : [data];
-      data && tracks && mutation.mutate({ id, tracks });
+      data && tracks && (await mutation.mutate({ id, tracks }));
+      setIsLoading(false);
       setIsSuccess(true);
     } catch {
+      setIsSuccess(false);
       setIsLoading(false);
       setIsError(true);
     }
   };
-  //      const data = await SoundCloud.getTrack(input);
-  //      const tracks = mapSoundCloudTrackToTrack(data);
-  //      mutation.mutate({ id, tracks });
-  //
-
-  //check if valid input
-  //if valid => // case for each service(youtube/spotify/soundcloud)
-  // store details in database
-  // if success, invalidate react query to refetch data
-  //
 
   return (
     <div>

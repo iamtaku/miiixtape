@@ -70,17 +70,18 @@ export const useGetSpotifyUser = () => {
 };
 
 export const useGetAllPlaylists = () =>
-  useQuery<CollectionType[], Error>("playlistAll", Playlist.getPlaylists);
+  useQuery<CollectionType[]>("playlistAll", Playlist.getPlaylists);
 
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
   return useMutation(postPlaylistItems, {
     onSuccess: (data) => {
       queryClient.invalidateQueries("collection");
-      console.log("tracks have been added! ", data);
+      console.log("tracks have been added! ", data.data);
     },
     onError: (error) => {
-      console.error("Error : ", error);
+      console.error("no joy for postplaylistitems");
+      throw new Error(`Error: ${error}`);
     },
   });
 };
@@ -90,7 +91,6 @@ export const usePostPlaylist = () => {
   return useMutation(postPlaylist, {
     onSuccess: (data) => {
       queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data
-      console.log("collection created! : ", data);
     },
   });
 };
