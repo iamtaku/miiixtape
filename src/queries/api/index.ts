@@ -59,7 +59,8 @@ export const Playlist = {
   }): Promise<ServerPlaylist> => requests.post("playlists", playlist),
   // updatePost: (post: PostType, id: number): Promise<PostType> =>
   //   requests.put(`posts/${id}`, post),
-  deletePost: (id: string): Promise<void> => requests.delete(`playlists/${id}`),
+  deletePlaylist: (id: string): Promise<void> =>
+    requests.delete(`playlists/${id}`),
   createPlaylistItems: (
     id: string,
     playlist_items: IPlaylistItems

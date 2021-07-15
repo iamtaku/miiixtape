@@ -7,25 +7,25 @@ import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";
 
 const Container = styled.div`
-  z-index: 10;
+  z-index: 1;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  height: 100%;
+  height: 100vh;
   /* background-color: rgba(255, 255, 255, 0.5);   */
   /* padding: 16px 24px; */
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(15, 11, 11, 0.2);
-  backdrop-filter: blur(10px) contrast(0.8);
+  backdrop-filter: blur(4px) contrast(0.8);
   display: grid;
 `;
 
-export const ModalWrapper = styled.div`
+const ModalWrapper = styled.div`
   place-self: center;
   background-color: var(--light-gray);
-  width: 90%;
+  width: 60%;
   border-radius: 16px;
   padding: 8px 24px 24px 24px;
   h3 {
@@ -70,8 +70,7 @@ const TitleWrapper = styled.div`
 `;
 
 interface ModalProps {
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-  tracks: Tracks;
+  handleClick: () => void;
   id: string;
 }
 
@@ -87,18 +86,18 @@ const mapSoundCloudTrackToTrack = (data: any): Tracks => {
   ];
 };
 
-export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks, id }) => {
+export const Modal: React.FC<ModalProps> = ({ handleClick, id }) => {
   return (
     <Container>
       <ModalWrapper>
         <TitleWrapper>
           <Title>Add Tracks</Title>
-          <CloseBtn onClick={() => setIsModalOpen(false)}>
+          <CloseBtn onClick={handleClick}>
             <FontAwesomeIcon icon={faTimes} />{" "}
           </CloseBtn>
         </TitleWrapper>
         <AddByUrl id={id} />
-        {/* <AddbyExisting tracks={tracks} /> */}
+        <AddbyExisting />
       </ModalWrapper>
     </Container>
   );

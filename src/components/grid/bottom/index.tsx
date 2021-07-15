@@ -2,18 +2,20 @@ import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Collection } from "../../../types/types";
+import { InnerGridTop } from "../top";
 import { Track } from "./Track";
 
-const Wrapper = styled.div`
-  position: relative;
-  grid-area: bottom;
-  min-height: 0;
-  overflow-y: scroll;
-`;
 interface PropTypes {
   data?: Collection;
   isLoading: boolean;
 }
+
+const Wrapper = styled.div`
+  position: relative;
+  height: 100%;
+  overflow: overlay;
+  overflow-y: scroll;
+`;
 
 const TrackList = styled.div`
   padding: 4px;
@@ -52,12 +54,14 @@ export const InnerGridBottom: React.FC<PropTypes> = ({ data, isLoading }) => {
   if (data?.tracks?.length === 0) {
     return (
       <Wrapper>
+        <InnerGridTop data={data} isLoading={isLoading} />
         <p>No tracks</p>
       </Wrapper>
     );
   }
   return (
-    <Wrapper>
+    <Wrapper className="main">
+      <InnerGridTop data={data} isLoading={isLoading} />
       {data.playlistInfo.type === "album" ? (
         <ItemContainer isAlbum>
           <Item>#</Item>

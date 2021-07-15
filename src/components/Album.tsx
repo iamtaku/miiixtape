@@ -1,10 +1,8 @@
 import React from "react";
 import { Redirect } from "react-router";
-import { InnerGridTop } from "./grid/top/index";
 import { InnerGridBottom } from "./grid/bottom/index";
 import { useQueryClient } from "react-query";
 import { useGetAlbum } from "../queries/hooks";
-import { InnerLayout } from "./Layout";
 import { Collection } from "../types/types";
 
 export const Album = ({ id }: { id?: string }) => {
@@ -21,10 +19,5 @@ export const Album = ({ id }: { id?: string }) => {
     <Redirect to="/app/error" />;
   }
 
-  return (
-    <InnerLayout>
-      <InnerGridTop data={data} isLoading={isLoading} />
-      <InnerGridBottom data={data} isLoading={isLoading} />
-    </InnerLayout>
-  );
+  return <InnerGridBottom data={data} isLoading={isLoading} />;
 };

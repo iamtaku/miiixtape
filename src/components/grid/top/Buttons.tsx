@@ -1,10 +1,19 @@
-import { faPause, faPlay, faPlus ,faShare} from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsisV,
+  faPause,
+  faPlay,
+  faPlus,
+  faShare,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import styled, { css } from "styled-components";
 import { device } from "../../../globalStyle";
 import { useIsCurrentPlaylist } from "../../../helpers/hooks";
+import { useDeletePlaylist } from "../../../queries/hooks";
+import { useGlobalContext } from "../../../state/context";
 import { Collection } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
@@ -60,9 +69,91 @@ const ImportButton = styled(Btn)`
 `;
 
 const PlayButton = styled(GridButton)`
+  color: var(--accent);
+`;
+
+const DeleteBtn = styled(Btn)`
   color: var(--secondary);
 `;
 
+const Wrapper = styled.div`
+  position: absolute;
+  top: 20px;
+  background-color: var(--light-gray);
+  padding: 8px;
+`;
+
+const DeleteButton = () => {
+  const mutation = useDeletePlaylist();
+  const history = useHistory();
+  const { state, dispatch } = useGlobalContext();
+  const handleClick = async () => {
+    mutation
+      .mutateAsync()
+      .then(() => {
+        // dispatch({ type: "PLAYBACK_FINISH", payload: {} });
+        history.push("/app");
+      })
+      .catch((err) => console.log(err));
+  };
+  return (
+    <DeleteBtn onClick={handleClick}>
+      <FontAwesomeIcon icon={faTrash} />
+      <span>DELETE</span>
+    </DeleteBtn>
+  );
+};
+
+const ShareButton = () => {
+  const handleClick = () => {};
+  return (
+    <DeleteBtn onClick={handleClick}>
+      <FontAwesomeIcon icon={faShare} />
+      <span>SHARE</span>
+    </DeleteBtn>
+  );
+};
+
+const OptionsModal: React.FC<{
+  handleClick: () => void;
+  isModalOpen: boolean;
+}> = ({ handleClick, isModalOpen }) => {
+  return (
+    <Wrapper>
+      <ImportButton onClick={handleClick} isPressed={isModalOpen}>
+        <FontAwesomeIcon icon={faPlus} />
+        <span>ADD</span>
+      </ImportButton>
+      <ShareButton />
+      <DeleteButton />
+    </Wrapper>
+  );
+};
+
+const OptionsBtn = styled(Btn)`
+  color: var(--secondary);
+`;
+
+const OptionsButton: React.FC<{
+  handleClick: () => void;
+  isModalOpen: boolean;
+}> = ({ handleClick, isModalOpen }) => {
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+
+  const handleOptionsClick = () => {
+    console.log("open options");
+    setIsOptionsOpen(!isOptionsOpen);
+  };
+  return (
+    <OptionsBtn onClick={handleOptionsClick} style={{ position: "relative" }}>
+      <FontAwesomeIcon icon={faEllipsisV} />
+      <span>OPTIONS</span>
+      {isOptionsOpen && (
+        <OptionsModal handleClick={handleClick} isModalOpen={isModalOpen} />
+      )}
+    </OptionsBtn>
+  );
+};
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,20 +166,21 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
     setIsModalOpen(false);
   }, [pathname]);
 
-  // if (data.tracks.length === 0) {
-  // return <p>No tracks</p>;
-  // }
+  const openOrCloseModal = () => {
+    const main = document.querySelector(".main")!;
+    if (!main) return;
+    isModalOpen
+      ? main.classList.remove("modal-open")
+      : main.classList.add("modal-open");
+  };
+  const handleClick = () => {
+    setIsModalOpen(!isModalOpen);
+    openOrCloseModal();
+  };
 
   return (
     <ButtonWrapper>
       {/* {params.service === "spotify" && ( */}
-      <ImportButton
-        onClick={() => setIsModalOpen(!isModalOpen)}
-        isPressed={isModalOpen}
-      >
-        <FontAwesomeIcon icon={faPlus} />
-        <span>ADD</span>
-      </ImportButton>
       {/* )} */}
       <PlayButton data={data}>
         {isCurrent && isPlaying ? (
@@ -103,13 +195,9 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
           </>
         )}
       </PlayButton>
-
+      <OptionsButton handleClick={handleClick} isModalOpen={isModalOpen} />
       {isModalOpen && (
-        <Modal
-          setIsModalOpen={setIsModalOpen}
-          tracks={data.tracks}
-          id={data.playlistInfo.id}
-        />
+        <Modal handleClick={handleClick} id={data.playlistInfo.id} />
       )}
       {/* <Btn style={{ color: 'var(--accent)' }}><FontAwesomeIcon icon={faShare} />SHARE</Btn> */}
     </ButtonWrapper>

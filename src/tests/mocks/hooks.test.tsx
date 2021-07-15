@@ -1,17 +1,16 @@
 import { rest } from "msw";
 import * as React from "react";
 import { renderHook } from "@testing-library/react-hooks";
+import { act, create } from "react-test-renderer";
 import { server } from "../../setupTests";
 import { createWrapper } from "./utils";
 import {
+  useDeletePlaylist,
   useGetAllPlaylists,
   useGetUser,
   usePostPlaylist,
   usePostPlaylistItems,
 } from "../../queries/hooks";
-import { useQuery } from "react-query";
-import axios from "axios";
-import { act, create } from "react-test-renderer";
 import { mockTracks } from "./db";
 
 describe("useGetUser hook", () => {
@@ -38,25 +37,6 @@ describe("useGetUser hook", () => {
     await waitFor(() => result.current.isError);
 
     expect(result.current.error).toBeDefined();
-  });
-});
-
-const fetchText = async (): Promise<{ working: string }> =>
-  axios.get("https://whatever.com/test").then((res) => res.data);
-
-const useFetchText = () => {
-  return useQuery<{ working: string }>("test", fetchText);
-};
-
-describe("test", () => {
-  test("testing whether server is working", async () => {
-    const { result, waitFor } = renderHook(() => useFetchText(), {
-      wrapper: createWrapper(),
-    });
-
-    await waitFor(() => result.current.isSuccess);
-
-    expect(result.current.data?.working).toBe("yes");
   });
 });
 
@@ -108,5 +88,20 @@ describe("usePostPlaylistItemHook", () => {
     expect(
       result.current.data?.data.relationships.playlist_items.data[0]
     ).toEqual(mockTracks[0]);
+  });
+});
+
+describe("useDeletePlaylistItemHook", () => {
+  it("deletes a playlist", async () => {
+    const { result, waitFor } = renderHook(() => useDeletePlaylist(), {
+      wrapper: createWrapper(),
+    });
+
+    act(() => {
+      result.current.mutate();
+    });
+
+    await waitFor(() => result.current.isSuccess);
+    expect(result.current.status).toBe("success");
   });
 });

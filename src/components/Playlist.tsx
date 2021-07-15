@@ -2,17 +2,11 @@ import React from "react";
 import { useHistory, useParams } from "react-router";
 import { useGetSinglePlaylist } from "../queries/hooks";
 import { InnerGridBottom } from "./grid/bottom";
-import { InnerGridTop } from "./grid/top";
 import { useQueryClient } from "react-query";
 import { Collection as PlaylistType, PlaylistParam } from "../types/types";
-import { InnerLayout } from "./Layout";
 
 export const Playlist: React.FC = () => {
-  const params = useParams<PlaylistParam>();
-  const { data, isLoading, error } = useGetSinglePlaylist(
-    params.playlistId,
-    params.service
-  );
+  const { data, isLoading, error } = useGetSinglePlaylist();
   const history = useHistory();
   const queryClient = useQueryClient();
   const test = queryClient.getQueryData<PlaylistType>([
@@ -26,10 +20,5 @@ export const Playlist: React.FC = () => {
     history.push("/app/error");
   }
 
-  return (
-    <InnerLayout>
-      <InnerGridTop data={data} isLoading={isLoading} />
-      <InnerGridBottom data={data} isLoading={isLoading} />
-    </InnerLayout>
-  );
+  return <InnerGridBottom data={data} isLoading={isLoading} />;
 };

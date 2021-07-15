@@ -1,22 +1,37 @@
 import axios from "axios";
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ReactHowler from "react-howler";
 import { SoundCloud } from "../../queries/api/";
 import { useGlobalContext } from "../../state/context";
 
 interface IProps {
   setSoundCloud: Dispatch<SetStateAction<ReactHowler | undefined>>;
+  setDuration: React.Dispatch<React.SetStateAction<number>>;
   uri?: string;
 }
-export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
+export const Soundcloud: React.FC<IProps> = ({
+  setSoundCloud,
+  setDuration,
+  uri,
+}) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<ReactHowler>(null);
+
+  useEffect(() => {
+    console.log("updating seek");
+    ref.current && setDuration(ref.current?.seek());
+  }, [ref.current]);
+
   const handleOnLoadError = () => {
     console.error("soundcloud  went wrong");
   };
   const handleOnPlay = () => {
     console.log("playing soundclouds");
     // fetchSpotify();
+  };
+
+  const handleOnLoad = () => {
+    ref.current && setSoundCloud(ref.current);
   };
 
   const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
@@ -33,7 +48,7 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
   };
 
   const handleEnd = () => {
-    console.log("spotify ended");
+    console.log("soundcloud ended");
     dispatch({
       type: "SONG_END",
       payload: {},
@@ -55,6 +70,7 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
         playing={state.player.isPlaying}
         onLoadError={handleOnLoadError}
         onPause={handleOnPlay}
+        onLoad={handleOnLoad}
         preload={true}
         html5
         ref={ref}

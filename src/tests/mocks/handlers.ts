@@ -83,4 +83,7 @@ export const handlers = [
       })
     );
   }),
+  rest.delete("*/playlists/:playlistId", (req, res, ctx) => {
+    return res(ctx.status(204));
+  }),
 ];

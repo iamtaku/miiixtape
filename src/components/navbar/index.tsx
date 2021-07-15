@@ -6,11 +6,15 @@ import { Link } from "react-router-dom";
 
 const NavBar = styled.nav`
   grid-area: nav;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const List = styled.ul`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   width: 100%;
   justify-content: space-between;
 `;
@@ -18,20 +22,29 @@ const List = styled.ul`
 const Title = styled.h1`
   color: var(--accent);
 `;
+
+const HomeSection = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+`;
 export const Navbar: React.FC = () => {
   return (
     <NavBar>
       <List>
-        <li>
-          <Link to="/app">
-            <Title>PLAAAYLIST</Title>
-          </Link>
-        </li>
-        <li>
+        <HomeSection>
+          <li>
+            <Link to="/app">
+              <Title>miiixtape</Title>
+            </Link>
+          </li>
+          <li>
+            <Profile />
+          </li>
+        </HomeSection>
+        <li style={{ width: "100%" }}>
           <SearchBar />
-        </li>
-        <li>
-          <Profile />
         </li>
       </List>
     </NavBar>

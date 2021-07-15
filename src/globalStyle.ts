@@ -17,12 +17,15 @@ export const Global = createGlobalStyle`
 --dark-accent: var(--dark-orange);
 }
 
-  body {
-    background-color: var(--primary);
+ body {
+    background-color: var(--light-gray);
     color: var(--secondary);
     font-family: 'Helvetica';
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow: overlay;
+
   }
+
   *,
 *::before,
 *::after {
@@ -83,6 +86,25 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+  /* background-color: var(--light-gray); */
+  /* color: var(--secondary); */
+  
+}
+::-webkit-scrollbar-track {
+  background: var(--primary) 
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--light-gray) 
+}
+  
+.modal-open {
+   overflow: hidden;
 }
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */

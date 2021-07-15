@@ -5,6 +5,7 @@ import {
   useGetAllSpotifyPlaylist,
   useGetAllPlaylists,
 } from "../../queries/hooks";
+import { Navbar as Nav } from "../navbar";
 
 const Wrapper = styled.div`
   grid-area: sidebar;
@@ -14,17 +15,29 @@ const Wrapper = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background: transparent;
-  opacity: 0.8;
+  background: var(--lighter-gray);
+`;
+
+const CollectionWrapper = styled.div`
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-top: 16px;
+  ::-webkit-scrollbar-track {
+    background: var(--lighter-gray);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--light-gray);
+  }
 `;
 
 export const Sidebar = () => {
-  const { data: spotifyPlaylists, isLoading: spotifyLoading } =
-    useGetAllSpotifyPlaylist();
+  // const { data: spotifyPlaylists, isLoading: spotifyLoading } =
+  //   useGetAllSpotifyPlaylist();
   const { data: playlists, isLoading } = useGetAllPlaylists();
 
   //add sidebar loading placeholder
-  if (isLoading || spotifyLoading)
+  if (isLoading)
     return (
       <Wrapper>
         <h2>Loading...</h2>
@@ -33,8 +46,11 @@ export const Sidebar = () => {
 
   return (
     <Wrapper>
-      <SidebarCollection data={spotifyPlaylists} title={"spotify"} />
-      <SidebarCollection data={playlists} title={"plaaaylist"} />
+      <Nav />
+      <CollectionWrapper>
+        {/* <SidebarCollection data={spotifyPlaylists} title={"spotify"} /> */}
+        <SidebarCollection data={playlists} title={"plaaaylist"} />
+      </CollectionWrapper>
       <AddPlaylistForm />
     </Wrapper>
   );

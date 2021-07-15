@@ -35,12 +35,12 @@ const Container = styled.div`
 `;
 
 const Title = styled.span`
-  font-size: 1.2rem;
+  font-size: 2.5rem;
   font-weight: bold;
   text-align: left;
 
   @media ${device.laptop} {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 `;
 

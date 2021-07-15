@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import {
   stripSpotifyAlbumURI,
@@ -30,6 +31,7 @@ const Success = () => <p>Success...</p>;
 const Error = () => <p>Error...</p>;
 
 export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
+  const history = useHistory();
   const mutation = usePostPlaylistItems();
   const { data: userInfo } = useGetUser();
   const [input, setInput] = useState("");
@@ -101,7 +103,7 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
     service: Service,
     uri: string
   ): Promise<Tracks | undefined> => {
-    if (!uri.includes("playlist/playlist")) return;
+    if (!history.location.pathname.includes("plaaaylist")) return;
     switch (service) {
       case "youtube":
         return await fetchYoutube(uri);
@@ -131,7 +133,8 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
       data && tracks && (await mutation.mutate({ id, tracks }));
       setIsLoading(false);
       setIsSuccess(true);
-    } catch {
+    } catch (err) {
+      console.error(err);
       setIsSuccess(false);
       setIsLoading(false);
       setIsError(true);

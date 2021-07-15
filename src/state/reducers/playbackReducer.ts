@@ -170,6 +170,8 @@ export const playbackReducer = (
         isPlaying: false,
         isFinished: true,
       } as PlaybackType;
+    case "PLAYBACK_FINISH":
+      return initial;
     case "PLAY":
       console.log(action.type);
       return handlePlay(state);

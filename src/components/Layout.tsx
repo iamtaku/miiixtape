@@ -2,42 +2,27 @@ import React from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { device } from "../globalStyle";
-import { Navbar } from "./navbar";
 import Player from "./players";
 import { Sidebar } from "./sidebar";
 
-const Container = styled.div`
-  display: grid;
-  height: 100vh;
-  width: 100%;
-  padding: 0 8px;
-  grid-template-rows: 60px 1fr 100px;
-  grid-template-areas:
-    "nav"
-    "main"
-    "player";
-`;
-
 const LayoutWrapper = styled.div`
-  grid-area: main;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
   display: grid;
   overflow: hidden;
   grid-template-rows: 1fr;
-  grid-template-columns: 0.5fr 3fr;
-  grid-column-gap: 15px;
+  grid-template-columns: 0.6fr 3fr;
   grid-template-areas: "sidebar inner";
+  /* margin: 0 8px; */
 `;
 
-export const InnerLayout = styled.div`
+const InnerLayout = styled.div`
   grid-area: inner;
-  border: 1px solid red;
-  display: grid;
   overflow: hidden;
-  grid-template-areas:
-    "top"
-    "bottom";
-  grid-template-rows: 20% 80%;
-  grid-row-gap: 24px;
+  width: 100%;
+  padding: 0 8px 8px 8px;
+  background-color: var(--primary);
   position: relative;
   @media ${device.laptop} {
     grid-template-rows: 30% 70%;
@@ -57,15 +42,14 @@ export const Layout: React.FC = ({ children }) => {
   };
 
   return (
-    <Container>
-      <Navbar />
-      <LayoutWrapper>
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Sidebar />
+    <LayoutWrapper>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Sidebar />
+        <InnerLayout>
           {children}
-        </DragDropContext>
-      </LayoutWrapper>
-      <Player />
-    </Container>
+          <Player />
+        </InnerLayout>
+      </DragDropContext>
+    </LayoutWrapper>
   );
 };

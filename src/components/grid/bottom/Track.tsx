@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Song } from "../../../types/types";
 import { timeConversion } from "../../../helpers/timeConversion";
 import { Link, useLocation } from "react-router-dom";
@@ -144,7 +145,13 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           {isAlbum ? (
             <Item>{` `}</Item>
           ) : (
-            <Image src={trackImg} alt={track.album?.name} />
+            <LazyLoadImage
+              src={trackImg}
+              alt={track.album?.name}
+              width="40px"
+              style={{ justifySelf: "center" }}
+              // placeholderSrc={DefaultMusicImage}
+            />
           )}
           <Item>{track.name}</Item>
           <Item>

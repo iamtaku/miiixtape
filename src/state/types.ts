@@ -26,6 +26,7 @@ export type PlaybackPayload = {
   PAUSE_CURRENT: {};
   PLAY: {};
   PLAY_PREVIOUS: {};
+  PLAYBACK_FINISH: {};
 };
 
 export type PlaybackType = {
