@@ -3,7 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Song } from "../../../types/types";
-import { timeConversion } from "../../../helpers/timeConversion";
+import { timeConversion } from "../../../helpers/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../../../state/context";
 import { TrackPlaybackButton } from "../../Buttons";

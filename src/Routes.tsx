@@ -4,13 +4,15 @@ import Landing from "./pages/Landing";
 import Error from "./pages/Error";
 import { Main } from "./components/Main";
 import { Search } from "./components/Search";
-import { Playlist } from "./components/Playlist";
+import { Playlist } from "./components/playlist/Playlist";
 import { Album } from "./components/Album";
 import { Layout } from "./components/Layout";
 import { NotFound } from "./pages/NotFound";
 import { Artist } from "./components/artist";
 import { Login } from "./pages/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { PlaylistShare } from "./components/playlist/PlaylistShare";
+import { isAuthenticated } from "./helpers/utils";
 
 export const Routes = () => (
   <BrowserRouter>
@@ -46,18 +48,19 @@ const AppRoutes = () => {
         <ProtectedRoute exact path={path}>
           <Main />
         </ProtectedRoute>
-        <Route path={`${path}/search/:search`}>
+        <ProtectedRoute path={`${path}/search/:search`}>
           <Search />
-        </Route>
+        </ProtectedRoute>
         <Route path={`${path}/playlist/:service/:playlistId`}>
+          {/* {!isAuthenticated() && <PlaylistShare />} */}
           <Playlist />
         </Route>
-        <Route path={`${path}/album/:service/:albumId`}>
+        <ProtectedRoute path={`${path}/album/:service/:albumId`}>
           <Album />
-        </Route>
-        <Route path={`${path}/artist/:service/:artistId`}>
+        </ProtectedRoute>
+        <ProtectedRoute path={`${path}/artist/:service/:artistId`}>
           <Artist />
-        </Route>
+        </ProtectedRoute>
 
         <Route path={`${path}/error`}>
           <Error />

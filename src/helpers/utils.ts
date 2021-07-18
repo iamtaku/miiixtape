@@ -22,3 +22,5 @@ export const timeConversion = (duration: number) => {
 
   return portions.join(" ");
 };
+
+export const isAuthenticated = (): boolean => !!localStorage.getItem("token");

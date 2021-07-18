@@ -6,7 +6,7 @@ import { useGetAlbum } from "../queries/hooks";
 import { Collection } from "../types/types";
 
 export const Album = ({ id }: { id?: string }) => {
-  const { data, isLoading, error } = useGetAlbum();
+  const { data, isLoading, error, isError } = useGetAlbum();
   const queryClient = useQueryClient();
   const test = queryClient.getQueryData<Collection>([
     "playlist",
@@ -14,10 +14,12 @@ export const Album = ({ id }: { id?: string }) => {
   ]);
   console.log(test);
 
-  if (error) {
+  if (isError) {
     console.error(error);
     <Redirect to="/app/error" />;
   }
 
-  return <InnerGridBottom data={data} isLoading={isLoading} />;
+  return (
+    <InnerGridBottom data={data} isLoading={isLoading} isError={isError} />
+  );
 };

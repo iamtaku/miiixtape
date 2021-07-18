@@ -15,13 +15,12 @@ const AddPlaylistButton = styled(BasicButton)`
 
 const Input = styled.input`
   width: 100%;
-  border: none;
   background: transparent;
   color: var(--secondary);
   outline: none;
   border-bottom: 1px solid var(--accent);
-  margin-top: 4px;
-  padding: 4px 8px;
+  /* margin-top: 4px; */
+  padding: 2px;
   outline-color: var(--accent);
 `;
 

@@ -4,11 +4,8 @@ export type ProtectedRouteProps = {
   // isAuthenticated: boolean;
 } & RouteProps;
 
-export const ProtectedRoute = ({
-  // isAuthenticated,
-  ...routeProps
-}: ProtectedRouteProps) => {
-  const isAuthenticated = localStorage.getItem("token");
+export const ProtectedRoute = ({ ...routeProps }: ProtectedRouteProps) => {
+  const isAuthenticated = !!localStorage.getItem("token");
 
   if (isAuthenticated) {
     return <Route {...routeProps} />;

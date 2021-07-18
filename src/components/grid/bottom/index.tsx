@@ -8,6 +8,7 @@ import { Track } from "./Track";
 interface PropTypes {
   data?: Collection;
   isLoading: boolean;
+  isError: boolean;
 }
 
 const Wrapper = styled.div`
@@ -47,7 +48,14 @@ const Item = styled.span<{ isRight?: boolean }>`
   }
 `;
 
-export const InnerGridBottom: React.FC<PropTypes> = ({ data, isLoading }) => {
+export const InnerGridBottom: React.FC<PropTypes> = ({
+  data,
+  isLoading,
+  isError,
+}) => {
+  if (isError) {
+    return <p>error</p>;
+  }
   if (isLoading || !data) {
     return <p>Loading...</p>;
   }

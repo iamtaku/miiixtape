@@ -46,8 +46,8 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   title,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
-
   const [isActive, setIsActive] = useState(false);
+
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
@@ -64,12 +64,6 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
       <TitleSection>
         <Container>
           <span>{title}</span>
-          <Icon>
-            <FontAwesomeIcon
-              icon={isOpen ? faChevronUp : faChevronDown}
-              onClick={handleClick}
-            />
-          </Icon>
         </Container>
       </TitleSection>
       {isOpen &&

@@ -10,6 +10,7 @@ import { Navbar as Nav } from "../navbar";
 const Wrapper = styled.div`
   grid-area: sidebar;
   max-width: 100%;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   white-space: nowrap;
@@ -34,9 +35,8 @@ const CollectionWrapper = styled.div`
 export const Sidebar = () => {
   // const { data: spotifyPlaylists, isLoading: spotifyLoading } =
   //   useGetAllSpotifyPlaylist();
-  const { data: playlists, isLoading } = useGetAllPlaylists();
+  const { data: playlists, isLoading, error } = useGetAllPlaylists();
 
-  //add sidebar loading placeholder
   if (isLoading)
     return (
       <Wrapper>
@@ -44,12 +44,16 @@ export const Sidebar = () => {
       </Wrapper>
     );
 
+  if (error?.response?.status === 401) {
+    return <h2>Unauthenticated sidebar</h2>;
+  }
+
   return (
     <Wrapper>
       <Nav />
       <CollectionWrapper>
         {/* <SidebarCollection data={spotifyPlaylists} title={"spotify"} /> */}
-        <SidebarCollection data={playlists} title={"plaaaylist"} />
+        <SidebarCollection data={playlists} title={"miiixtape"} />
       </CollectionWrapper>
       <AddPlaylistForm />
     </Wrapper>

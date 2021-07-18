@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UserAttributes } from "./types";
 import {
   Artist,
-  Collection,
   Collection as CollectionType,
   PlaylistParam,
 } from "../types/types";
@@ -21,6 +20,7 @@ import {
   Playlist,
   deletePlaylist,
 } from "./api/";
+import { AxiosError } from "axios";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
@@ -32,7 +32,7 @@ export const useGetArtist = (params: ArtistParams) => {
 export const useGetSinglePlaylist = () => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
-  return useQuery<CollectionType, Error>(
+  return useQuery<CollectionType, AxiosError>(
     ["collection", { id: params.playlistId, service: params.service }],
     () =>
       getPlaylist({ id: params.playlistId, service: params.service }, userInfo),
@@ -52,7 +52,7 @@ export const useGetAlbum = () => {
   const params = useParams<AlbumParam>();
   const { data: userInfo } = useGetUser();
 
-  return useQuery<CollectionType, Error>(
+  return useQuery<CollectionType, AxiosError>(
     ["collection", { id: params.albumId, service: params.service }],
     () => getAlbum(params, userInfo),
     {
@@ -76,7 +76,7 @@ export const useGetSpotifyUser = () => {
 };
 
 export const useGetAllPlaylists = () =>
-  useQuery<CollectionType[]>("playlistAll", Playlist.getPlaylists);
+  useQuery<CollectionType[], AxiosError>("playlistAll", Playlist.getPlaylists);
 
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
