@@ -1,23 +1,34 @@
 import React from "react";
 import styled from "styled-components";
+import { useQueryClient } from "react-query";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpotify } from "@fortawesome/free-brands-svg-icons";
+
 import { Collection, Song } from "../types/types";
 import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/api";
 import { useGetUser } from "../queries/hooks";
 import { useIsCurrentPlaylist, useIsCurrentTrack } from "../helpers/hooks";
-import { useQueryClient } from "react-query";
 
 const LoginBtn = styled.a`
   margin: 16px;
-  border: 2px solid var(--primary);
-  border-radius: 24px;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
   padding: 8px 16px;
+  text-align: center;
+  width: auto;
+  max-width: 200px;
+  align-self: center;
 `;
 
 export const LoginButton: React.FC = ({ children }) => {
   const URL = `${process.env.REACT_APP_BASE_URL}/auth`;
 
-  return <LoginBtn href={URL}>{children}</LoginBtn>;
+  return (
+    <LoginBtn href={URL}>
+      Login with Spotify <FontAwesomeIcon icon={faSpotify} />
+    </LoginBtn>
+  );
 };
 
 export const BasicButton = styled.button<{

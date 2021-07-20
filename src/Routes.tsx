@@ -52,7 +52,6 @@ const AppRoutes = () => {
           <Search />
         </ProtectedRoute>
         <Route path={`${path}/playlist/:service/:playlistId`}>
-          {/* {!isAuthenticated() && <PlaylistShare />} */}
           <Playlist />
         </Route>
         <ProtectedRoute path={`${path}/album/:service/:albumId`}>

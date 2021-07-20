@@ -7,6 +7,7 @@ import {
 import { Collection as PlaylistType, Tracks } from "../../types/types";
 import { ServerPlaylist, UserAttributes } from "../types";
 import { generatePlaylistData } from "./miiixtape/generatePlaylistData";
+import { isAuthenticated } from "../../helpers/utils";
 export { SoundCloud } from "./soundcloud/api";
 export { Youtube } from "./youtube/api";
 export * from "./spotify/api";
@@ -20,13 +21,17 @@ interface IPlaylistItems {
   };
 }
 
-const token = window.localStorage.getItem("token");
-const headers = {
-  Authorization: `Bearer ${token}`,
-};
 const playlistInstance = axios.create({
   baseURL: SERVER,
-  headers,
+});
+
+const token = () => window.localStorage.getItem("token");
+
+playlistInstance.interceptors.request.use((config) => {
+  if (isAuthenticated()) {
+    config.headers.Authorization = `Bearer ${token()}`;
+  }
+  return config;
 });
 
 export const responseBody = (response: AxiosResponse) => {

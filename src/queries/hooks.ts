@@ -45,7 +45,7 @@ export const useGetSinglePlaylist = () => {
 };
 
 export const useGetUser = () => {
-  return useQuery<UserAttributes>("user", getUser, {});
+  return useQuery<UserAttributes>("user", getUser);
 };
 
 export const useGetAlbum = () => {
@@ -72,6 +72,7 @@ export const useGetSpotifyUser = () => {
   const { data: userInfo } = useGetUser();
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,
+    retry: true,
   });
 };
 

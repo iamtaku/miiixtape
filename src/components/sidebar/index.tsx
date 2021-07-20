@@ -5,7 +5,7 @@ import {
   useGetAllSpotifyPlaylist,
   useGetAllPlaylists,
 } from "../../queries/hooks";
-import { Navbar as Nav } from "../navbar";
+import { Navbar as Nav } from "./nav";
 
 const Wrapper = styled.div`
   grid-area: sidebar;
@@ -44,9 +44,9 @@ export const Sidebar = () => {
       </Wrapper>
     );
 
-  if (error?.response?.status === 401) {
-    return <h2>Unauthenticated sidebar</h2>;
-  }
+  // if (error?.response?.status === 401) {
+  //   return <h2>Unauthenticated sidebar</h2>;
+  // }
 
   return (
     <Wrapper>
