@@ -1,24 +1,27 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UserAttributes } from "./types";
-import { Artist, Collection as CollectionType } from "../types/types";
-import { useParams } from "react-router";
+import {
+  Artist,
+  Collection as CollectionType,
+  PlaylistParam,
+} from "../types/types";
+import { useHistory, useParams } from "react-router";
 import {
   ArtistParams,
-  getAllPlaylists,
   getArtist,
   getPlaylist,
-  getToken,
   getUser,
   postPlaylist,
   postPlaylistItems,
-  Token,
-} from "./plaaaylist-queries";
-import {
   AlbumParam,
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
-} from "./spotify-queries";
+  Playlist,
+  deletePlaylist,
+} from "./api/";
+import { AxiosError } from "axios";
+
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
   return useQuery<Artist, Error>(["artist", params], () =>
@@ -26,33 +29,30 @@ export const useGetArtist = (params: ArtistParams) => {
   );
 };
 
-export const useGetSinglePlaylist = (id: string, service: string) => {
+export const useGetSinglePlaylist = () => {
+  const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
-  return useQuery<CollectionType, Error>(
-    ["collection", { id, service }],
-    () => getPlaylist({ id, service }, userInfo),
+  return useQuery<CollectionType, AxiosError>(
+    ["collection", { id: params.playlistId, service: params.service }],
+    () =>
+      getPlaylist({ id: params.playlistId, service: params.service }, userInfo),
     {
       enabled: !!userInfo,
       staleTime: Infinity,
+      retry: false,
     }
   );
 };
 
-export const useGetToken = () => useQuery<Token>("token", getToken);
-
 export const useGetUser = () => {
-  const { data: token } = useGetToken();
-  return useQuery<UserAttributes>("user", getUser, {
-    enabled: !!token,
-    refetchInterval: 1000 * 60 * 59,
-  });
+  return useQuery<UserAttributes>("user", getUser);
 };
 
 export const useGetAlbum = () => {
   const params = useParams<AlbumParam>();
   const { data: userInfo } = useGetUser();
 
-  return useQuery<CollectionType, Error>(
+  return useQuery<CollectionType, AxiosError>(
     ["collection", { id: params.albumId, service: params.service }],
     () => getAlbum(params, userInfo),
     {
@@ -65,40 +65,61 @@ export const useGetAllSpotifyPlaylist = () => {
   const { data: userInfo } = useGetUser();
   return useQuery("spotifyPlaylistAll", () => getSpotifyPlaylists(userInfo), {
     enabled: !!userInfo,
-    staleTime: Infinity,
   });
 };
 
 export const useGetSpotifyUser = () => {
   const { data: userInfo } = useGetUser();
-
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,
+    retry: true,
   });
 };
 
 export const useGetAllPlaylists = () =>
-  useQuery<CollectionType[], Error>("playlistAll", getAllPlaylists, {});
+  useQuery<CollectionType[], AxiosError>("playlistAll", Playlist.getPlaylists);
 
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
+  const params = useParams<PlaylistParam>();
   return useMutation(postPlaylistItems, {
     onSuccess: (data) => {
-      queryClient.invalidateQueries("collection");
-      console.log("tracks have been added! ", data);
+      queryClient.invalidateQueries([
+        "collection",
+        { id: params.playlistId, service: params.service },
+      ]);
     },
     onError: (error) => {
-      console.error("Error : ", error);
+      console.error("no joy for postplaylistitems");
+      throw new Error(`Error: ${error}`);
     },
   });
 };
 
 export const usePostPlaylist = () => {
   const queryClient = useQueryClient();
+  const history = useHistory();
   return useMutation(postPlaylist, {
     onSuccess: (data) => {
       queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data
-      console.log("collection created! : ", data);
+    },
+  });
+};
+
+export const useDeletePlaylist = () => {
+  const params = useParams<PlaylistParam>();
+  const queryClient = useQueryClient();
+  return useMutation(() => deletePlaylist(params.playlistId), {
+    onSuccess: (data, error, editedValue) => {
+      queryClient.removeQueries([
+        "collection",
+        { id: params.playlistId, service: params.service },
+      ]);
+      queryClient.invalidateQueries("playlistAll");
+    },
+    onError: (error) => {
+      console.error("no joy for deletePlaylistIt");
+      throw new Error(`Error: ${error}`);
     },
   });
 };

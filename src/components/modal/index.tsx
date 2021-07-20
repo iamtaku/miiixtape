@@ -1,36 +1,33 @@
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
-import { useGetAllPlaylists, usePostPlaylistItems } from "../../queries/hooks";
 import { Tracks } from "../../types/types";
 import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";
 
 const Container = styled.div`
+  z-index: 1;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.5);  
-
-  border-radius: 25px;
-  padding: 16px 24px;
-
-   -webkit-backdrop-filter: blur(10px);
-  background-color: rgba(15, 11, 11, 0.2);  
-
-  backdrop-filter: blur(10px) contrast(.8);
+  height: 100vh;
+  /* background-color: rgba(255, 255, 255, 0.5);   */
+  /* padding: 16px 24px; */
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(15, 11, 11, 0.2);
+  backdrop-filter: blur(4px) contrast(0.8);
   display: grid;
-
 `;
 
-export const ModalWrapper = styled.div`
+const ModalWrapper = styled.div`
   place-self: center;
   background-color: var(--light-gray);
-  width: 90%;
+  width: 60%;
   border-radius: 16px;
-  padding: 24px;
+  padding: 8px 24px 24px 24px;
   h3 {
     margin: 4px 0;
   }
@@ -48,15 +45,32 @@ export const ModalWrapper = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.h3`
-font-size: 3rem;
+  font-size: 3rem;
+`;
+
+const CloseBtn = styled.button`
+  background: none;
+  border: none;
+  font-size: 2rem;
+  &:hover {
+    cursor: pointer;
+    color: var(--accent);
+  }
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 interface ModalProps {
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-  tracks: Tracks;
+  handleClick: () => void;
   id: string;
 }
 
@@ -72,18 +86,19 @@ const mapSoundCloudTrackToTrack = (data: any): Tracks => {
   ];
 };
 
-export const Modal: React.FC<ModalProps> = ({ setIsModalOpen, tracks, id }) => {
-
-
-  
-
+export const Modal: React.FC<ModalProps> = ({ handleClick, id }) => {
   return (
-  <Container>
-    <ModalWrapper>
-      <Title>Add Tracks</Title>
-      <AddByUrl />
-      <AddbyExisting tracks={tracks}/>
-          </ModalWrapper>
-</Container>
+    <Container>
+      <ModalWrapper>
+        <TitleWrapper>
+          <Title>Add Tracks</Title>
+          <CloseBtn onClick={handleClick}>
+            <FontAwesomeIcon icon={faTimes} />{" "}
+          </CloseBtn>
+        </TitleWrapper>
+        <AddByUrl id={id} />
+        <AddbyExisting />
+      </ModalWrapper>
+    </Container>
   );
 };

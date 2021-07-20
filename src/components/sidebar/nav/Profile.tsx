@@ -3,15 +3,17 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from "react-router";
-import { ProfilePlaceholder } from "../placeholders/Placeholder";
-import { ModalWrapper } from "../modal";
-import { useGetSpotifyUser } from "../../queries/hooks";
-import { BasicButton } from "../Buttons";
+import { ProfilePlaceholder } from "../../placeholders/Placeholder";
+import { useGetSpotifyUser } from "../../../queries/hooks";
+import { BasicButton } from "../../Buttons";
 
-const ProfileActionsWrapper = styled(ModalWrapper)`
+const ProfileActionsWrapper = styled.div`
+  position: absolute;
+  left: -50px;
+  z-index: 20;
+  width: 100%;
   ul {
     flex-direction: column;
-    /* background-color: white; */
   }
 `;
 
@@ -26,9 +28,9 @@ const ProfileImage = styled.img`
   background-position: center center;
   background-size: cover;
   object-fit: cover;
-  width: 60px;
-  height: 60px;
-  position: relative;
+  width: 40px;
+  height: 40px;
+  /* position: relative; */
 `;
 
 const Wrapper = styled.div`

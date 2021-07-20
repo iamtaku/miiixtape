@@ -15,18 +15,17 @@ const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
   display: grid;
   grid-template-columns: 0.05fr 1fr;
   grid-template-areas: "button main ";
-  height: 40px;
+  height: 20px;
   width: 100%;
   align-content: center;
   border: 1px solid transparent;
   background-color: ${(props) =>
     props.isActive ? "var(--light-gray) !important" : "default"};
-  border-radius: 16px;
+  border-radius: 4px;
   opacity: 0.8;
-  margin: 4px 0;
 
   a {
-    padding: 4px 8px;
+    padding: 2px;
     display: block;
     width: 100%;
     overflow: hidden;

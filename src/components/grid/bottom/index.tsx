@@ -2,16 +2,21 @@ import React from "react";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Collection } from "../../../types/types";
+import { InnerGridTop } from "../top";
 import { Track } from "./Track";
 
-const Wrapper = styled.div`
-  grid-area: bottom;
-  overflow-y: scroll;
-`;
 interface PropTypes {
   data?: Collection;
   isLoading: boolean;
+  isError: boolean;
 }
+
+const Wrapper = styled.div`
+  position: relative;
+  height: 100%;
+  overflow: overlay;
+  overflow-y: scroll;
+`;
 
 const TrackList = styled.div`
   padding: 4px;
@@ -27,7 +32,6 @@ const ItemContainer = styled.li<{ isAlbum?: boolean }>`
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
-  /* opacity: 0.7; */
 `;
 
 const Item = styled.span<{ isRight?: boolean }>`
@@ -44,19 +48,28 @@ const Item = styled.span<{ isRight?: boolean }>`
   }
 `;
 
-export const InnerGridBottom: React.FC<PropTypes> = ({ data, isLoading }) => {
+export const InnerGridBottom: React.FC<PropTypes> = ({
+  data,
+  isLoading,
+  isError,
+}) => {
+  if (isError) {
+    return <p>error</p>;
+  }
   if (isLoading || !data) {
     return <p>Loading...</p>;
   }
   if (data?.tracks?.length === 0) {
     return (
       <Wrapper>
+        <InnerGridTop data={data} isLoading={isLoading} />
         <p>No tracks</p>
       </Wrapper>
     );
   }
   return (
-    <Wrapper>
+    <Wrapper className="main">
+      <InnerGridTop data={data} isLoading={isLoading} />
       {data.playlistInfo.type === "album" ? (
         <ItemContainer isAlbum>
           <Item>#</Item>

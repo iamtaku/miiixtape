@@ -3,20 +3,23 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 const SearchBarWrapper = styled.div`
-  border-radius: 50px;
-  padding: 4px 36px;
+  border-radius: 8px;
+  /* padding: 4px 36px; */
   background-color: var(--light-gray);
-
-  border-radius: 50px;
+  width: 100%;
   background: #5c5c5c;
-  box-shadow: inset 16px 16px 32px #545454, inset -16px -16px 32px #646464;
+  /* box-shadow: inset 16px 16px 32px #545454, inset -16px -16px 32px #646464; */
+
+  form {
+    width: 100%;
+  }
 
   input {
     background: transparent;
     box-shadow: none;
-    border: none;
+    border: 2px solid transparent;
     color: var(--secondary);
-    width: 300px;
+    width: 100%;
 
     ::placeholder {
       color: var(--secondary);

@@ -1,41 +1,59 @@
-import styled from "styled-components";
-import { Profile } from "./Profile";
-import { SearchBar } from "./SearchBar";
 import React from "react";
+import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const NavBar = styled.nav`
-  grid-area: nav;
-  display: flex;
-  align-items: center;
+const Container = styled.nav`
+  width: 100%;
+  padding: 16px;
 `;
 
 const List = styled.ul`
   display: flex;
-  align-items: center;
-  width: 100%;
   justify-content: space-between;
 `;
 
-const Title = styled.h1`
-  color: var(--accent);
+const Item = styled.li``;
+
+const Logo = () => <span>miiixtape</span>;
+
+const Button = styled(Link)`
+  background: none;
+  padding: 8px;
+  border: none;
+  margin: 0 8px;
+  border-radius: 8px;
 `;
-export const Navbar: React.FC = () => {
+const Buttons = () => (
+  <div>
+    <Button
+      to={"/app"}
+      style={{
+        border: "1px solid var(--secondary)",
+        color: "var(--secondary)",
+      }}
+    >
+      Open Player
+    </Button>
+    <Button
+      to={"/login"}
+      style={{ border: "1px solid var(--accent", color: "var(--accent)" }}
+    >
+      Login
+    </Button>
+  </div>
+);
+
+export const Navbar = () => {
   return (
-    <NavBar>
+    <Container>
       <List>
-        <li>
-          <Link to="/app">
-            <Title>PLAAAYLIST</Title>
-          </Link>
-        </li>
-        <li>
-          <SearchBar />
-        </li>
-        <li>
-          <Profile />
-        </li>
+        <Item>
+          <Logo />
+        </Item>
+        <Item>
+          <Buttons />
+        </Item>
       </List>
-    </NavBar>
+    </Container>
   );
 };

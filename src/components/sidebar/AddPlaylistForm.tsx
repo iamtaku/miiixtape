@@ -1,6 +1,7 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 import { usePostPlaylist } from "../../queries/hooks";
 import { BasicButton } from "../Buttons";
@@ -14,26 +15,31 @@ const AddPlaylistButton = styled(BasicButton)`
 
 const Input = styled.input`
   width: 100%;
-  border: none;
   background: transparent;
   color: var(--secondary);
   outline: none;
   border-bottom: 1px solid var(--accent);
-  margin: 4px;
-  padding: 4px 8px;
+  /* margin-top: 4px; */
+  padding: 2px;
   outline-color: var(--accent);
 `;
 
 export const AddPlaylistForm = () => {
   const mutation = usePostPlaylist();
-
+  const history = useHistory();
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [input, setInput] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate(input);
-    setInput("");
+    try {
+      mutation.mutateAsync(input).then((data) => {
+        setInput("");
+        data && history.push(`/app/playlist/plaaaylist/${data.data.id}`);
+      });
+    } catch {
+      console.error("something went wrong");
+    }
   };
 
   const handleBlur = () => {

@@ -1,6 +1,6 @@
-import { Song, Tracks } from "../types/types";
-import { player as initial } from "./context";
-import { ActionMap, PlaybackPayload, PlaybackType } from "./types";
+import { Song, Tracks } from "../../types/types";
+import { player as initial } from "../context";
+import { ActionMap, PlaybackPayload, PlaybackType } from "../types";
 
 export type PlaybackActions =
   ActionMap<PlaybackPayload>[keyof ActionMap<PlaybackPayload>];
@@ -170,6 +170,8 @@ export const playbackReducer = (
         isPlaying: false,
         isFinished: true,
       } as PlaybackType;
+    case "PLAYBACK_FINISH":
+      return initial;
     case "PLAY":
       console.log(action.type);
       return handlePlay(state);

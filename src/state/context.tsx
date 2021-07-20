@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
-import { playbackReducer, PlaybackActions } from "./reducers";
+import { playbackReducer, PlaybackActions } from "./reducers/playbackReducer";
 import { PlaybackType } from "./types";
 
 type InitialStateType = {

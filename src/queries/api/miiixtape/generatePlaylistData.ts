@@ -1,37 +1,21 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import {
-  generateServices,
-  mapPlaylistItemToTrack,
-  mapSCTracktoTrack,
-  mapSpotifyTracktoTrack,
-} from "../helpers/mappingHelpers";
-import { stripURI } from "../helpers/stripURI";
+import { generateServices, mapPlaylistItemToTrack } from "./mappingHelpers";
+import { stripURI } from "../../../helpers/stripURI";
 import {
   Collection,
   PlaylistInfo,
   Service,
   Song,
   Tracks,
-} from "../types/types";
-import { SoundCloud } from "./api";
-import { PlaylistItemItem, ServerPlaylist } from "./types";
+} from "../../../types/types";
+import { SoundCloud } from "..";
+import { PlaylistItemItem, ServerPlaylist } from "../../types";
+import { Spotify } from "../spotify/api";
 
 const filterTracks = (data: PlaylistItemItem[], service: Service) =>
   data.filter((item) => item.attributes.song.service === service);
 
 const removeDuplicate = (data: any): string[] => Array.from(new Set(data));
-
-export const fetchAllSpotifyTracks = async (
-  uris: string[],
-  client: SpotifyWebApi.SpotifyWebApiJs
-) => {
-  const NUM_TIMES = 50;
-  const results: Promise<SpotifyApi.MultipleTracksResponse>[] = [];
-  for (let i = 0; i < uris.length; i += NUM_TIMES) {
-    results.push(client.getTracks(uris.slice(i, i + NUM_TIMES)));
-  }
-  return await Promise.all(results);
-};
 
 const fetchSpotifyTracks = async (
   data: PlaylistItemItem[],
@@ -42,28 +26,15 @@ const fetchSpotifyTracks = async (
       stripURI(track.attributes.song.uri)
     )
   ); //fetch them 50 at a time
-  const res = await fetchAllSpotifyTracks(spotifyTracks, client);
-  const tracks: Tracks = [];
-  res.forEach((item) =>
-    item.tracks.forEach((track) => {
-      const mapped = mapSpotifyTracktoTrack(track);
-      tracks.push(mapped);
-    })
-  );
+  const tracks = Spotify.getTracks(spotifyTracks, client);
   return tracks;
 };
 
 const fetchSCTracks = async (data: PlaylistItemItem[]): Promise<Tracks> => {
   const soundcloudTracks = filterTracks(data, "soundcloud");
   const uris = soundcloudTracks.map((item) => item.attributes.song.uri);
-  const res = await SoundCloud.getTracks(uris);
-  const tracks: Tracks = [];
-  res.forEach((track) => {
-    const mapped = mapSCTracktoTrack(track);
-    tracks.push(mapped);
-  });
-
-  return tracks;
+  const res = SoundCloud.getTracks(uris);
+  return res;
 };
 
 const fetchAppropriateService = async (
@@ -109,18 +80,10 @@ const generatePlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
   };
 };
 
-export const fetchSinglePlaylist = async (
+const generatePlaylistTracks = async (
   data: ServerPlaylist,
   client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<Collection> => {
-  const playlistInfo = generatePlaylistInfo(data);
-  if (data.included.length === 0) {
-    return {
-      playlistInfo,
-      tracks: [],
-    };
-  }
-
+): Promise<Tracks> => {
   const trackHash: IHash = {};
   const fetchedTracks = await fetchTracks(data.included, client);
   fetchedTracks.forEach((item) => {
@@ -130,8 +93,7 @@ export const fetchSinglePlaylist = async (
       }
     });
   });
-
-  const tracks: Tracks = data.included.map((item, index) => {
+  const tracks: Tracks = data.included.map((item) => {
     if (["spotify", "soundcloud"].includes(item.attributes.song.service)) {
       const track: Song = JSON.parse(
         JSON.stringify(trackHash[item.attributes.song.uri])
@@ -143,6 +105,21 @@ export const fetchSinglePlaylist = async (
     return mapPlaylistItemToTrack(item);
   });
 
+  return tracks;
+};
+
+export const generatePlaylistData = async (
+  data: ServerPlaylist,
+  client: SpotifyWebApi.SpotifyWebApiJs
+): Promise<Collection> => {
+  const playlistInfo = generatePlaylistInfo(data);
+  if (data.included.length === 0) {
+    return {
+      playlistInfo,
+      tracks: [],
+    };
+  }
+  const tracks = await generatePlaylistTracks(data, client);
   return {
     playlistInfo,
     tracks,

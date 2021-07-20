@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { Collection, Service } from "../../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faYoutube, faSpotify } from "@fortawesome/free-brands-svg-icons";
+import {
+  faYoutube,
+  faSpotify,
+  faSoundcloud,
+} from "@fortawesome/free-brands-svg-icons";
 import { device } from "../../../globalStyle";
 
 interface IProps {
@@ -31,12 +35,12 @@ const Container = styled.div`
 `;
 
 const Title = styled.span`
-  font-size: 1.2rem;
+  font-size: 2.5rem;
   font-weight: bold;
   text-align: left;
 
   @media ${device.laptop} {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 `;
 
@@ -53,10 +57,13 @@ const setIcon = (service: Service, index: number) => {
       return <FontAwesomeIcon icon={faSpotify} key={index} />;
     case "youtube":
       return <FontAwesomeIcon icon={faYoutube} key={index} />;
+    case "soundcloud":
+      return <FontAwesomeIcon icon={faSoundcloud} key={index} />;
   }
 };
 
 export const Description: React.FC<IProps> = ({ data, services }) => {
+  const tracks = (length: number) => (length === 1 ? "Track" : "Tracks");
   return (
     <Wrapper>
       <Container>
@@ -66,7 +73,9 @@ export const Description: React.FC<IProps> = ({ data, services }) => {
         </ServiceWrapper>
       </Container>
       <Title>{data.playlistInfo.name}</Title>
-      {data.tracks.length > 0 && <span>{`${data.tracks.length} Tracks`}</span>}
+      {data.tracks.length > 0 && (
+        <span>{`${data.tracks.length} ${tracks(data.tracks.length)}`}</span>
+      )}
     </Wrapper>
   );
 };

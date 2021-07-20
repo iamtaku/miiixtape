@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Song } from "../../../types/types";
-import { timeConversion } from "../../../helpers/timeConversion";
+import { timeConversion } from "../../../helpers/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../../../state/context";
 import { TrackPlaybackButton } from "../../Buttons";
@@ -13,6 +14,7 @@ import {
   faPlay,
   faExternalLinkAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import DefaultMusicImage from "../../..//assets/music-cover.png";
 
 interface TrackProps {
   track: Song;
@@ -29,7 +31,7 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
   padding: 4px 12px;
   align-items: center;
   border-radius: 8px;
-  min-height: 40px;
+  min-height: 44px;
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
 
@@ -110,6 +112,8 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
     }
   };
 
+  const trackImg = track.img ? track.img : DefaultMusicImage;
+
   return (
     <Draggable draggableId={track.id} index={index}>
       {(provided) => (
@@ -141,7 +145,13 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           {isAlbum ? (
             <Item>{` `}</Item>
           ) : (
-            <Image src={track.img} alt={track.album?.name} />
+            <LazyLoadImage
+              src={trackImg}
+              alt={track.album?.name}
+              width="40px"
+              style={{ justifySelf: "center" }}
+              // placeholderSrc={DefaultMusicImage}
+            />
           )}
           <Item>{track.name}</Item>
           <Item>
