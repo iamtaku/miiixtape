@@ -7,7 +7,6 @@ import { useGlobalContext } from "../../state/context";
 import { Song } from "../../types/types";
 
 const YoutubeWrapper = styled.div`
-  /* display: none; */
   width: 100px;
 `;
 
@@ -35,6 +34,10 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
   const handleOnReady = ({ target, data }: IYoutubeEvent) => {
     target.seekTo(0, true);
     setYoutube(target);
+    dispatch({
+      type: "UPDATE_DURATION",
+      payload: { duration: target.getDuration() },
+    });
   };
 
   const handleOnEnd = ({ target, data }: IYoutubeEvent) => {

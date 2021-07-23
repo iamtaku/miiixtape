@@ -30,12 +30,6 @@ const Player = () => {
 
   return (
     <Wrapper>
-      <Controls
-        currentDuration={duration}
-        youtube={youtube}
-        spotify={spotify}
-        soundcloud={soundcloud}
-      />
       <Test>
         {state.player.currentSong?.service === "youtube" && (
           <Youtube setYoutube={setYoutube} uri={uri} />
@@ -55,6 +49,7 @@ const Player = () => {
           />
         )}
       </Test>
+      <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />
     </Wrapper>
   );
 };

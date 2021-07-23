@@ -100,13 +100,12 @@ const handleSetNext = (state: PlaybackType) => {
 };
 
 const handlePlay = (state: PlaybackType) => {
-  return { ...state, isPlaying: true };
+  return { ...state, isPlaying: true, isFinished: false };
 };
 
 const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
 
 const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
-  // debugger;
   return {
     ...state,
     currentCollection: undefined,
@@ -127,7 +126,6 @@ const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
     nextSong,
     previousSong,
   };
-  // debugger;
   if (!state.currentCollection?.tracks.includes(newTrack)) {
     newState.currentCollection = undefined;
   }
@@ -155,21 +153,20 @@ export const playbackReducer = (
         };
         return newState;
       }
-
       return state;
     case "PLAY_TRACK":
-      debugger;
       return handlePlayTrack(state, action.payload.track);
     case "SET_TRACK":
       return handleSetTrack(state, action.payload.track);
     case "SET_NEXT":
       return handleSetNext(state);
     case "SONG_END":
+      console.log(action.type);
       return {
         ...state,
-        isPlaying: false,
         isFinished: true,
-      } as PlaybackType;
+        isPlaying: false,
+      };
     case "PLAYBACK_FINISH":
       return initial;
     case "PLAY":
@@ -180,6 +177,8 @@ export const playbackReducer = (
       return handlePause(state);
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);
+    case "UPDATE_DURATION":
+      return { ...state, duration: action.payload.duration };
 
     default:
       return state;

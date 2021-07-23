@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-const SearchBarWrapper = styled.div`
+export const SearchBarWrapper = styled.div`
   border-radius: 8px;
-  /* padding: 4px 36px; */
+  padding: 2px 24px;
   background-color: var(--light-gray);
   width: 100%;
   background: #5c5c5c;
-  /* box-shadow: inset 16px 16px 32px #545454, inset -16px -16px 32px #646464; */
-
+  border: 2px solid transparent;
   form {
     width: 100%;
   }
@@ -19,6 +18,7 @@ const SearchBarWrapper = styled.div`
     box-shadow: none;
     border: 2px solid transparent;
     color: var(--secondary);
+    opacity: 0.6;
     width: 100%;
 
     ::placeholder {

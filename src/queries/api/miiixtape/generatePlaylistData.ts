@@ -75,6 +75,7 @@ const generatePlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
     id: data.data.id,
     name: data.data.attributes.name,
     description: data.data.attributes.description,
+    owner: data.data.relationships.user.data.id,
     type: "playlist",
     service: "plaaaylist",
   };
@@ -119,9 +120,13 @@ export const generatePlaylistData = async (
       tracks: [],
     };
   }
-  const tracks = await generatePlaylistTracks(data, client);
-  return {
-    playlistInfo,
-    tracks,
-  };
+  try {
+    const tracks = await generatePlaylistTracks(data, client);
+    return {
+      playlistInfo,
+      tracks,
+    };
+  } catch (err) {
+    throw new Error(err);
+  }
 };

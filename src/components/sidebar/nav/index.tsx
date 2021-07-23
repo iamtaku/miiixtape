@@ -28,6 +28,7 @@ const HomeSection = styled.div`
   align-items: center;
   width: 100%;
   justify-content: space-between;
+  margin-bottom: 8px;
 `;
 export const Navbar: React.FC = () => {
   return (
@@ -43,9 +44,9 @@ export const Navbar: React.FC = () => {
             <Profile />
           </li>
         </HomeSection>
-        <li style={{ width: "100%" }}>
+        {/* <li style={{ width: "100%" }}>
           <SearchBar />
-        </li>
+        </li> */}
       </List>
     </NavBar>
   );

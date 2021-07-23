@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useGlobalContext } from "../../state/context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
+import { useGlobalContext } from "../../state/context";
 import { useGetUser } from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
 
@@ -13,7 +13,6 @@ interface ControlsProps {
   youtube?: YouTubePlayer;
   spotify?: SpotifyWebPlayer;
   soundcloud?: ReactHowler;
-  currentDuration: number;
 }
 
 const Wrapper = styled.div`
@@ -32,12 +31,10 @@ const Wrapper = styled.div`
   bottom: 0px;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* min-width: 800px; */
   border-radius: 50px;
   z-index: 100;
   background-color: rgba(15, 11, 11, 0.2);
   backdrop-filter: blur(10px) contrast(0.8);
-
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
 `;
 
@@ -71,18 +68,24 @@ export const Controls: React.FC<ControlsProps> = ({
   youtube,
   spotify,
   soundcloud,
-  currentDuration,
 }) => {
   const { state, dispatch } = useGlobalContext();
   const { data: user } = useGetUser();
-
   const [duration, setDuration] = useState(0);
   const [value, setValue] = useState(0);
-
   const inputRef = useRef(null);
 
   useEffect(() => {
+    // debugger;
+    state.player.isFinished && setValue(0);
+  }, [state.player.isFinished]);
+
+  useEffect(() => {
+    // if (state.player.duration) {
+    // setValue(0);
+    // }
     if (!state.player.isPlaying) return;
+
     const interval = setInterval(() => {
       if (value >= duration) {
         setValue(0);
@@ -92,33 +95,13 @@ export const Controls: React.FC<ControlsProps> = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [state.player.isPlaying, value, duration]);
+  }, [state.player.duration, state.player.isPlaying, value, duration]);
 
   useEffect(() => {
-    const getDuration = (): number => {
-      if (state.player.currentSong?.service === "soundcloud" && soundcloud) {
-        return soundcloud?.howler.duration();
-      }
-
-      if (state.player.currentSong?.service === "spotify" && spotify) {
-        return spotify?.state.track.durationMs / 1000;
-      }
-
-      if (state.player.currentSong?.service === "youtube" && youtube) {
-        return youtube.getDuration();
-      }
-      return 0;
-    };
-
-    const currentDuration = getDuration();
-    if (state.player.currentSong && currentDuration > 0) {
-      setDuration(currentDuration);
+    if (state.player.currentSong) {
+      setDuration(state.player.duration);
     }
   }, [state, soundcloud, spotify, youtube]);
-
-  // we need duration of song so that we can set a seeker
-
-  // update our seeker and then update our actual duration for our song
 
   const handlePause = () => {
     dispatch({ type: "PAUSE_CURRENT", payload: {} });
@@ -132,6 +115,7 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   const handleNext = () => {
+    // debugger;
     dispatch({
       type: "SONG_END",
       payload: {},
@@ -171,7 +155,6 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    //
     const seekValue = +e.currentTarget.value;
     updateSeek(seekValue);
     console.log(e.currentTarget.value, duration);
@@ -180,9 +163,10 @@ export const Controls: React.FC<ControlsProps> = ({
   return (
     <Wrapper>
       <Test>
-        <p>previous: {state.player.previousSong?.name}</p>
-        <p>current: {state.player.currentSong?.name}</p>
-        <p>next: {state.player.nextSong?.name}</p>
+        {/* <p>previous: {state.player.previousSong?.name}</p> */}
+        {/* <p>current: {state.player.currentSong?.name}</p> */}
+        {/* <p>next: {state.player.nextSong?.name}</p> */}
+        <p>{state.player.isFinished ? "finished" : "not finished"}</p>
       </Test>
       <Top>
         <button onClick={handlePrevious}>Previous</button>

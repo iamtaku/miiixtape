@@ -15,8 +15,13 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
   const queryClient = useQueryClient();
 
   const handleCallback = (state: CallbackState) => {
-    console.log(state);
     ref.current && setSpotify(ref.current);
+    if (state.track.durationMs > 0) {
+      dispatch({
+        type: "UPDATE_DURATION",
+        payload: { duration: state.track.durationMs / 1000 },
+      });
+    }
     if (
       state.type === "player_update" &&
       state.isPlaying === false &&
@@ -38,7 +43,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
 
     if (state.error) {
       console.error(state);
-      // debugger;
       console.log("refetching token");
       queryClient.invalidateQueries(["user"]);
       state.needsUpdate = true;

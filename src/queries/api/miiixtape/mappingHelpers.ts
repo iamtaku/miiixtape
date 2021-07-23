@@ -1,4 +1,9 @@
-import { PlaylistItemItem, ServerPlaylists, UserAttributes } from "../../types";
+import {
+  PlaylistItemItem,
+  ServerPlaylists,
+  ServerUser,
+  UserAttributes,
+} from "../../types";
 import { Song, Collection, Tracks, Service } from "../../../types/types";
 
 export const generateYoutubeURL = (uri: string): string => {
@@ -43,8 +48,8 @@ export const generateServices = (tracks: Tracks): Service[] => {
   return Array.from(servicesSet);
 };
 
-export const mapUserAttributes = (data: any): UserAttributes => {
+export const mapUserAttributes = (data: ServerUser): UserAttributes => {
   return {
     ...data.data.attributes,
-  } as UserAttributes;
+  };
 };

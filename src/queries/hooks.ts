@@ -24,8 +24,12 @@ import { AxiosError } from "axios";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
-  return useQuery<Artist, Error>(["artist", params], () =>
-    getArtist(params, userInfo)
+  return useQuery<Artist, Error>(
+    ["artist", params],
+    () => getArtist(params, userInfo),
+    {
+      enabled: !!userInfo,
+    }
   );
 };
 
@@ -38,8 +42,6 @@ export const useGetSinglePlaylist = () => {
       getPlaylist({ id: params.playlistId, service: params.service }, userInfo),
     {
       enabled: !!userInfo,
-      staleTime: Infinity,
-      retry: false,
     }
   );
 };
@@ -98,7 +100,6 @@ export const usePostPlaylistItems = () => {
 
 export const usePostPlaylist = () => {
   const queryClient = useQueryClient();
-  const history = useHistory();
   return useMutation(postPlaylist, {
     onSuccess: (data) => {
       queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data

@@ -5,23 +5,15 @@ import { useHistory } from "react-router";
 import styled from "styled-components";
 import { usePostPlaylist } from "../../queries/hooks";
 import { BasicButton } from "../Buttons";
+import { SearchBarWrapper } from "./nav/SearchBar";
 
-const AddPlaylistButton = styled(BasicButton)`
+const AddPlaylistButton = styled.button`
   width: 100%;
-  margin: 0 auto;
-  margin-top: 4px;
   color: var(--accent);
-`;
-
-const Input = styled.input`
-  width: 100%;
-  background: transparent;
-  color: var(--secondary);
-  outline: none;
-  border-bottom: 1px solid var(--accent);
-  /* margin-top: 4px; */
-  padding: 2px;
-  outline-color: var(--accent);
+  background: none;
+  box-shadow: none;
+  border: none;
+  padding: 1px;
 `;
 
 export const AddPlaylistForm = () => {
@@ -49,22 +41,24 @@ export const AddPlaylistForm = () => {
 
   return (
     <>
-      {isInputOpen ? (
-        <form onSubmit={handleSubmit}>
-          <Input
-            type="text"
-            value={input}
-            autoFocus={true}
-            onBlur={handleBlur}
-            onChange={(e) => setInput(e.currentTarget.value)}
-            placeholder="Create a new plaaaylist"
-          />
-        </form>
-      ) : (
-        <AddPlaylistButton onClick={() => setIsInputOpen(true)}>
-          <FontAwesomeIcon icon={faPlus} />
-        </AddPlaylistButton>
-      )}
+      <SearchBarWrapper>
+        {isInputOpen ? (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={input}
+              autoFocus={true}
+              onBlur={handleBlur}
+              onChange={(e) => setInput(e.currentTarget.value)}
+              placeholder="Create new "
+            />
+          </form>
+        ) : (
+          <AddPlaylistButton onClick={() => setIsInputOpen(true)}>
+            <FontAwesomeIcon icon={faPlus} />
+          </AddPlaylistButton>
+        )}
+      </SearchBarWrapper>
     </>
   );
 };

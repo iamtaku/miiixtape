@@ -1,10 +1,7 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Tracks } from "../../types/types";
-import { AddbyExisting } from "./AddbyExisting";
-import { AddByUrl } from "./AddByUrl";
 
 const Container = styled.div`
   z-index: 1;
@@ -14,12 +11,11 @@ const Container = styled.div`
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100vh;
-  /* background-color: rgba(255, 255, 255, 0.5);   */
-  /* padding: 16px 24px; */
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(15, 11, 11, 0.2);
   backdrop-filter: blur(4px) contrast(0.8);
-  display: grid;
+  display: grid; //why grid?
+  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
 `;
 
 const ModalWrapper = styled.div`
@@ -30,16 +26,6 @@ const ModalWrapper = styled.div`
   padding: 8px 24px 24px 24px;
   h3 {
     margin: 4px 0;
-  }
-
-  li {
-    padding: 0 16px;
-    cursor: pointer;
-    &:hover {
-      background-color: var(--accent);
-      opacity: 0.8;
-      border-radius: 4px;
-    }
   }
 
   white-space: nowrap;
@@ -69,35 +55,26 @@ const TitleWrapper = styled.div`
   align-items: center;
 `;
 
-interface ModalProps {
+export interface ModalProps {
   handleClick: () => void;
-  id: string;
+  title: string;
 }
 
-const mapSoundCloudTrackToTrack = (data: any): Tracks => {
-  // debugger;
-  return [
-    {
-      id: data.id.toString(),
-      name: data.title,
-      service: "soundcloud",
-      uri: data.id.toString(),
-    },
-  ];
-};
-
-export const Modal: React.FC<ModalProps> = ({ handleClick, id }) => {
+export const Modal: React.FC<ModalProps> = ({
+  children,
+  title,
+  handleClick,
+}) => {
   return (
     <Container>
       <ModalWrapper>
         <TitleWrapper>
-          <Title>Add Tracks</Title>
+          <Title>{title}</Title>
           <CloseBtn onClick={handleClick}>
             <FontAwesomeIcon icon={faTimes} />{" "}
           </CloseBtn>
         </TitleWrapper>
-        <AddByUrl id={id} />
-        <AddbyExisting />
+        {children}
       </ModalWrapper>
     </Container>
   );

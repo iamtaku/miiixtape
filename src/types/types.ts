@@ -37,6 +37,7 @@ export type Collection = {
 export type PlaylistInfo = {
   id: string;
   name: string;
+  owner?: string;
   external_urls?: string;
   img?: string;
   description?: string;

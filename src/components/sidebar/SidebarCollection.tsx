@@ -1,5 +1,3 @@
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Collection } from "../../types/types";
@@ -13,16 +11,14 @@ interface SidebarCollectionProps {
 const TitleSection = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-left: 24px;
 `;
 
 const Container = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   span {
-    font-size: 1rem;
-    text-transform: uppercase;
-    opacity: 0.8;
+    font-size: 1.1rem;
+    opacity: 0.7;
     margin-right: 8px;
   }
 `;
@@ -30,6 +26,7 @@ const Container = styled.div`
 const List = styled.ul<{ isCurrent?: boolean }>`
   /* padding: 8px; */
   /* margin: 8px 0; */
+  margin-bottom: 8px;
 `;
 
 const Icon = styled.div`

@@ -32,6 +32,12 @@ export const Global = createGlobalStyle`
   box-sizing: border-box;
 }
 
+button {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 /* Remove default margin */
 body,
 h1,

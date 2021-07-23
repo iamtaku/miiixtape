@@ -17,21 +17,20 @@ export const Soundcloud: React.FC<IProps> = ({
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<ReactHowler>(null);
 
-  useEffect(() => {
-    console.log("updating seek");
-    ref.current && setDuration(ref.current?.seek());
-  }, [ref.current]);
-
   const handleOnLoadError = () => {
     console.error("soundcloud  went wrong");
   };
   const handleOnPlay = () => {
     console.log("playing soundclouds");
-    // fetchSpotify();
   };
 
   const handleOnLoad = () => {
-    ref.current && setSoundCloud(ref.current);
+    if (!ref.current) return;
+    setSoundCloud(ref.current);
+    dispatch({
+      type: "UPDATE_DURATION",
+      payload: { duration: ref.current?.duration() },
+    });
   };
 
   const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;

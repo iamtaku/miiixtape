@@ -40,9 +40,10 @@ const Wrapper = styled.div`
 export const Profile = () => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { data, isLoading } = useGetSpotifyUser();
+  const { data, isLoading, error } = useGetSpotifyUser();
   // const data = {} as any;
   // const isLoading = true;
+  //
 
   const logOut = () => {
     window.localStorage.removeItem("token");
@@ -74,7 +75,11 @@ export const Profile = () => {
           <ul>
             {data.href ? (
               <li>
-                <a href={data.href} target="_blank" rel="noreferrer">
+                <a
+                  href={data.external_urls.spotify}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
                 </a>
               </li>
