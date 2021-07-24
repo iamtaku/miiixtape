@@ -26,8 +26,8 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
-      ? "20px 50px 2.5fr 1fr 0.5fr 0.5fr "
-      : "20px 50px 2fr 1fr 1fr 0.5fr 0.5fr"};
+      ? "20px 50px 2.5fr 1fr 0.5fr 0.2fr "
+      : "20px 50px 2fr 1fr 1fr 0.5fr 0.2fr"};
   grid-column-gap: 8px;
   padding: 4px 12px;
   align-items: center;

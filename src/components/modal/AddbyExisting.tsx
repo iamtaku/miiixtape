@@ -27,6 +27,12 @@ const Item = styled.li`
   justify-content: space-between;
   padding: 2px 26px;
   border: 1px solid transparent;
+
+  p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
   &:hover {
     background: var(--accent);
     border: 1px solid var(--accent);
@@ -50,7 +56,7 @@ export const AddbyExisting: React.FC<IAddByExisting> = () => {
     // debugger;
     if (!userInfo) return;
     const playlist = await Spotify.getPlaylist(
-      playlistInfo.id,
+      playlistInfo?.id,
       client(userInfo?.access_token)
     );
     mutation

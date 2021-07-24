@@ -5,6 +5,7 @@ import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
+
 import { useGlobalContext } from "../../state/context";
 import { useGetUser } from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
@@ -76,7 +77,6 @@ export const Controls: React.FC<ControlsProps> = ({
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // debugger;
     state.player.isFinished && setValue(0);
   }, [state.player.isFinished]);
 
@@ -115,7 +115,6 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   const handleNext = () => {
-    // debugger;
     dispatch({
       type: "SONG_END",
       payload: {},

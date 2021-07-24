@@ -23,7 +23,6 @@ const Wrapper = styled.div`
 const CollectionWrapper = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
-  margin-top: 16px;
   ::-webkit-scrollbar-track {
     background: var(--lighter-gray);
   }

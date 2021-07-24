@@ -31,6 +31,7 @@ export const mapServerPlaylist = (data: ServerPlaylists): Collection[] => {
         id: item.id,
         name: item.attributes.name,
         service: "plaaaylist",
+        owner: item.relationships.user.data.id,
       },
       tracks: [],
     };
@@ -38,7 +39,12 @@ export const mapServerPlaylist = (data: ServerPlaylists): Collection[] => {
   return mappedData;
 };
 export const mapTrackToPlaylist = (track: Song): Collection => ({
-  playlistInfo: { name: track.name, id: track.id, service: track.service },
+  playlistInfo: {
+    name: track.name,
+    id: track.id,
+    service: track.service,
+    owner: "",
+  },
   tracks: [{ ...track }],
 });
 

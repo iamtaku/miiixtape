@@ -14,14 +14,17 @@ const Container = styled.div`
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(15, 11, 11, 0.2);
   backdrop-filter: blur(4px) contrast(0.8);
-  display: grid; //why grid?
+  /* display: grid; //why grid? */
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
 `;
 
 const ModalWrapper = styled.div`
-  place-self: center;
-  background-color: var(--light-gray);
+  position: absolute;
+  top: 40vh;
+  left: 50%;
+  transform: translate(-50%, -70%);
   width: 60%;
+  background-color: var(--light-gray);
   border-radius: 16px;
   padding: 8px 24px 24px 24px;
   h3 {

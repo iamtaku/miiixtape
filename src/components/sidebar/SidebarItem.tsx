@@ -28,9 +28,12 @@ const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
 const StyledLink = styled(Link)`
   padding: 2px;
   width: 100%;
-  overflow-x: hidden;
   font-size: 0.98rem;
   z-index: 10;
+  opacity: 0.7;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const PlayButton = styled(PlaybackButton)<{

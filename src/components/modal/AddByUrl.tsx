@@ -13,10 +13,11 @@ import { mapSCTracktoTrack } from "../../queries/api/soundcloud/mapping";
 import client from "../../queries/api/spotify/api";
 import { useGetUser, usePostPlaylistItems } from "../../queries/hooks";
 import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
-import { Service, Tracks } from "../../types/types";
+import { Collection, PlaylistInfo, Service, Tracks } from "../../types/types";
 
 interface IAddByUrl {
   id: string;
+  handleFetch: (collection: Collection) => void;
 }
 
 const FormWrapper = styled(SearchBarWrapper)`
@@ -63,44 +64,57 @@ const findService = (input: string): Service | false => {
   return false;
 };
 
-const fetchYoutube = async (uri: string): Promise<Tracks> => {
+const fetchYoutube = async (uri: string): Promise<Collection> => {
+  const playlistInfo: PlaylistInfo = {
+    id: "",
+    name: "",
+    owner: "",
+    service: "youtube",
+  };
   if (uri.includes("list")) {
     const stripped = stripYoutubePlaylistURI(uri);
     const data = await Youtube.getPlaylist(stripped);
-    return data;
+    return { playlistInfo, tracks: data };
   }
   const fetchURI = stripYoutubeURI(uri);
   const data = await Youtube.getVideo(fetchURI);
-  return [data];
+  return {
+    playlistInfo,
+    tracks: [data],
+  };
 };
 
 const fetchSpotify = async (
   uri: string,
   token: string
-): Promise<Tracks | undefined> => {
+): Promise<Collection | undefined> => {
   if (uri.includes("playlist")) {
     const strippedURI = stripSpotifyPlaylistURI(uri);
     const data = await Spotify.getPlaylist(strippedURI, client(token));
-    return data.tracks;
+    return data;
   }
 
   if (uri.includes("album")) {
     const strippedURI = stripSpotifyAlbumURI(uri);
     const data = await Spotify.getAlbum(strippedURI, client(token));
-    return data.tracks;
+    return data;
   }
 
   const strippedURI = stripSpotifyTrackURI(uri);
   const data = await Spotify.getTracks([strippedURI], client(token));
-  return data;
+  return {
+    playlistInfo: { id: "", name: "", owner: "", service: "spotify" },
+    tracks: data,
+  };
 };
-const fetchSC = async (uri: string): Promise<Tracks> => {
+const fetchSC = async (uri: string): Promise<Collection> => {
   const trackInfo = await SoundCloud.getTrackInfo(uri);
+  debugger;
   const data = trackInfo.tracks.map(mapSCTracktoTrack);
   return data;
 };
 
-export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
+export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
   const history = useHistory();
   const mutation = usePostPlaylistItems();
   const { data: userInfo } = useGetUser();
@@ -109,7 +123,7 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const fetchURL = async (uri: string): Promise<Tracks | undefined> => {
+  const fetchURL = async (uri: string): Promise<Collection | undefined> => {
     if (
       !history.location.pathname.includes("plaaaylist") ||
       userInfo === undefined
@@ -135,20 +149,21 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id }) => {
 
     try {
       const data = await fetchURL(input);
-      if (!data) throw Error();
-      const tracks = Array.isArray(data) ? data : [data];
-      if (data && tracks) {
-        mutation
-          .mutateAsync({ id, tracks })
-          .then((data) => {
-            console.log(data);
-            setIsLoading(false);
-            setIsSuccess(true);
-          })
-          .catch((err) => {
-            throw Error();
-          });
-      }
+      data && handleFetch(data);
+      // if (!data) throw Error();
+      // const tracks = Array.isArray(data) ? data : [data];
+      // if (data && tracks) {
+      //   mutation
+      //     .mutateAsync({ id, tracks })
+      //     .then((data) => {
+      //       console.log(data);
+      //       setIsLoading(false);
+      //       setIsSuccess(true);
+      //     })
+      //     .catch((err) => {
+      //       throw Error();
+      //     });
+      // }
     } catch (err) {
       console.error(err);
       setIsSuccess(false);
