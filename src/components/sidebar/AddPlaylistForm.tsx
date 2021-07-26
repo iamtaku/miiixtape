@@ -13,7 +13,7 @@ const AddPlaylistButton = styled.button`
   background: none;
   box-shadow: none;
   border: none;
-  padding: 1px;
+  /* padding: 1px; */
 `;
 
 export const AddPlaylistForm = () => {

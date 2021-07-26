@@ -1,3 +1,9 @@
+import {
+  faArrowAltCircleDown,
+  faArrowDown,
+  faChevronCircleDown,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 import { Collection, Tracks } from "../../types/types";
@@ -16,17 +22,28 @@ const AddButton = styled.button`
   padding: 4px 8px;
 `;
 
+const AddBtn = () => <AddButton>ADD</AddButton>;
+
+const ExpandBtn = () => (
+  <FontAwesomeIcon icon={faChevronCircleDown} style={{ margin: "0 auto" }} />
+);
+
 export const Confirm: React.FC<{ data: Collection | undefined }> = ({
   data,
 }) => {
   console.log(data);
 
+  if (!data) return null;
+
   return (
-    <AddContainer>
-      <p>
-        Add {data?.tracks.length} tracks from {data?.playlistInfo.name}?
-      </p>
-      <AddButton>ADD </AddButton>
-    </AddContainer>
+    <>
+      <AddContainer>
+        <p>
+          Add {data?.tracks.length} tracks from {data?.playlistInfo.name}?
+        </p>
+        <AddBtn />
+      </AddContainer>
+      <ExpandBtn />
+    </>
   );
 };

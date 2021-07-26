@@ -80,7 +80,7 @@ const fetchYoutube = async (uri: string): Promise<Collection> => {
   const data = await Youtube.getVideo(fetchURI);
   return {
     playlistInfo,
-    tracks: [data],
+    tracks: data,
   };
 };
 
@@ -107,11 +107,25 @@ const fetchSpotify = async (
     tracks: data,
   };
 };
+
+const mapSoundCloudPlaylistInfo = (data: any): PlaylistInfo => {
+  return {
+    id: data.id,
+    name: data.title,
+    service: "soundcloud",
+    external_urls: data.permalink_url,
+    type: "playlist",
+  };
+};
+
 const fetchSC = async (uri: string): Promise<Collection> => {
   const trackInfo = await SoundCloud.getTrackInfo(uri);
-  debugger;
+  const playlistInfo = mapSoundCloudPlaylistInfo(trackInfo);
   const data = trackInfo.tracks.map(mapSCTracktoTrack);
-  return data;
+  return {
+    playlistInfo,
+    tracks: data,
+  };
 };
 
 export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {

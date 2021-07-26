@@ -18,8 +18,8 @@ export const Playlist: React.FC = () => {
   if (isError) {
     console.log(error);
     queryClient.invalidateQueries(["user"]);
-    debugger;
-    // history.push("/app/error");
+    // debugger;
+    history.push("/app/error");
   }
 
   return (

@@ -27,10 +27,6 @@ export const Soundcloud: React.FC<IProps> = ({
   const handleOnLoad = () => {
     if (!ref.current) return;
     setSoundCloud(ref.current);
-    dispatch({
-      type: "UPDATE_DURATION",
-      payload: { duration: ref.current?.duration() },
-    });
   };
 
   const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;

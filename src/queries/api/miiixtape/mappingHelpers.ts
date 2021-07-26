@@ -13,7 +13,7 @@ export const generateYoutubeURL = (uri: string): string => {
 
 export const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
   let href = generateYoutubeURL(item.attributes.song.uri);
-
+  debugger;
   return {
     id: item.id,
     name: item.attributes.song.name,

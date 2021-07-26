@@ -9,6 +9,7 @@ import ReactHowler from "react-howler";
 import { useGlobalContext } from "../../state/context";
 import { useGetUser } from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
+import { convertMilliSecondstoSeconds } from "../../helpers/utils";
 
 interface ControlsProps {
   youtube?: YouTubePlayer;
@@ -81,6 +82,14 @@ export const Controls: React.FC<ControlsProps> = ({
   }, [state.player.isFinished]);
 
   useEffect(() => {
+    state?.player?.currentSong?.time &&
+      setDuration(
+        convertMilliSecondstoSeconds(state?.player?.currentSong?.time)
+      );
+    setValue(0);
+  }, [state.player.currentSong]);
+
+  useEffect(() => {
     // if (state.player.duration) {
     // setValue(0);
     // }
@@ -95,13 +104,7 @@ export const Controls: React.FC<ControlsProps> = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [state.player.duration, state.player.isPlaying, value, duration]);
-
-  useEffect(() => {
-    if (state.player.currentSong) {
-      setDuration(state.player.duration);
-    }
-  }, [state, soundcloud, spotify, youtube]);
+  }, [state, value, duration]);
 
   const handlePause = () => {
     dispatch({ type: "PAUSE_CURRENT", payload: {} });

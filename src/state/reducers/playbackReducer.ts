@@ -177,8 +177,6 @@ export const playbackReducer = (
       return handlePause(state);
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);
-    case "UPDATE_DURATION":
-      return { ...state, duration: action.payload.duration };
 
     default:
       return state;

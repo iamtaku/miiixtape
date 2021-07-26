@@ -16,7 +16,8 @@ export const SearchBarWrapper = styled.div`
   input {
     background: transparent;
     box-shadow: none;
-    border: 2px solid transparent;
+    /* border: 2px solid transparent; */
+    border: none;
     color: var(--secondary);
     opacity: 0.6;
     width: 100%;

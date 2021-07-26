@@ -47,7 +47,8 @@ export const Youtube = {
   getVideo: (id: string) =>
     youtubeRequests
       .get(`videos?part=snippet%2CcontentDetails&id=${id}`)
-      .then((res) => mapYoutubeToTrack(res.items[0])),
+      // .then((res) => mapYoutubeToTrack(res.items[0])),
+      .then(mapYoutubeTrackstoTrack),
   getPlaylist: (id: string) =>
     fetchMultiple(id).then((res) => mapYoutubePlaylistToPlaylist(res)),
 };

@@ -1,3 +1,4 @@
+import { parseYoutubeTime } from "../../../helpers/utils";
 import { Song, Tracks } from "../../../types/types";
 
 export const mapYoutubeToTrack = (data: any): Song => {
@@ -6,6 +7,7 @@ export const mapYoutubeToTrack = (data: any): Song => {
     name: data.snippet.title,
     service: "youtube",
     uri: data.id,
+    time: parseYoutubeTime(data.contentDetails.duration),
   };
 };
 
@@ -19,7 +21,7 @@ const mapYoutubePlaylistItemToTrack = (data: any): Song => {
 };
 
 export const mapYoutubeTrackstoTrack = (data: any): Tracks => {
-  const mapped: Tracks = data.map((item: any) => mapYoutubeToTrack(item));
+  const mapped: Tracks = data.items.map((item: any) => mapYoutubeToTrack(item));
   return mapped;
 };
 

@@ -11,6 +11,7 @@ import {
 import { SoundCloud } from "..";
 import { PlaylistItemItem, ServerPlaylist } from "../../types";
 import { Spotify } from "../spotify/api";
+import { Youtube } from "../youtube/api";
 
 const filterTracks = (data: PlaylistItemItem[], service: Service) =>
   data.filter((item) => item.attributes.song.service === service);
@@ -37,6 +38,15 @@ const fetchSCTracks = async (data: PlaylistItemItem[]): Promise<Tracks> => {
   return res;
 };
 
+const fetchYoutubeTracks = async (
+  data: PlaylistItemItem[]
+): Promise<Tracks> => {
+  const youtubeTracks = filterTracks(data, "youtube");
+  const uris = youtubeTracks.map((item) => item.attributes.song.uri).join(",");
+  const res = Youtube.getVideo(uris);
+  return res;
+};
+
 const fetchAppropriateService = async (
   service: Service,
   data: PlaylistItemItem[],
@@ -47,6 +57,8 @@ const fetchAppropriateService = async (
       return fetchSpotifyTracks(data, client);
     case "soundcloud":
       return fetchSCTracks(data);
+    case "youtube":
+      return fetchYoutubeTracks(data);
     default:
       break;
   }
@@ -95,7 +107,11 @@ const generatePlaylistTracks = async (
     });
   });
   const tracks: Tracks = data.included.map((item) => {
-    if (["spotify", "soundcloud"].includes(item.attributes.song.service)) {
+    if (
+      ["spotify", "soundcloud", "youtube"].includes(
+        item.attributes.song.service
+      )
+    ) {
       const track: Song = JSON.parse(
         JSON.stringify(trackHash[item.attributes.song.uri])
       );
