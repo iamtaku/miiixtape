@@ -177,6 +177,17 @@ export const playbackReducer = (
       return handlePause(state);
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);
+    case "IS_LOADING":
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case "LOADING_FINISH":
+      return {
+        ...state,
+        isLoading: false,
+      };
 
     default:
       return state;

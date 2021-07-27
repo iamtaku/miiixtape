@@ -27,6 +27,8 @@ export type PlaybackPayload = {
   PLAY: {};
   PLAY_PREVIOUS: {};
   PLAYBACK_FINISH: {};
+  IS_LOADING: {};
+  LOADING_FINISH: {};
 };
 
 export type PlaybackType = {
@@ -39,4 +41,5 @@ export type PlaybackType = {
   nextService?: Service;
   isPlaying: boolean;
   isFinished: boolean;
+  isLoading: boolean;
 };

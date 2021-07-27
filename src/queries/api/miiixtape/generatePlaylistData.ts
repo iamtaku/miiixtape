@@ -136,13 +136,13 @@ export const generatePlaylistData = async (
       tracks: [],
     };
   }
-  try {
-    const tracks = await generatePlaylistTracks(data, client);
-    return {
-      playlistInfo,
-      tracks,
-    };
-  } catch (err) {
-    throw new Error(err);
-  }
+  // try {
+  const tracks = await generatePlaylistTracks(data, client);
+  return {
+    playlistInfo,
+    tracks,
+  };
+  // } catch (err) {
+  // throw new Error(err);
+  // }
 };

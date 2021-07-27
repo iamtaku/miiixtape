@@ -21,7 +21,7 @@ const InnerLayout = styled.div`
   grid-area: inner;
   overflow: hidden;
   width: 100%;
-  padding: 0 8px 8px 8px;
+  /* padding: 0 8px 8px 8px; */
   background-color: var(--primary);
   position: relative;
   @media ${device.laptop} {

@@ -16,6 +16,13 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
 
   const handleCallback = (state: CallbackState) => {
     ref.current && setSpotify(ref.current);
+    if (state.isInitializing) {
+      dispatch({ type: "IS_LOADING", payload: {} });
+    }
+
+    if (state.isPlaying && !state.isInitializing && state.status === "READY") {
+      dispatch({ type: "LOADING_FINISH", payload: {} });
+    }
     if (state.track.durationMs > 0) {
     }
     if (

@@ -1,7 +1,6 @@
 import axios from "axios";
 import {
   mapYoutubePlaylistToPlaylist,
-  mapYoutubeToTrack,
   mapYoutubeTrackstoTrack,
 } from "./mapping";
 import { responseBody } from "..";
@@ -41,14 +40,11 @@ const fetchMultiple = async (id: string) => {
 
 export const Youtube = {
   getVideos: (ids: string[]) =>
-    youtubeRequests
-      .get(`${ids.join(",")}`)
-      .then((res) => mapYoutubeTrackstoTrack(res)),
+    youtubeRequests.get(`${ids.join(",")}`).then(mapYoutubeTrackstoTrack),
   getVideo: (id: string) =>
     youtubeRequests
       .get(`videos?part=snippet%2CcontentDetails&id=${id}`)
-      // .then((res) => mapYoutubeToTrack(res.items[0])),
       .then(mapYoutubeTrackstoTrack),
   getPlaylist: (id: string) =>
-    fetchMultiple(id).then((res) => mapYoutubePlaylistToPlaylist(res)),
+    fetchMultiple(id).then(mapYoutubePlaylistToPlaylist),
 };

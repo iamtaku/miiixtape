@@ -90,10 +90,7 @@ export const Controls: React.FC<ControlsProps> = ({
   }, [state.player.currentSong]);
 
   useEffect(() => {
-    // if (state.player.duration) {
-    // setValue(0);
-    // }
-    if (!state.player.isPlaying) return;
+    if (state.player.isLoading || !state.player.isPlaying) return;
 
     const interval = setInterval(() => {
       if (value >= duration) {
@@ -151,7 +148,7 @@ export const Controls: React.FC<ControlsProps> = ({
     }
 
     if (state.player.currentSong?.service === "youtube" && youtube) {
-      return youtube.getDuration();
+      youtube.seekTo(seekValue, true);
     }
     setValue(seekValue);
   };
@@ -165,9 +162,11 @@ export const Controls: React.FC<ControlsProps> = ({
   return (
     <Wrapper>
       <Test>
-        {/* <p>previous: {state.player.previousSong?.name}</p> */}
-        {/* <p>current: {state.player.currentSong?.name}</p> */}
-        {/* <p>next: {state.player.nextSong?.name}</p> */}
+        <p>
+          {!state.player.isLoading && state.player.isPlaying
+            ? "done Loading"
+            : "loading..."}
+        </p>
         <p>{state.player.isFinished ? "finished" : "not finished"}</p>
       </Test>
       <Top>

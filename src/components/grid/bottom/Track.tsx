@@ -168,6 +168,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               src={trackImg}
               alt={track.album?.name}
               width="40px"
+              height="40px"
               style={{ justifySelf: "center" }}
             />
           )}

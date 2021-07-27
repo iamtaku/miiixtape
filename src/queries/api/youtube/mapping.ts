@@ -8,6 +8,7 @@ export const mapYoutubeToTrack = (data: any): Song => {
     service: "youtube",
     uri: data.id,
     time: parseYoutubeTime(data.contentDetails.duration),
+    img: data.snippet.thumbnails.default.url,
   };
 };
 
@@ -26,6 +27,7 @@ export const mapYoutubeTrackstoTrack = (data: any): Tracks => {
 };
 
 export const mapYoutubePlaylistToPlaylist = (data: any): Tracks => {
+  debugger;
   const mapped: Tracks = data.map((item: any) =>
     mapYoutubePlaylistItemToTrack(item)
   );
