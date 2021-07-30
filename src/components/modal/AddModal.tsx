@@ -15,14 +15,13 @@ export const AddModal: React.FC<IAddModalProps> = ({ id, handleClick }) => {
   const [data, setData] = useState<Collection>();
 
   const handleFetch = async (collection: Collection) => {
-    debugger;
     setData(collection);
     setIsConfirmOpen(true);
   };
 
   return (
     <ModalWrapper title={"Add tracks"} handleClick={handleClick}>
-      {isConfirmOpen ? (
+      {isConfirmOpen && data ? (
         <Confirm data={data} />
       ) : (
         <>

@@ -107,21 +107,13 @@ const generatePlaylistTracks = async (
     });
   });
   const tracks: Tracks = data.included.map((item) => {
-    if (
-      ["spotify", "soundcloud", "youtube"].includes(
-        item.attributes.song.service
-      )
-    ) {
-      const track: Song = JSON.parse(
-        JSON.stringify(trackHash[item.attributes.song.uri])
-      );
-      track.playlistPosition = item.attributes.position;
-      track.id = item.id;
-      return track;
-    }
-    return mapPlaylistItemToTrack(item);
+    const track: Song = JSON.parse(
+      JSON.stringify(trackHash[item.attributes.song.uri])
+    );
+    track.playlistPosition = item.attributes.position;
+    track.id = item.id;
+    return track;
   });
-
   return tracks;
 };
 

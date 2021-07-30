@@ -100,6 +100,7 @@ const handleSetNext = (state: PlaybackType) => {
 };
 
 const handlePlay = (state: PlaybackType) => {
+  console.log("playing!");
   return { ...state, isPlaying: true, isFinished: false };
 };
 

@@ -13,7 +13,7 @@ interface SideBarItemProps {
 
 const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
   position: relative;
-  height: 20px;
+  padding: 2px 24px;
   width: 100%;
   align-content: center;
   border: 1px solid transparent;

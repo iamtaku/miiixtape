@@ -14,14 +14,13 @@ const LayoutWrapper = styled.div`
   grid-template-rows: 1fr;
   grid-template-columns: 0.6fr 3fr;
   grid-template-areas: "sidebar inner";
-  /* margin: 0 8px; */
 `;
 
 const InnerLayout = styled.div`
   grid-area: inner;
   overflow: hidden;
   width: 100%;
-  /* padding: 0 8px 8px 8px; */
+  height: 100%auto;
   background-color: var(--primary);
   position: relative;
   @media ${device.laptop} {

@@ -14,6 +14,7 @@ import { Song } from "../../types/types";
 
 const YoutubeWrapper = styled.div`
   width: 100px;
+  display: none;
 `;
 
 interface YoutubeProps {
@@ -61,9 +62,8 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri, setYoutube }) => {
   };
 
   const handleOnPause = ({ target, data }: IYoutubeEvent) => {
-    // debugger;
     console.log("pausing youtube");
-    dispatch({ type: "PAUSE_CURRENT", payload: {} });
+    !isPlaying && dispatch({ type: "PAUSE_CURRENT", payload: {} });
   };
 
   const handleOnStateChange = ({
@@ -77,13 +77,15 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri, setYoutube }) => {
     if (state.player.currentSong?.service !== "youtube") {
       target.seekTo(0, true);
     }
+
+    if (state.player.isPlaying) {
+      dispatch({ type: "PLAY", payload: {} });
+    }
   };
 
   const handleOnError = ({ target, data }: IYoutubeEvent) => {
     console.error("youtube err");
   };
-
-  // const handleOnPlay = () => dispatch({ type: "PLAY", payload: {} });
 
   const opts: Options = {
     height: "100",

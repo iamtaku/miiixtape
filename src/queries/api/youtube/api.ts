@@ -20,7 +20,7 @@ const youtubeRequests = {
 };
 
 const fetchMultiple = async (id: string) => {
-  const results: Promise<any>[] = [];
+  const tracks: Promise<any>[] = [];
   let token = "";
   const tokenGen = (token: string) =>
     !!token.length ? `&pageToken=${token}` : "";
@@ -28,12 +28,16 @@ const fetchMultiple = async (id: string) => {
     let url =
       `playlistItems?part=contentDetails&part=snippet&maxResults=50&playlistId=${id}` +
       tokenGen(token);
-    // debugger;
     const data = await youtubeRequests.get(url);
-    results.push(...data.items);
+    tracks.push(...data.items);
     token = data.nextPageToken;
   } while (token);
-  return results;
+
+  const playlist = await youtubeRequests.get(
+    //@ts-ignore
+    `playlists?part=contentDetails&part=snippet&id=${tracks[0].snippet.playlistId}`
+  );
+  return { playlist, tracks };
 };
 
 //if next page token, fetch again

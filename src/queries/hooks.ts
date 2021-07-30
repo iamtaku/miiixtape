@@ -21,6 +21,7 @@ import {
   deletePlaylist,
 } from "./api/";
 import { AxiosError } from "axios";
+import { useGlobalContext } from "../state/context";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
@@ -42,6 +43,8 @@ export const useGetSinglePlaylist = () => {
       getPlaylist({ id: params.playlistId, service: params.service }, userInfo),
     {
       enabled: !!userInfo,
+      staleTime: Infinity,
+      refetchInterval: false,
     }
   );
 };
@@ -84,12 +87,15 @@ export const useGetAllPlaylists = () =>
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
   const params = useParams<PlaylistParam>();
+  const { dispatch } = useGlobalContext();
   return useMutation(postPlaylistItems, {
     onSuccess: (data) => {
       queryClient.invalidateQueries([
         "collection",
         { id: params.playlistId, service: params.service },
       ]);
+      console.log(data);
+      // dispatch({ type: "ADD_TO_QUEUE", payload: data });
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");

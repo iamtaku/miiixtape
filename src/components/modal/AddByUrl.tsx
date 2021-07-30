@@ -29,6 +29,7 @@ const FormWrapper = styled(SearchBarWrapper)`
 
 const Input = styled.input<{ error: Boolean }>`
   flex-grow: 5;
+  padding: 4px;
 `;
 
 const EnterBtn = styled.input`
@@ -65,19 +66,20 @@ const findService = (input: string): Service | false => {
 };
 
 const fetchYoutube = async (uri: string): Promise<Collection> => {
+  if (uri.includes("list")) {
+    //if playlist
+    const stripped = stripYoutubePlaylistURI(uri);
+    const playlist = await Youtube.getPlaylist(stripped);
+    return playlist;
+  }
+  const fetchURI = stripYoutubeURI(uri);
+  const data = await Youtube.getVideo(fetchURI);
   const playlistInfo: PlaylistInfo = {
     id: "",
     name: "",
     owner: "",
     service: "youtube",
   };
-  if (uri.includes("list")) {
-    const stripped = stripYoutubePlaylistURI(uri);
-    const data = await Youtube.getPlaylist(stripped);
-    return { playlistInfo, tracks: data };
-  }
-  const fetchURI = stripYoutubeURI(uri);
-  const data = await Youtube.getVideo(fetchURI);
   return {
     playlistInfo,
     tracks: data,
@@ -130,7 +132,6 @@ const fetchSC = async (uri: string): Promise<Collection> => {
 
 export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
   const history = useHistory();
-  const mutation = usePostPlaylistItems();
   const { data: userInfo } = useGetUser();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -198,7 +199,7 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
             error={isError}
             placeholder="Enter Spotify, Soundcloud or Youtube URL's"
           />
-          <EnterBtn type="submit" value="ADD" />
+          <EnterBtn type="submit" value="FETCH" />
         </form>
       </FormWrapper>
       <Status>
