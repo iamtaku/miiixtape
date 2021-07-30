@@ -6,6 +6,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
 import { Link as ReactLink } from "react-router-dom";
 import { BsMusicNoteList } from "react-icons/bs";
+import { IoShuffle, IoRepeat } from "react-icons/io5";
 
 import { useGlobalContext } from "../../state/context";
 import { useGetUser } from "../../queries/hooks";
@@ -24,16 +25,16 @@ interface IControlsProps {
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 10% 80% 10%;
+  grid-template-rows: 20% 60% 20%;
   grid-template-areas:
-    ". . ."
+    ". . upper-right"
     "left middle right"
     "bottom bottom bottom";
   grid-template-columns: 1fr 0.2fr 1fr;
   width: 85%;
   /* padding: 0px 16px; */
-  min-height: 120px;
-  /* max-width: 640px; */
+  max-height: 120px;
+  max-width: 800px;
   /* height: 200px; */
   position: absolute;
   bottom: 0px;
@@ -42,6 +43,11 @@ const Container = styled.div`
   border-radius: 50px;
   z-index: 100;
   background-color: rgba(15, 11, 11, 0);
+  background-color: linear-gradient(
+    270deg,
+    rgba(142, 142, 142, 1) 0%,
+    rgba(53, 53, 53, 1) 100%
+  );
   backdrop-filter: blur(10px) contrast(0.8);
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
 `;
@@ -67,9 +73,9 @@ const Top = styled.div`
 const Bottom = styled.div`
   grid-area: bottom;
   place-self: center;
-  align-self: start;
-  z-index: 10000;
+  align-self: center;
   width: 80%;
+  height: 5px;
   position: relative;
   border-radius: 15px;
   background: var(--light-gray);
@@ -78,6 +84,27 @@ const Bottom = styled.div`
     rgba(142, 142, 142, 1) 0%,
     rgba(53, 53, 53, 1) 100%
   );
+`;
+
+const Right = styled.div`
+  place-self: center;
+  grid-area: right;
+`;
+
+const Left = styled.div`
+  grid-area: left;
+  width: 100%auto;
+  /* place-self: center; */
+  display: flex;
+  height: 100%auto;
+  align-items: center;
+`;
+
+const UpperRight = styled.div`
+  grid-area: upper-right;
+  place-self: center;
+  /* align-self: flex-end; */
+  margin-top: 24px;
 `;
 
 const Btn = styled.button`
@@ -97,6 +124,7 @@ const CoverImg = styled.img`
   max-width: 74px;
   max-height: 74px;
   aspect-ratio: 1;
+  margin: 0px 24px;
 `;
 
 const SongInfo = styled.div`
@@ -104,20 +132,7 @@ const SongInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-`;
-
-const Right = styled.div`
-  place-self: center;
-  grid-area: right;
-`;
-
-const Left = styled.div`
-  grid-area: left;
   width: 100%auto;
-  /* place-self: center; */
-  display: flex;
-  height: 100%auto;
-  align-items: center;
 `;
 
 const Link = styled(ReactLink)`
@@ -147,7 +162,14 @@ const Album: React.FC<{ song: Song | undefined }> = ({ song }) => {
   }
   return (
     <Link to={`/app/album/${song.service}/${song.album.uri}`}>
-      <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+      <span
+        style={{
+          fontSize: "1.1rem",
+          fontWeight: "bold",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
         {song.name}
       </span>
     </Link>
@@ -163,9 +185,24 @@ const AlbumCover: React.FC<{ song: Song | undefined }> = ({ song }) => {
 
 const Queue = () => {
   return (
-    <button>
+    <Btn>
       <BsMusicNoteList />
-    </button>
+    </Btn>
+  );
+};
+const Shuffle = () => {
+  return (
+    <Btn>
+      <IoShuffle />
+    </Btn>
+  );
+};
+
+const Repeat = () => {
+  return (
+    <Btn>
+      <IoRepeat />
+    </Btn>
   );
 };
 
@@ -284,9 +321,13 @@ export const Controls: React.FC<IControlsProps> = ({
           </Btn>
         </Top>
       </Middle>
+      <UpperRight>
+        <Queue />
+        <Shuffle />
+        <Repeat />
+      </UpperRight>
       <Right>
         <Volume />
-        <Queue />
       </Right>
       <Bottom>
         <Seeker updateSeek={updateSeek} duration={duration} value={value} />

@@ -22,7 +22,7 @@ const Container = styled.div`
 
 const CoverImg = styled.img<{ isArtist: Boolean }>`
   justify-self: center;
-  max-height: 25vh;
+  max-height: 100%;
   border-radius: 50px;
   background-position: center center;
   background-size: cover;

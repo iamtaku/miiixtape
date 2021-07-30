@@ -19,7 +19,7 @@ const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
   border: 1px solid transparent;
   background-color: ${(props) =>
     props.isActive ? "var(--light-gray) !important" : "default"};
-  border-radius: 4px;
+  border-radius: 8px;
   opacity: 0.8;
   display: flex;
   align-items: center;

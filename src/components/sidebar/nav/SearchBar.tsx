@@ -5,21 +5,19 @@ import styled from "styled-components";
 export const SearchBarWrapper = styled.div`
   border-radius: 8px;
   padding: 2px 24px;
-  background-color: var(--light-gray);
+  background-color: var(--primary);
   width: 100%;
-  background: #5c5c5c;
   border: 2px solid transparent;
   form {
     width: 100%;
   }
 
   input {
-    background: transparent;
     box-shadow: none;
-    /* border: 2px solid transparent; */
     border: none;
     color: var(--secondary);
-    opacity: 0.6;
+    background: transparent;
+    opacity: 0.7;
     width: 100%;
 
     ::placeholder {
