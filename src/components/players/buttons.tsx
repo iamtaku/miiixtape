@@ -15,14 +15,14 @@ const Btn = styled.button`
   }
 `;
 
-const Queue = () => {
+export const Queue = () => {
   return (
     <Btn>
       <BsMusicNoteList />
     </Btn>
   );
 };
-const Shuffle = () => {
+export const Shuffle = () => {
   return (
     <Btn>
       <IoShuffle />
@@ -30,7 +30,7 @@ const Shuffle = () => {
   );
 };
 
-const Repeat = () => {
+export const Repeat = () => {
   return (
     <Btn>
       <IoRepeat />
@@ -38,7 +38,7 @@ const Repeat = () => {
   );
 };
 
-const Next: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+export const Next: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <Btn onClick={onClick}>
       <FaForward />
@@ -46,7 +46,7 @@ const Next: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 };
 
-const Back: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+export const Back: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <Btn onClick={onClick}>
       <FaBackward />
@@ -54,7 +54,7 @@ const Back: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 };
 
-const PlayPause: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+export const PlayPause: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const { state } = useGlobalContext();
 
   return (
@@ -63,5 +63,3 @@ const PlayPause: React.FC<{ onClick: () => void }> = ({ onClick }) => {
     </Btn>
   );
 };
-
-export { Queue, Shuffle, Repeat, Next, Back, PlayPause };
