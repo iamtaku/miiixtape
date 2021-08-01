@@ -16,6 +16,7 @@ export const player: PlaybackType = {
   nextService: undefined,
   isPlaying: false,
   isFinished: false,
+  isLoading: false,
 };
 
 export const initialState = {

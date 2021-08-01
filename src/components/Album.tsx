@@ -7,12 +7,11 @@ import { Collection } from "../types/types";
 
 export const Album = ({ id }: { id?: string }) => {
   const { data, isLoading, error, isError } = useGetAlbum();
-  const queryClient = useQueryClient();
-  const test = queryClient.getQueryData<Collection>([
-    "playlist",
-    { id: data?.playlistInfo.id, service: "spotify" },
-  ]);
-  console.log(test);
+  // const test = queryClient.getQueryData<Collection>([
+  //   "playlist",
+  //   { id: data?.playlistInfo.id, service: "spotify" },
+  // ]);
+  // console.log(test);
 
   if (isError) {
     console.error(error);

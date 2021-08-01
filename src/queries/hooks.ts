@@ -21,11 +21,16 @@ import {
   deletePlaylist,
 } from "./api/";
 import { AxiosError } from "axios";
+import { useGlobalContext } from "../state/context";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
-  return useQuery<Artist, Error>(["artist", params], () =>
-    getArtist(params, userInfo)
+  return useQuery<Artist, Error>(
+    ["artist", params],
+    () => getArtist(params, userInfo),
+    {
+      enabled: !!userInfo,
+    }
   );
 };
 
@@ -39,7 +44,7 @@ export const useGetSinglePlaylist = () => {
     {
       enabled: !!userInfo,
       staleTime: Infinity,
-      retry: false,
+      refetchInterval: false,
     }
   );
 };
@@ -82,12 +87,15 @@ export const useGetAllPlaylists = () =>
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
   const params = useParams<PlaylistParam>();
+  const { dispatch } = useGlobalContext();
   return useMutation(postPlaylistItems, {
     onSuccess: (data) => {
       queryClient.invalidateQueries([
         "collection",
         { id: params.playlistId, service: params.service },
       ]);
+      console.log(data);
+      // dispatch({ type: "ADD_TO_QUEUE", payload: data });
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");
@@ -98,7 +106,6 @@ export const usePostPlaylistItems = () => {
 
 export const usePostPlaylist = () => {
   const queryClient = useQueryClient();
-  const history = useHistory();
   return useMutation(postPlaylist, {
     onSuccess: (data) => {
       queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data

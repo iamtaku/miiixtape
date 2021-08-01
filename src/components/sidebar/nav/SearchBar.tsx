@@ -2,23 +2,22 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
-const SearchBarWrapper = styled.div`
+export const SearchBarWrapper = styled.div`
   border-radius: 8px;
-  /* padding: 4px 36px; */
-  background-color: var(--light-gray);
+  padding: 4px 24px;
+  background-color: var(--primary);
   width: 100%;
-  background: #5c5c5c;
-  /* box-shadow: inset 16px 16px 32px #545454, inset -16px -16px 32px #646464; */
-
+  border: 1px solid transparent;
   form {
     width: 100%;
   }
 
   input {
-    background: transparent;
     box-shadow: none;
-    border: 2px solid transparent;
+    border: none;
     color: var(--secondary);
+    background: transparent;
+    opacity: 0.7;
     width: 100%;
 
     ::placeholder {
@@ -30,7 +29,7 @@ const SearchBarWrapper = styled.div`
   }
 
   :focus-within {
-    border: 2px solid var(--accent);
+    border: 1px solid var(--accent);
   }
 `;
 

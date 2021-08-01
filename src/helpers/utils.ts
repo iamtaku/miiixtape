@@ -1,6 +1,5 @@
 export const timeConversion = (duration: number) => {
   const portions: string[] = [];
-
   const msInHour = 1000 * 60 * 60;
   const hours = Math.trunc(duration / msInHour);
   if (hours > 0) {
@@ -23,4 +22,33 @@ export const timeConversion = (duration: number) => {
   return portions.join(" ");
 };
 
+export const parseYoutubeTime = (duration: string): number => {
+  var matches = duration.match(/[0-9]+[HMS]/g);
+
+  var seconds = 0;
+  if (!matches) return 0;
+  matches.forEach(function (part) {
+    var unit = part.charAt(part.length - 1);
+    var amount = parseInt(part.slice(0, -1));
+
+    switch (unit) {
+      case "H":
+        seconds += amount * 60 * 60;
+        break;
+      case "M":
+        seconds += amount * 60;
+        break;
+      case "S":
+        seconds += amount;
+        break;
+      default:
+      // noop
+    }
+  });
+
+  return seconds * 1000;
+};
+
+export const convertMilliSecondstoSeconds = (duration: number) =>
+  duration / 1000;
 export const isAuthenticated = (): boolean => !!localStorage.getItem("token");

@@ -18,17 +18,11 @@ const Container = styled.div`
   margin-bottom: 46px;
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
   z-index: 1000;
-  /* position: -webkit-sticky; */
-  /* position: sticky; */
-  /* top: 1px; */
 `;
 
 const CoverImg = styled.img<{ isArtist: Boolean }>`
   justify-self: center;
-  /* min-width: 100%; */
-  /* z-index: 15; */
-  max-height: 25vh;
-  /* min-height: auto; */
+  max-height: 100%;
   border-radius: 50px;
   background-position: center center;
   background-size: cover;

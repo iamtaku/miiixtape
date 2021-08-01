@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import YouTube, { Options } from "react-youtube";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
@@ -7,8 +13,8 @@ import { useGlobalContext } from "../../state/context";
 import { Song } from "../../types/types";
 
 const YoutubeWrapper = styled.div`
-  /* display: none; */
   width: 100px;
+  display: none;
 `;
 
 interface YoutubeProps {
@@ -22,18 +28,20 @@ interface IYoutubeEvent {
   data: number;
 }
 
-export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
+export const Youtube: React.FC<YoutubeProps> = ({ track, uri, setYoutube }) => {
   const { dispatch, state } = useGlobalContext();
-  const [youtube, setYoutube] = useState<YouTubePlayer>();
   const { isPlaying } = useIsCurrentTrack(state.player.currentSong);
-  // debugger;
+  const ref = useRef<YouTube>(null);
+
   useEffect(() => {
-    isPlaying ? youtube?.playVideo() : youtube?.pauseVideo();
-    // debugger;
-  }, [isPlaying, youtube]);
+    isPlaying
+      ? ref.current?.getInternalPlayer().playVideo()
+      : ref.current?.getInternalPlayer().pauseVideo();
+  }, [isPlaying]);
 
   const handleOnReady = ({ target, data }: IYoutubeEvent) => {
     target.seekTo(0, true);
+    dispatch({ type: "LOADING_FINISH", payload: {} });
     setYoutube(target);
   };
 
@@ -54,9 +62,8 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
   };
 
   const handleOnPause = ({ target, data }: IYoutubeEvent) => {
-    // debugger;
     console.log("pausing youtube");
-    dispatch({ type: "PAUSE_CURRENT", payload: {} });
+    !isPlaying && dispatch({ type: "PAUSE_CURRENT", payload: {} });
   };
 
   const handleOnStateChange = ({
@@ -70,13 +77,15 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
     if (state.player.currentSong?.service !== "youtube") {
       target.seekTo(0, true);
     }
+
+    if (state.player.isPlaying) {
+      dispatch({ type: "PLAY", payload: {} });
+    }
   };
 
   const handleOnError = ({ target, data }: IYoutubeEvent) => {
     console.error("youtube err");
   };
-
-  // const handleOnPlay = () => dispatch({ type: "PLAY", payload: {} });
 
   const opts: Options = {
     height: "100",
@@ -90,8 +99,6 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
   return (
     <YoutubeWrapper>
       <YouTube
-        // videoId={state.player.currentSong ? state.player.currentSong.uri : ""}
-
         videoId={uri}
         onReady={handleOnReady}
         opts={opts}
@@ -100,6 +107,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri }) => {
         onStateChange={handleOnStateChange}
         onError={handleOnError}
         // onPlay={handleOnPlay}
+        ref={ref}
       />
     </YoutubeWrapper>
   );

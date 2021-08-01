@@ -5,14 +5,13 @@ import { Collection } from "../../../types/types";
 import { InnerGridTop } from "../top";
 import { Track } from "./Track";
 
-interface PropTypes {
+interface IGridProps {
   data?: Collection;
   isLoading: boolean;
   isError: boolean;
 }
 
 const Wrapper = styled.div`
-  position: relative;
   height: 100%;
   overflow: overlay;
   overflow-y: scroll;
@@ -20,14 +19,18 @@ const Wrapper = styled.div`
 
 const TrackList = styled.div`
   padding: 4px;
+
+  li:last-child {
+    margin-bottom: 110px;
+  }
 `;
 
 const ItemContainer = styled.li<{ isAlbum?: boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
-      ? "15px 50px 2.5fr 1fr 0.5fr "
-      : "15px 50px 2fr 1fr 1fr 0.5fr 0.5fr"};
+      ? "20px 50px 2.5fr 1fr 0.5fr 0.2fr "
+      : "15px 50px 2fr 1fr 1fr 0.5fr 0.2fr"};
   grid-column-gap: 8px;
   padding: 4px 12px;
   align-items: center;
@@ -48,7 +51,7 @@ const Item = styled.span<{ isRight?: boolean }>`
   }
 `;
 
-export const InnerGridBottom: React.FC<PropTypes> = ({
+export const InnerGridBottom: React.FC<IGridProps> = ({
   data,
   isLoading,
   isError,
@@ -77,7 +80,6 @@ export const InnerGridBottom: React.FC<PropTypes> = ({
           <Item>Title</Item>
           <Item>Artist</Item>
           <Item isRight>Length</Item>
-          {/* <Item isRight>Service</Item> */}
         </ItemContainer>
       ) : (
         <ItemContainer>
@@ -87,7 +89,6 @@ export const InnerGridBottom: React.FC<PropTypes> = ({
           <Item>Artist</Item>
           <Item>Album</Item>
           <Item isRight>Length</Item>
-          <Item isRight>URL</Item>
         </ItemContainer>
       )}
       <Droppable droppableId={"tracks"}>

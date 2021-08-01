@@ -25,17 +25,10 @@ const Player = () => {
   const [youtube, setYoutube] = useState<YouTubePlayer>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer>();
   const [soundcloud, setSoundCloud] = useState<ReactHowler>();
-  const [duration, setDuration] = useState(0);
   const uri = state.player?.currentSong?.uri;
 
   return (
     <Wrapper>
-      <Controls
-        currentDuration={duration}
-        youtube={youtube}
-        spotify={spotify}
-        soundcloud={soundcloud}
-      />
       <Test>
         {state.player.currentSong?.service === "youtube" && (
           <Youtube setYoutube={setYoutube} uri={uri} />
@@ -48,13 +41,10 @@ const Player = () => {
           />
         )}
         {state.player.currentSong?.service === "soundcloud" && (
-          <Soundcloud
-            setSoundCloud={setSoundCloud}
-            uri={uri}
-            setDuration={setDuration}
-          />
+          <Soundcloud setSoundCloud={setSoundCloud} uri={uri} />
         )}
       </Test>
+      <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />
     </Wrapper>
   );
 };

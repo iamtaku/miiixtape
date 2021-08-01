@@ -2,22 +2,23 @@ import React from "react";
 import { useHistory, useParams } from "react-router";
 import { useGetSinglePlaylist } from "../../queries/hooks";
 import { InnerGridBottom } from "../grid/bottom";
-import { useQueryClient } from "react-query";
-import { Collection as PlaylistType, PlaylistParam } from "../../types/types";
 import { PlaylistShare } from "./PlaylistShare";
+import { isAuthenticated } from "../../helpers/utils";
+import { useQueryClient } from "react-query";
 
 export const Playlist: React.FC = () => {
   const { data, isLoading, error, isError } = useGetSinglePlaylist();
-  const history = useHistory();
   const queryClient = useQueryClient();
-  const test = queryClient.getQueryData<PlaylistType>([
-    "playlist",
-    { playlistId: data?.playlistInfo.id, service: data?.playlistInfo.service },
-  ]);
+  const history = useHistory();
 
-  if (error?.response?.status === 401) {
-    debugger;
+  // if (!isAuthenticated()) {
+  // return <PlaylistShare />;
+  // }
+
+  if (isError) {
     console.log(error);
+    queryClient.invalidateQueries(["user"]);
+    // debugger;
     history.push("/app/error");
   }
 

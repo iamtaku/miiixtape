@@ -3,48 +3,30 @@ import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import ReactHowler from "react-howler";
 import { SoundCloud } from "../../queries/api/";
 import { useGlobalContext } from "../../state/context";
+const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
 
 interface IProps {
   setSoundCloud: Dispatch<SetStateAction<ReactHowler | undefined>>;
-  setDuration: React.Dispatch<React.SetStateAction<number>>;
   uri?: string;
 }
-export const Soundcloud: React.FC<IProps> = ({
-  setSoundCloud,
-  setDuration,
-  uri,
-}) => {
+export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<ReactHowler>(null);
 
-  useEffect(() => {
-    console.log("updating seek");
-    ref.current && setDuration(ref.current?.seek());
-  }, [ref.current]);
-
   const handleOnLoadError = () => {
-    console.error("soundcloud  went wrong");
+    console.log("soundcloud  went wrong");
   };
-  const handleOnPlay = () => {
-    console.log("playing soundclouds");
-    // fetchSpotify();
+
+  const handleOnPause = () => {
+    dispatch({ type: "PAUSE_CURRENT", payload: {} });
   };
+
+  const handleOnPlay = () => dispatch({ type: "LOADING_FINISH", payload: {} });
 
   const handleOnLoad = () => {
-    ref.current && setSoundCloud(ref.current);
-  };
-
-  const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
-  const SOUNDCLOUD = `https://api.soundcloud.com`;
-  const url =
-    "https://soundcloud.com/sancks/gorillaz-on-melancholy-hill-acoustic";
-
-  const pltest = "https://soundcloud.com/iam1000yearsold/sets/swigswag";
-  const fetchSpotify = () => {
-    SoundCloud.getTrack(url).then((res) => console.log(res));
-    axios
-      .get(`${SOUNDCLOUD}/resolve?url=${pltest}&client_id=${KEY}`)
-      .then((res) => console.log(res));
+    if (!ref.current) return;
+    setSoundCloud(ref.current);
+    dispatch({ type: "IS_LOADING", payload: {} });
   };
 
   const handleEnd = () => {
@@ -69,8 +51,9 @@ export const Soundcloud: React.FC<IProps> = ({
         src={`https://api.soundcloud.com/tracks/${uri}/stream?client_id=${KEY}`}
         playing={state.player.isPlaying}
         onLoadError={handleOnLoadError}
-        onPause={handleOnPlay}
+        // onPause={handleOnPause}
         onLoad={handleOnLoad}
+        onPlay={handleOnPlay}
         preload={true}
         html5
         ref={ref}

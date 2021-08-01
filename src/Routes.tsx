@@ -41,7 +41,6 @@ const PageRoutes = () => (
 
 const AppRoutes = () => {
   const { path, url } = useRouteMatch();
-  console.log(path, url);
   return (
     <Layout>
       <Switch>

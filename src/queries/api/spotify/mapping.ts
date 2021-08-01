@@ -85,6 +85,7 @@ export const mapSpotifyTracktoTrack = (
   const album: Album = {
     name: data.album.name,
     uri: stripURI(data.album.uri),
+    service: "spotify",
   };
 
   const artists: Artists = data.artists.map((artist) => ({

@@ -1,27 +1,47 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
+import { FaPlus } from "react-icons/fa";
 import { usePostPlaylist } from "../../queries/hooks";
-import { BasicButton } from "../Buttons";
 
-const AddPlaylistButton = styled(BasicButton)`
+const Container = styled.div`
+  padding: 4px 24px;
+  background: var(--lighter-gray);
+  border-radius: 8px;
+  border: 1px solid transparent;
+  width: 100%auto;
+  box-shadow: 20px 20px 60px #383838, -20px -20px 60px #4c4c4c;
+`;
+
+const AddPlaylistButton = styled.button`
   width: 100%;
-  margin: 0 auto;
-  margin-top: 4px;
+  height: 100%;
   color: var(--accent);
+  background: var(--dark-grey);
+  box-shadow: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
 `;
 
 const Input = styled.input`
-  width: 100%;
-  background: transparent;
   color: var(--secondary);
-  outline: none;
-  border-bottom: 1px solid var(--accent);
-  /* margin-top: 4px; */
-  padding: 2px;
-  outline-color: var(--accent);
+  box-shadow: none;
+  border: none;
+  color: var(--secondary);
+  background: transparent;
+  opacity: 0.7;
+  width: 100%;
+  height: 100%;
+
+  &::placeholder {
+    color: var(--secondary);
+  }
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const AddPlaylistForm = () => {
@@ -48,7 +68,7 @@ export const AddPlaylistForm = () => {
   };
 
   return (
-    <>
+    <Container>
       {isInputOpen ? (
         <form onSubmit={handleSubmit}>
           <Input
@@ -57,14 +77,14 @@ export const AddPlaylistForm = () => {
             autoFocus={true}
             onBlur={handleBlur}
             onChange={(e) => setInput(e.currentTarget.value)}
-            placeholder="Create a new plaaaylist"
+            placeholder="Create new "
           />
         </form>
       ) : (
         <AddPlaylistButton onClick={() => setIsInputOpen(true)}>
-          <FontAwesomeIcon icon={faPlus} />
+          <FaPlus />
         </AddPlaylistButton>
       )}
-    </>
+    </Container>
   );
 };

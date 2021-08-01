@@ -12,10 +12,19 @@ export interface UserAttributes {
   spotify_id?: string;
   refresh_token: string;
   access_token: string;
+  user_id: string;
 }
 
 interface SingleDataItem {
   id: string;
+}
+
+export interface ServerUser {
+  data: {
+    id: string;
+    type: "user";
+    attributes: UserAttributes;
+  };
 }
 
 export interface PlaylistItemItem extends SingleDataItem {

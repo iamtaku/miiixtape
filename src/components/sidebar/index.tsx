@@ -6,6 +6,7 @@ import {
   useGetAllPlaylists,
 } from "../../queries/hooks";
 import { Navbar as Nav } from "./nav";
+import { isAuthenticated } from "../../helpers/utils";
 
 const Wrapper = styled.div`
   grid-area: sidebar;
@@ -22,7 +23,6 @@ const Wrapper = styled.div`
 const CollectionWrapper = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
-  margin-top: 16px;
   ::-webkit-scrollbar-track {
     background: var(--lighter-gray);
   }
@@ -36,6 +36,15 @@ export const Sidebar = () => {
   // const { data: spotifyPlaylists, isLoading: spotifyLoading } =
   //   useGetAllSpotifyPlaylist();
   const { data: playlists, isLoading, error } = useGetAllPlaylists();
+
+  if (!isAuthenticated) {
+    return <h2>UnAuthenticated sidebar</h2>;
+  }
+
+  if (error) {
+    console.log(error.response);
+    return <h2>error</h2>;
+  }
 
   if (isLoading)
     return (
@@ -53,9 +62,9 @@ export const Sidebar = () => {
       <Nav />
       <CollectionWrapper>
         {/* <SidebarCollection data={spotifyPlaylists} title={"spotify"} /> */}
-        <SidebarCollection data={playlists} title={"miiixtape"} />
+        <SidebarCollection data={playlists} title={"playlists"} />
+        <AddPlaylistForm />
       </CollectionWrapper>
-      <AddPlaylistForm />
     </Wrapper>
   );
 };

@@ -11,6 +11,7 @@ import {
 import { SoundCloud } from "..";
 import { PlaylistItemItem, ServerPlaylist } from "../../types";
 import { Spotify } from "../spotify/api";
+import { Youtube } from "../youtube/api";
 
 const filterTracks = (data: PlaylistItemItem[], service: Service) =>
   data.filter((item) => item.attributes.song.service === service);
@@ -37,6 +38,15 @@ const fetchSCTracks = async (data: PlaylistItemItem[]): Promise<Tracks> => {
   return res;
 };
 
+const fetchYoutubeTracks = async (
+  data: PlaylistItemItem[]
+): Promise<Tracks> => {
+  const youtubeTracks = filterTracks(data, "youtube");
+  const uris = youtubeTracks.map((item) => item.attributes.song.uri).join(",");
+  const res = Youtube.getVideo(uris);
+  return res;
+};
+
 const fetchAppropriateService = async (
   service: Service,
   data: PlaylistItemItem[],
@@ -47,6 +57,8 @@ const fetchAppropriateService = async (
       return fetchSpotifyTracks(data, client);
     case "soundcloud":
       return fetchSCTracks(data);
+    case "youtube":
+      return fetchYoutubeTracks(data);
     default:
       break;
   }
@@ -75,6 +87,7 @@ const generatePlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
     id: data.data.id,
     name: data.data.attributes.name,
     description: data.data.attributes.description,
+    owner: data.data.relationships.user.data.id,
     type: "playlist",
     service: "plaaaylist",
   };
@@ -94,17 +107,13 @@ const generatePlaylistTracks = async (
     });
   });
   const tracks: Tracks = data.included.map((item) => {
-    if (["spotify", "soundcloud"].includes(item.attributes.song.service)) {
-      const track: Song = JSON.parse(
-        JSON.stringify(trackHash[item.attributes.song.uri])
-      );
-      track.playlistPosition = item.attributes.position;
-      track.id = item.id;
-      return track;
-    }
-    return mapPlaylistItemToTrack(item);
+    const track: Song = JSON.parse(
+      JSON.stringify(trackHash[item.attributes.song.uri])
+    );
+    track.playlistPosition = item.attributes.position;
+    track.id = item.id;
+    return track;
   });
-
   return tracks;
 };
 
@@ -119,9 +128,13 @@ export const generatePlaylistData = async (
       tracks: [],
     };
   }
+  // try {
   const tracks = await generatePlaylistTracks(data, client);
   return {
     playlistInfo,
     tracks,
   };
+  // } catch (err) {
+  // throw new Error(err);
+  // }
 };

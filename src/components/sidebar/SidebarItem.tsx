@@ -12,42 +12,44 @@ interface SideBarItemProps {
 }
 
 const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
-  display: grid;
-  grid-template-columns: 0.05fr 1fr;
-  grid-template-areas: "button main ";
-  height: 20px;
+  position: relative;
+  padding: 4px 24px;
   width: 100%;
-  align-content: center;
+  display: flex;
+  align-items: center;
   border: 1px solid transparent;
   background-color: ${(props) =>
     props.isActive ? "var(--light-gray) !important" : "default"};
-  border-radius: 4px;
-  opacity: 0.8;
+  border-radius: 8px;
+  opacity: 0.9;
+`;
 
-  a {
-    padding: 2px;
-    display: block;
-    width: 100%;
-    overflow: hidden;
-    z-index: 10;
-  }
-
-  /* &:hover {
-    background-color: var(--light-gray);
-  } */
+const StyledLink = styled(Link)`
+  width: 100%;
+  z-index: 10;
+  opacity: 0.7;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const PlayButton = styled(PlaybackButton)<{
   isActive?: Boolean;
 }>`
-  grid-area: "button";
   display: ${(props) => (props.isActive ? "show" : "none")};
   background: none;
   border: none;
-  min-width: 100%;
+  padding: 0;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  min-width: 20px;
+  border-radius: 0;
   color: var(--accent);
+  z-index: 100;
   &:hover {
-    cursor: pointer;
+    cursor: initial;
+    background: none;
   }
 `;
 
@@ -70,13 +72,11 @@ export const SidebarItem: React.FC<SideBarItemProps> = ({ playlist }) => {
       <PlayButton data={playlist} isActive={isActive || isCurrent}>
         <FontAwesomeIcon icon={isPlaying && isCurrent ? faPause : faPlay} />
       </PlayButton>
-      <Link
-        style={{ gridArea: "main" }}
+      <StyledLink
         to={`/app/playlist/${playlist.playlistInfo.service}/${playlist.playlistInfo.id}`}
       >
         {playlist.playlistInfo.name}
-      </Link>
-      {/* {isPlaying && isCurrent && <PlayingAnimation />} */}
+      </StyledLink>
     </Item>
   );
 };

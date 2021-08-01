@@ -21,7 +21,6 @@ export const Global = createGlobalStyle`
     background-color: var(--light-gray);
     color: var(--secondary);
     font-family: 'Helvetica';
-    /* overflow: hidden; */
     overflow: overlay;
 
   }
@@ -32,6 +31,42 @@ export const Global = createGlobalStyle`
   box-sizing: border-box;
 }
 
+button {
+  &:hover {
+    cursor: pointer;
+  }
+  padding: 0;
+}
+
+input[type=text]{
+  padding: 0;
+  margin: 0;
+}
+
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+
 /* Remove default margin */
 body,
 h1,
@@ -39,11 +74,13 @@ h2,
 h3,
 h4,
 p,
+input,
 figure,
 blockquote,
 dl,
 dd {
   margin: 0;
+  padding: 0;
 }
 
 a {

@@ -1,4 +1,9 @@
-import { PlaylistItemItem, ServerPlaylists, UserAttributes } from "../../types";
+import {
+  PlaylistItemItem,
+  ServerPlaylists,
+  ServerUser,
+  UserAttributes,
+} from "../../types";
 import { Song, Collection, Tracks, Service } from "../../../types/types";
 
 export const generateYoutubeURL = (uri: string): string => {
@@ -8,7 +13,7 @@ export const generateYoutubeURL = (uri: string): string => {
 
 export const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
   let href = generateYoutubeURL(item.attributes.song.uri);
-
+  debugger;
   return {
     id: item.id,
     name: item.attributes.song.name,
@@ -26,6 +31,7 @@ export const mapServerPlaylist = (data: ServerPlaylists): Collection[] => {
         id: item.id,
         name: item.attributes.name,
         service: "plaaaylist",
+        owner: item.relationships.user.data.id,
       },
       tracks: [],
     };
@@ -33,7 +39,12 @@ export const mapServerPlaylist = (data: ServerPlaylists): Collection[] => {
   return mappedData;
 };
 export const mapTrackToPlaylist = (track: Song): Collection => ({
-  playlistInfo: { name: track.name, id: track.id, service: track.service },
+  playlistInfo: {
+    name: track.name,
+    id: track.id,
+    service: track.service,
+    owner: "",
+  },
   tracks: [{ ...track }],
 });
 
@@ -43,8 +54,8 @@ export const generateServices = (tracks: Tracks): Service[] => {
   return Array.from(servicesSet);
 };
 
-export const mapUserAttributes = (data: any): UserAttributes => {
+export const mapUserAttributes = (data: ServerUser): UserAttributes => {
   return {
     ...data.data.attributes,
-  } as UserAttributes;
+  };
 };

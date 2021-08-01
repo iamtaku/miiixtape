@@ -20,7 +20,9 @@ export interface Artist extends Basic {
     albums?: Album[];
   };
 }
-export interface Album extends Basic {}
+export interface Album extends Basic {
+  service: Service;
+}
 
 export type Basic = {
   uri: string;
@@ -37,6 +39,7 @@ export type Collection = {
 export type PlaylistInfo = {
   id: string;
   name: string;
+  owner?: string;
   external_urls?: string;
   img?: string;
   description?: string;

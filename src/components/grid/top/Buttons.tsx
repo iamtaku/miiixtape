@@ -12,19 +12,20 @@ import { useHistory, useLocation, useParams } from "react-router";
 import styled, { css } from "styled-components";
 import { device } from "../../../globalStyle";
 import { useIsCurrentPlaylist } from "../../../helpers/hooks";
-import { useDeletePlaylist } from "../../../queries/hooks";
+import {
+  useDeletePlaylist,
+  useGetSinglePlaylist,
+  useGetUser,
+} from "../../../queries/hooks";
 import { useGlobalContext } from "../../../state/context";
 import { Collection } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
-import { Modal } from "../../modal";
+import { AddModal } from "../../modal/AddModal";
+import { ShareModal } from "../../modal/ShareModal";
 
 interface ButtonsProps {
   data: Collection;
-}
-
-interface IParam {
-  service: string;
 }
 
 const ButtonWrapper = styled.div`
@@ -58,14 +59,19 @@ const buttonStyles = css`
 
 const Btn = styled(BasicButton)`
   ${buttonStyles}
+  justify-content: space-around;
 `;
 
 const GridButton = styled(PlaybackButton)`
   ${buttonStyles}
 `;
 
-const ImportButton = styled(Btn)`
+const AddButton = styled(Btn)`
   color: var(--accent);
+`;
+
+const ShareButton = styled(Btn)`
+  color: var(--secibdart);
 `;
 
 const PlayButton = styled(GridButton)`
@@ -76,11 +82,25 @@ const DeleteBtn = styled(Btn)`
   color: var(--secondary);
 `;
 
+const ImportBtn = styled(Btn)`
+  color: var(--secondary);
+`;
+
 const Wrapper = styled.div`
   position: absolute;
-  top: 20px;
+  top: 30px;
   background-color: var(--light-gray);
   padding: 8px;
+  border: 1px solid var(--light-gray);
+  border-radius: 4px;
+
+  button {
+    border-radius: 0px;
+    background: transparent;
+    margin-left: 0;
+    box-shadow: none;
+    padding: 4px;
+  }
 `;
 
 const DeleteButton = () => {
@@ -104,28 +124,55 @@ const DeleteButton = () => {
   );
 };
 
-const ShareButton = () => {
-  const handleClick = () => {};
-  return (
-    <DeleteBtn onClick={handleClick}>
-      <FontAwesomeIcon icon={faShare} />
-      <span>SHARE</span>
-    </DeleteBtn>
-  );
+const DisabledWrapper = styled.div<{ isDisabled: boolean }>`
+  ${(props) =>
+    props.isDisabled
+      ? ` opacity: 0.5
+  button {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  `
+      : null}
+`;
+
+interface IDisabled {
+  isDisabled: boolean;
+}
+
+const ImportButton = () => {
+  return <ImportBtn>IMPORT</ImportBtn>;
+};
+
+const Disabled: React.FC<IDisabled> = ({ children, isDisabled }) => {
+  return <DisabledWrapper isDisabled={isDisabled}>{children}</DisabledWrapper>;
 };
 
 const OptionsModal: React.FC<{
   handleClick: () => void;
   isModalOpen: boolean;
-}> = ({ handleClick, isModalOpen }) => {
+  handleShareClick: () => void;
+  isShareModalOpen: boolean;
+}> = ({ handleShareClick, isShareModalOpen, handleClick, isModalOpen }) => {
+  const { data } = useGetSinglePlaylist();
+  const { data: userInfo } = useGetUser();
+  const isAuthorized = () => data?.playlistInfo.owner === userInfo?.user_id;
   return (
     <Wrapper>
-      <ImportButton onClick={handleClick} isPressed={isModalOpen}>
-        <FontAwesomeIcon icon={faPlus} />
-        <span>ADD</span>
-      </ImportButton>
-      <ShareButton />
-      <DeleteButton />
+      <Disabled isDisabled={!isAuthorized()}>
+        <AddButton onClick={handleClick} isPressed={isModalOpen}>
+          <FontAwesomeIcon icon={faPlus} />
+          <span>ADD</span>
+        </AddButton>
+      </Disabled>
+      {!isAuthorized() && <ImportButton />}
+      <ShareButton onClick={handleShareClick} isPressed={isShareModalOpen}>
+        <FontAwesomeIcon icon={faShare} />
+        <span>SHARE</span>
+      </ShareButton>
+      <Disabled isDisabled={isAuthorized()}>
+        <DeleteButton />
+      </Disabled>
     </Wrapper>
   );
 };
@@ -137,7 +184,9 @@ const OptionsBtn = styled(Btn)`
 const OptionsButton: React.FC<{
   handleClick: () => void;
   isModalOpen: boolean;
-}> = ({ handleClick, isModalOpen }) => {
+  handleShareClick: () => void;
+  isShareModalOpen: boolean;
+}> = ({ handleClick, isModalOpen, handleShareClick, isShareModalOpen }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
   const handleOptionsClick = () => {
@@ -149,7 +198,12 @@ const OptionsButton: React.FC<{
       <FontAwesomeIcon icon={faEllipsisV} />
       <span>OPTIONS</span>
       {isOptionsOpen && (
-        <OptionsModal handleClick={handleClick} isModalOpen={isModalOpen} />
+        <OptionsModal
+          handleClick={handleClick}
+          isModalOpen={isModalOpen}
+          handleShareClick={handleShareClick}
+          isShareModalOpen={isShareModalOpen}
+        />
       )}
     </OptionsBtn>
   );
@@ -157,31 +211,39 @@ const OptionsButton: React.FC<{
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
-
   const { pathname } = useLocation();
-  const params = useParams<IParam>();
 
   useEffect(() => {
     setIsModalOpen(false);
   }, [pathname]);
 
-  const openOrCloseModal = () => {
+  useEffect(() => {
+    if (data.tracks.length === 0) {
+      setIsModalOpen(true);
+    }
+  }, [data.tracks.length]);
+
+  const openOrCloseModal = (state: boolean) => {
     const main = document.querySelector(".main")!;
     if (!main) return;
-    isModalOpen
+    state
       ? main.classList.remove("modal-open")
       : main.classList.add("modal-open");
   };
   const handleClick = () => {
     setIsModalOpen(!isModalOpen);
-    openOrCloseModal();
+    openOrCloseModal(isModalOpen);
+  };
+
+  const handleShareClick = () => {
+    setIsShareModalOpen(!isShareModalOpen);
+    openOrCloseModal(isShareModalOpen);
   };
 
   return (
     <ButtonWrapper>
-      {/* {params.service === "spotify" && ( */}
-      {/* )} */}
       <PlayButton data={data}>
         {isCurrent && isPlaying ? (
           <>
@@ -195,11 +257,16 @@ export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
           </>
         )}
       </PlayButton>
-      <OptionsButton handleClick={handleClick} isModalOpen={isModalOpen} />
+      <OptionsButton
+        handleClick={handleClick}
+        isModalOpen={isModalOpen}
+        handleShareClick={handleShareClick}
+        isShareModalOpen={isShareModalOpen}
+      />
       {isModalOpen && (
-        <Modal handleClick={handleClick} id={data.playlistInfo.id} />
+        <AddModal handleClick={handleClick} id={data.playlistInfo.id} />
       )}
-      {/* <Btn style={{ color: 'var(--accent)' }}><FontAwesomeIcon icon={faShare} />SHARE</Btn> */}
+      {isShareModalOpen && <ShareModal handleClick={handleShareClick} />}
     </ButtonWrapper>
   );
 };
