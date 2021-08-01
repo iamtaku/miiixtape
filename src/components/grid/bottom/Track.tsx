@@ -79,11 +79,11 @@ const Item = styled.span<{
   }
 `;
 
-const ExternalLink = styled.a`
-  text-align: right;
-  justify-self: end;
-  width: 16px;
-`;
+// const ExternalLink = styled.a`
+//   text-align: right;
+//   justify-self: end;
+//   width: 16px;
+// `;
 
 const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: Boolean }>`
   display: ${(props) => (props.isActive ? "default" : "none")};
@@ -118,7 +118,7 @@ const MenuButton: React.FC<{ track: Song; handleUrlClick: () => void }> = ({
 export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
   const [isActive, setIsActive] = useState(false);
-  const { state, dispatch } = useGlobalContext();
+  const { dispatch } = useGlobalContext();
 
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
