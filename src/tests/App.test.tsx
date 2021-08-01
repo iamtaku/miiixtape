@@ -10,7 +10,7 @@ test("renders learn react link", () => {
 });
 
 test("allows user to login", () => {
-  const { getByText, getByLabelText, getByDisplayValue } = render(<App />);
+  const { getByText } = render(<App />);
   const button = getByText("Login with Spotify");
   fireEvent.click(button);
 });

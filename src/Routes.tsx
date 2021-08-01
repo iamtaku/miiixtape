@@ -11,8 +11,8 @@ import { NotFound } from "./pages/NotFound";
 import { Artist } from "./components/artist";
 import { Login } from "./pages/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { PlaylistShare } from "./components/playlist/PlaylistShare";
-import { isAuthenticated } from "./helpers/utils";
+// import { PlaylistShare } from "./components/playlist/PlaylistShare";
+// import { isAuthenticated } from "./helpers/utils";
 
 export const Routes = () => (
   <BrowserRouter>
@@ -40,7 +40,7 @@ const PageRoutes = () => (
 );
 
 const AppRoutes = () => {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   return (
     <Layout>
       <Switch>

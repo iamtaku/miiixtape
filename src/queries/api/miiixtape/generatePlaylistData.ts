@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { generateServices, mapPlaylistItemToTrack } from "./mappingHelpers";
+import { generateServices } from "./mappingHelpers";
 import { stripURI } from "../../../helpers/stripURI";
 import {
   Collection,

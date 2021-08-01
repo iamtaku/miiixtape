@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { LoginButton } from "../components/Buttons";
 import api from "../queries/api";
 import { ServerTokenResponse } from "../queries/types";
 import styled from "styled-components";
-import axios from "axios";
 
 const Container = styled.div`
   display: flex;

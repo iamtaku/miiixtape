@@ -40,7 +40,7 @@ const Wrapper = styled.div`
 export const Profile = () => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { data, isLoading, error } = useGetSpotifyUser();
+  const { data, isLoading } = useGetSpotifyUser();
   // const data = {} as any;
   // const isLoading = true;
   //

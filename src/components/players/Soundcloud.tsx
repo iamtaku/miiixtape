@@ -1,7 +1,5 @@
-import axios from "axios";
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef } from "react";
 import ReactHowler from "react-howler";
-import { SoundCloud } from "../../queries/api/";
 import { useGlobalContext } from "../../state/context";
 const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
 
@@ -17,9 +15,9 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
     console.log("soundcloud  went wrong");
   };
 
-  const handleOnPause = () => {
-    dispatch({ type: "PAUSE_CURRENT", payload: {} });
-  };
+  // const handleOnPause = () => {
+  // dispatch({ type: "PAUSE_CURRENT", payload: {} });
+  // };
 
   const handleOnPlay = () => dispatch({ type: "LOADING_FINISH", payload: {} });
 

@@ -5,7 +5,7 @@ import {
   Collection as CollectionType,
   PlaylistParam,
 } from "../types/types";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 import {
   ArtistParams,
   getArtist,
@@ -21,7 +21,7 @@ import {
   deletePlaylist,
 } from "./api/";
 import { AxiosError } from "axios";
-import { useGlobalContext } from "../state/context";
+// import { useGlobalContext } from "../state/context";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
@@ -87,7 +87,7 @@ export const useGetAllPlaylists = () =>
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
   const params = useParams<PlaylistParam>();
-  const { dispatch } = useGlobalContext();
+  // const { dispatch } = useGlobalContext();
   return useMutation(postPlaylistItems, {
     onSuccess: (data) => {
       queryClient.invalidateQueries([

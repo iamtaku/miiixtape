@@ -1,9 +1,8 @@
 import React from "react";
 import { Redirect } from "react-router";
 import { InnerGridBottom } from "./grid/bottom/index";
-import { useQueryClient } from "react-query";
+// import { useQueryClient } from "react-query";
 import { useGetAlbum } from "../queries/hooks";
-import { Collection } from "../types/types";
 
 export const Album = ({ id }: { id?: string }) => {
   const { data, isLoading, error, isError } = useGetAlbum();

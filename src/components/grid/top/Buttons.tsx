@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import styled, { css } from "styled-components";
 import { device } from "../../../globalStyle";
 import { useIsCurrentPlaylist } from "../../../helpers/hooks";
@@ -17,7 +17,6 @@ import {
   useGetSinglePlaylist,
   useGetUser,
 } from "../../../queries/hooks";
-import { useGlobalContext } from "../../../state/context";
 import { Collection } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
@@ -106,7 +105,6 @@ const Wrapper = styled.div`
 const DeleteButton = () => {
   const mutation = useDeletePlaylist();
   const history = useHistory();
-  const { state, dispatch } = useGlobalContext();
   const handleClick = async () => {
     mutation
       .mutateAsync()

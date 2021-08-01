@@ -1,9 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-const Input2 = styled.input.attrs({ type: "range" })`
-  background: yellow !important;
-`;
 const Input = styled.input.attrs({ type: "range" })`
   width: 100%;
   margin: 12.85px 0;
@@ -101,7 +98,7 @@ how to remove the virtical space around the range input in IE*/
 
 export const Volume = () => {
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const seekValue = Math.floor(+e.currentTarget.value);
+    // const seekValue = Math.floor(+e.currentTarget.value);
     // updateSeek(seekValue);
     console.log(e.currentTarget.value);
   };

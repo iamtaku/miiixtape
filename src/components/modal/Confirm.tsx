@@ -1,8 +1,4 @@
-import {
-  faArrowAltCircleDown,
-  faArrowDown,
-  faChevronCircleDown,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronCircleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useParams } from "react-router";
@@ -46,8 +42,8 @@ const ExpandCheckList: React.FC<{ data: Collection }> = ({ data }) => {
 
 export const Confirm: React.FC<{ data: Collection }> = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [confirmData, setConfirmData] = useState<Tracks>(data.tracks);
-  const [filtered, setFiltered] = useState<Tracks>([]);
+  const [confirmData] = useState<Tracks>(data.tracks);
+  // const [filtered, setFiltered] = useState<Tracks>([]);
 
   const mutation = usePostPlaylistItems();
   const { playlistId: id } = useParams<PlaylistParam>();

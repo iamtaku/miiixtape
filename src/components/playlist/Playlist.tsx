@@ -1,9 +1,7 @@
 import React from "react";
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 import { useGetSinglePlaylist } from "../../queries/hooks";
 import { InnerGridBottom } from "../grid/bottom";
-import { PlaylistShare } from "./PlaylistShare";
-import { isAuthenticated } from "../../helpers/utils";
 import { useQueryClient } from "react-query";
 
 export const Playlist: React.FC = () => {

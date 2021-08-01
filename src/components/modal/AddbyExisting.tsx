@@ -4,18 +4,11 @@ import styled from "styled-components";
 import { Spotify } from "../../queries/api";
 import client from "../../queries/api/spotify/api";
 import {
-  useGetAllPlaylists,
   useGetAllSpotifyPlaylist,
-  useGetArtist,
   useGetUser,
   usePostPlaylistItems,
 } from "../../queries/hooks";
-import {
-  Collection,
-  PlaylistInfo,
-  PlaylistParam,
-  Tracks,
-} from "../../types/types";
+import { PlaylistInfo, PlaylistParam } from "../../types/types";
 
 interface IAddByExisting {
   // handleClick:(id: string)  => void,
@@ -48,7 +41,6 @@ const Item = styled.li`
 
 export const AddbyExisting: React.FC<IAddByExisting> = () => {
   const params = useParams<PlaylistParam>();
-  const { data: playlists } = useGetAllPlaylists();
   const { data: spotifyPlaylists, isLoading } = useGetAllSpotifyPlaylist();
   const { data: userInfo } = useGetUser();
   const mutation = usePostPlaylistItems();

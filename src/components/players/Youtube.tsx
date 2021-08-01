@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import YouTube, { Options } from "react-youtube";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";

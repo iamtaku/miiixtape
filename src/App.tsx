@@ -1,6 +1,6 @@
 import React from "react";
 import { QueryClientProvider, QueryClient } from "react-query";
-import { ReactQueryDevtoolsPanel } from "react-query/devtools";
+// import { ReactQueryDevtoolsPanel } from "react-query/devtools";
 import { AppProvider } from "./state/context";
 import { Routes } from "./Routes";
 

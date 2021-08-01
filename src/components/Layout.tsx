@@ -36,6 +36,7 @@ export const Layout: React.FC = ({ children }) => {
 
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
+    console.log(sInd, dInd);
 
     console.log("dragged");
   };

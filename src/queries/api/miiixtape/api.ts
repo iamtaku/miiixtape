@@ -4,7 +4,7 @@ import {
   Collection as PlaylistType,
   Tracks,
 } from "../../../types/types";
-import api, { Playlist, Spotify, SoundCloud } from "../";
+import { Playlist, Spotify, SoundCloud } from "../";
 import { UserAttributes } from "../../types";
 
 export interface ArtistParams {

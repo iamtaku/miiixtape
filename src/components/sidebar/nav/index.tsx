@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Profile } from "./Profile";
-import { SearchBar } from "./SearchBar";
+// import { SearchBar } from "./SearchBar";
 import React from "react";
 import { Link } from "react-router-dom";
 

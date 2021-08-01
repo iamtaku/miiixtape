@@ -20,7 +20,7 @@ const Test = styled.div`
 `;
 
 const Player = () => {
-  const { state, dispatch } = useGlobalContext();
+  const { state } = useGlobalContext();
   const { data: userInfo } = useGetUser();
   const [youtube, setYoutube] = useState<YouTubePlayer>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer>();

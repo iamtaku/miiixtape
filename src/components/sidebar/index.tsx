@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import { SidebarCollection } from "./SidebarCollection";
 import { AddPlaylistForm } from "./AddPlaylistForm";
-import {
-  useGetAllSpotifyPlaylist,
-  useGetAllPlaylists,
-} from "../../queries/hooks";
+import { useGetAllPlaylists } from "../../queries/hooks";
 import { Navbar as Nav } from "./nav";
 import { isAuthenticated } from "../../helpers/utils";
 

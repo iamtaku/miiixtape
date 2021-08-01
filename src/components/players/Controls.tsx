@@ -10,9 +10,9 @@ import client from "../../queries/api/spotify/api";
 import { convertMilliSecondstoSeconds } from "../../helpers/utils";
 import { Seeker } from "./Seeker";
 import DefaultMusicImage from "../../assets/music-cover.png";
-import { Artist, Song } from "../../types/types";
+import { Song } from "../../types/types";
 import { Volume } from "./Volume";
-import { Queue, Next, Back, PlayPause, Repeat, Shuffle } from "./buttons";
+import { Queue, Next, Back, PlayPause, Repeat, Shuffle } from "./Buttons";
 
 interface IControlsProps {
   youtube?: YouTubePlayer;
