@@ -13,22 +13,19 @@ interface SideBarItemProps {
 
 const Item = styled.li<{ isActive: Boolean; isPlaying: Boolean }>`
   position: relative;
-  padding: 2px 24px;
+  padding: 4px 24px;
   width: 100%;
-  align-content: center;
+  display: flex;
+  align-items: center;
   border: 1px solid transparent;
   background-color: ${(props) =>
     props.isActive ? "var(--light-gray) !important" : "default"};
   border-radius: 8px;
-  opacity: 0.8;
-  display: flex;
-  align-items: center;
+  opacity: 0.9;
 `;
 
 const StyledLink = styled(Link)`
-  padding: 2px;
   width: 100%;
-  font-size: 0.98rem;
   z-index: 10;
   opacity: 0.7;
   text-overflow: ellipsis;

@@ -1,29 +1,32 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import { usePostPlaylist } from "../../queries/hooks";
-import { BasicButton } from "../Buttons";
-import { SearchBarWrapper } from "./nav/SearchBar";
 import { FaPlus } from "react-icons/fa";
+import { usePostPlaylist } from "../../queries/hooks";
+
+const Container = styled.div`
+  padding: 4px 24px;
+  background: var(--lighter-gray);
+  border-radius: 8px;
+  border: 1px solid transparent;
+  width: 100%auto;
+  box-shadow: 20px 20px 60px #383838, -20px -20px 60px #4c4c4c;
+`;
 
 const AddPlaylistButton = styled.button`
   width: 100%;
+  height: 100%;
   color: var(--accent);
   background: var(--dark-grey);
   box-shadow: none;
   border: none;
-`;
-
-const Container = styled.div`
-  padding: 2px 0;
-  background: var(--primary);
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
 `;
 
 const Input = styled.input`
-  background: var(--dark-gray);
   color: var(--secondary);
   box-shadow: none;
   border: none;
@@ -31,7 +34,7 @@ const Input = styled.input`
   background: transparent;
   opacity: 0.7;
   width: 100%;
-  /* padding: 2px 24px; */
+  height: 100%;
 
   &::placeholder {
     color: var(--secondary);
@@ -75,11 +78,6 @@ export const AddPlaylistForm = () => {
             onBlur={handleBlur}
             onChange={(e) => setInput(e.currentTarget.value)}
             placeholder="Create new "
-            style={{
-              background: "var(--primary)",
-              borderRadius: "8px",
-              padding: "2px 24px",
-            }}
           />
         </form>
       ) : (

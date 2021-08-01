@@ -73,12 +73,14 @@ export const AddbyExisting: React.FC<IAddByExisting> = () => {
         <ul>
           {spotifyPlaylists.map((playlist) => {
             return (
-              <Item
-                key={playlist.playlistInfo.id}
-                onClick={() => handleClick(playlist.playlistInfo)}
-              >
+              <Item key={playlist.playlistInfo.id}>
                 <p>{playlist.playlistInfo.name}</p>
-                <span style={{ display: "none" }}>ADD</span>
+                <span
+                  onClick={() => handleClick(playlist.playlistInfo)}
+                  style={{ display: "none" }}
+                >
+                  ADD
+                </span>
               </Item>
             );
           })}

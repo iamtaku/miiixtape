@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FaPlay, FaPause, FaForward, FaBackward } from "react-icons/fa";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
 import { Link as ReactLink } from "react-router-dom";
-import { BsMusicNoteList } from "react-icons/bs";
-import { IoShuffle, IoRepeat } from "react-icons/io5";
-
 import { useGlobalContext } from "../../state/context";
 import { useGetUser } from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
@@ -16,6 +12,7 @@ import { Seeker } from "./Seeker";
 import DefaultMusicImage from "../../assets/music-cover.png";
 import { Artist, Song } from "../../types/types";
 import { Volume } from "./Volume";
+import { Queue, Next, Back, PlayPause, Repeat, Shuffle } from "./buttons";
 
 interface IControlsProps {
   youtube?: YouTubePlayer;
@@ -34,8 +31,8 @@ const Container = styled.div`
   width: 85%;
   /* padding: 0px 16px; */
   max-height: 120px;
+  min-height: 120px;
   max-width: 800px;
-  /* height: 200px; */
   position: absolute;
   bottom: 0px;
   left: 50%;
@@ -107,17 +104,6 @@ const UpperRight = styled.div`
   margin-top: 24px;
 `;
 
-const Btn = styled.button`
-  background: none;
-  color: var(--secondary);
-  border: none;
-  margin: 0 15px;
-
-  &:hover {
-    color: var(--accent);
-  }
-`;
-
 const CoverImg = styled.img`
   /* place-self: center; */
   flex-grow: 1;
@@ -180,29 +166,6 @@ const AlbumCover: React.FC<{ song: Song | undefined }> = ({ song }) => {
   if (!!!song) return null;
   return (
     <CoverImg src={song ? song.img : DefaultMusicImage} alt={song?.name} />
-  );
-};
-
-const Queue = () => {
-  return (
-    <Btn>
-      <BsMusicNoteList />
-    </Btn>
-  );
-};
-const Shuffle = () => {
-  return (
-    <Btn>
-      <IoShuffle />
-    </Btn>
-  );
-};
-
-const Repeat = () => {
-  return (
-    <Btn>
-      <IoRepeat />
-    </Btn>
   );
 };
 
@@ -291,7 +254,13 @@ export const Controls: React.FC<IControlsProps> = ({
   };
 
   return (
-    <Container>
+    <Container
+      style={{
+        color: state.player.currentSong
+          ? "default"
+          : "var(--light-gray) !important",
+      }}
+    >
       <Test>
         <p>
           {!state.player.isLoading && state.player.isPlaying
@@ -310,15 +279,9 @@ export const Controls: React.FC<IControlsProps> = ({
       </Left>
       <Middle>
         <Top>
-          <Btn onClick={handlePrevious}>
-            <FaBackward />
-          </Btn>
-          <Btn onClick={handlePlayPause} style={{ fontSize: "1.5rem" }}>
-            {state.player.isPlaying ? <FaPause /> : <FaPlay />}
-          </Btn>
-          <Btn onClick={handleNext}>
-            <FaForward />
-          </Btn>
+          <Back onClick={handlePrevious} />
+          <PlayPause onClick={handlePlayPause} />
+          <Next onClick={handleNext} />
         </Top>
       </Middle>
       <UpperRight>

@@ -21,7 +21,6 @@ export const Global = createGlobalStyle`
     background-color: var(--light-gray);
     color: var(--secondary);
     font-family: 'Helvetica';
-    /* overflow: hidden; */
     overflow: overlay;
 
   }
@@ -36,6 +35,12 @@ button {
   &:hover {
     cursor: pointer;
   }
+  padding: 0;
+}
+
+input[type=text]{
+  padding: 0;
+  margin: 0;
 }
 
 input[type=range] {
@@ -69,11 +74,13 @@ h2,
 h3,
 h4,
 p,
+input,
 figure,
 blockquote,
 dl,
 dd {
   margin: 0;
+  padding: 0;
 }
 
 a {

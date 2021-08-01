@@ -77,11 +77,10 @@ const Range = styled.input.attrs({ type: "range" })`
   }
 `;
 
-const Elapsed = styled.div<{ width: number }>`
+const Elapsed = styled.div`
   position: absolute;
   background: var(--accent);
   height: 5px;
-  width: ${(props) => props.width}%;
   border-radius: 15px;
   background: rgb(223, 30, 30);
   background: linear-gradient(
@@ -105,7 +104,7 @@ export const Seeker: React.FC<ISeekerProps> = ({
   const calcPercentage = () => (value === 0 ? 0 : (value / duration) * 100);
   return (
     <>
-      <Elapsed width={calcPercentage()} />
+      <Elapsed style={{ width: `${calcPercentage()}%` }} />
       <Range
         name="seeker"
         max={duration}

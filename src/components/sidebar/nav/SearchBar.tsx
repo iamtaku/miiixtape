@@ -4,10 +4,10 @@ import styled from "styled-components";
 
 export const SearchBarWrapper = styled.div`
   border-radius: 8px;
-  padding: 2px 24px;
+  padding: 4px 24px;
   background-color: var(--primary);
   width: 100%;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   form {
     width: 100%;
   }
@@ -29,7 +29,7 @@ export const SearchBarWrapper = styled.div`
   }
 
   :focus-within {
-    border: 2px solid var(--accent);
+    border: 1px solid var(--accent);
   }
 `;
 
