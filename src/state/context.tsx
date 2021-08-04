@@ -1,9 +1,17 @@
 import React, { createContext, useContext, useReducer, Dispatch } from "react";
 import { playbackReducer, PlaybackActions } from "./reducers/playbackReducer";
-import { PlaybackType } from "./types";
+import { uiReducer, UIActions } from "./reducers/uiReducer";
+import { PlaybackType, UIType } from "./types";
+
+export const fetchVolume = (): number => {
+  const local = window.localStorage.getItem("volume");
+  if (!!local) return +local;
+  return 50;
+};
 
 type InitialStateType = {
   player: PlaybackType;
+  ui: UIType;
 };
 
 export const player: PlaybackType = {
@@ -19,23 +27,30 @@ export const player: PlaybackType = {
   isLoading: false,
 };
 
+export const ui: UIType = {
+  isModalOpen: false,
+  modalType: null,
+};
+
 export const initialState = {
   player,
+  ui,
 };
 
 const AppContext = createContext<{
   state: InitialStateType;
-  dispatch: Dispatch<PlaybackActions>;
+  dispatch: Dispatch<PlaybackActions | UIActions>;
 }>({
   state: initialState,
   dispatch: () => null,
 });
 
 const mainReducer = (
-  { player }: InitialStateType,
-  action: PlaybackActions
+  { player, ui }: InitialStateType,
+  action: PlaybackActions | UIActions
 ) => ({
-  player: playbackReducer(player, action),
+  player: playbackReducer(player, action as PlaybackActions),
+  ui: uiReducer(ui, action as UIActions),
 });
 
 const AppProvider: React.FC = ({ children }) => {

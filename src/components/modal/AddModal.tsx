@@ -5,12 +5,7 @@ import { AddByUrl } from "./AddByUrl";
 import { Confirm } from "./Confirm";
 import { Modal as ModalWrapper } from "./index";
 
-interface IAddModalProps {
-  id: string;
-  handleClick: () => void;
-}
-
-export const AddModal: React.FC<IAddModalProps> = ({ id, handleClick }) => {
+export const AddModal = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [data, setData] = useState<Collection>();
 
@@ -19,16 +14,21 @@ export const AddModal: React.FC<IAddModalProps> = ({ id, handleClick }) => {
     setIsConfirmOpen(true);
   };
 
+  const handleConfirmClose = () => setIsConfirmOpen(false);
+
   return (
-    <ModalWrapper title={"Add tracks"} handleClick={handleClick}>
+    // <ModalWrapper>
+    <>
+      <p>Add modal inside</p>
       {isConfirmOpen && data ? (
-        <Confirm data={data} />
+        <Confirm data={data} handleConfirmClose={handleConfirmClose} />
       ) : (
         <>
-          <AddByUrl id={id} handleFetch={handleFetch} />
+          <AddByUrl handleFetch={handleFetch} />
           <AddbyExisting />
         </>
       )}
-    </ModalWrapper>
+    </>
+    // </ModalWrapper>
   );
 };

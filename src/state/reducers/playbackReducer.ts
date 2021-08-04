@@ -189,6 +189,10 @@ export const playbackReducer = (
         ...state,
         isLoading: false,
       };
+    case "INITIALIZE":
+      return {
+        ...initial,
+      };
 
     default:
       return state;

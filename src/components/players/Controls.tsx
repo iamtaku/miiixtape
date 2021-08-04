@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
 import { Link as ReactLink } from "react-router-dom";
-import { useGlobalContext } from "../../state/context";
+import { fetchVolume, useGlobalContext } from "../../state/context";
 import { useGetUser } from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
 import { convertMilliSecondstoSeconds } from "../../helpers/utils";
@@ -12,7 +12,15 @@ import { Seeker } from "./Seeker";
 import DefaultMusicImage from "../../assets/music-cover.png";
 import { Song } from "../../types/types";
 import { Volume } from "./Volume";
-import { Queue, Next, Back, PlayPause, Repeat, Shuffle } from "./Buttons";
+import {
+  Queue,
+  Next,
+  Back,
+  PlayPause,
+  Repeat,
+  Shuffle,
+  Volume as Mute,
+} from "./Buttons";
 
 interface IControlsProps {
   youtube?: YouTubePlayer;
@@ -23,13 +31,13 @@ interface IControlsProps {
 const Container = styled.div`
   display: grid;
   grid-template-rows: 20% 60% 20%;
+  grid-template-columns: 1fr 80% 1fr;
   grid-template-areas:
-    ". . upper-right"
+    ". top-middle ."
     "left middle right"
-    "bottom bottom bottom";
-  grid-template-columns: 1fr 0.2fr 1fr;
-  width: 85%;
-  /* padding: 0px 16px; */
+    ". bottom .";
+  width: 100%;
+  grid-column-gap: 4px;
   max-height: 120px;
   min-height: 120px;
   max-width: 800px;
@@ -49,6 +57,12 @@ const Container = styled.div`
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
 `;
 
+const PlaybackControlsContainer = styled.div`
+  place-self: center;
+  display: flex;
+  align-items: center;
+`;
+
 const Test = styled.div`
   position: absolute;
   z-index: 1000;
@@ -59,19 +73,17 @@ const Test = styled.div`
 const Middle = styled.div`
   grid-area: middle;
   place-self: center;
-`;
-
-const Top = styled.div`
-  place-self: center;
-  height: 100%;
-  display: flex;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 0.6fr 1fr;
   align-items: center;
 `;
+
 const Bottom = styled.div`
   grid-area: bottom;
   place-self: center;
   align-self: center;
-  width: 80%;
+  width: 100%;
   height: 5px;
   position: relative;
   border-radius: 15px;
@@ -84,41 +96,39 @@ const Bottom = styled.div`
 `;
 
 const Right = styled.div`
-  place-self: center;
+  place-self: center start;
   grid-area: right;
 `;
 
-const Left = styled.div`
-  grid-area: left;
-  width: 100%auto;
-  /* place-self: center; */
-  display: flex;
-  height: 100%auto;
-  align-items: center;
+const TopMiddle = styled.div`
+  grid-area: top-middle;
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 1fr;
+  grid-template-areas: ". . top-right";
 `;
 
-const UpperRight = styled.div`
-  grid-area: upper-right;
-  place-self: center;
-  /* align-self: flex-end; */
-  margin-top: 24px;
+const PlaylistControlsContainer = styled(Middle)`
+  grid-area: top-right;
+  width: 50%;
+  place-self: end end;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const CoverImg = styled.img`
-  /* place-self: center; */
-  flex-grow: 1;
-  max-width: 74px;
-  max-height: 74px;
+  grid-area: left;
+  place-self: center end;
+  max-width: 50px;
+  max-height: 50px;
   aspect-ratio: 1;
-  margin: 0px 24px;
 `;
 
 const SongInfo = styled.div`
-  flex-grow: 1;
+  place-self: center start;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%auto;
+  width: 100%;
 `;
 
 const Link = styled(ReactLink)`
@@ -150,7 +160,7 @@ const Album: React.FC<{ song: Song | undefined }> = ({ song }) => {
     <Link to={`/app/album/${song.service}/${song.album.uri}`}>
       <span
         style={{
-          fontSize: "1.1rem",
+          fontSize: "1rem",
           fontWeight: "bold",
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -169,6 +179,14 @@ const AlbumCover: React.FC<{ song: Song | undefined }> = ({ song }) => {
   );
 };
 
+const usePrevious = (value: any) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
+
 export const Controls: React.FC<IControlsProps> = ({
   youtube,
   spotify,
@@ -178,6 +196,8 @@ export const Controls: React.FC<IControlsProps> = ({
   const { data: user } = useGetUser();
   const [duration, setDuration] = useState(0);
   const [value, setValue] = useState(0);
+  const [volume, setVolume] = useState(fetchVolume());
+  const [prevVolume, setPrevVolume] = useState(volume);
 
   useEffect(() => {
     state.player.isFinished && setValue(0);
@@ -242,15 +262,41 @@ export const Controls: React.FC<IControlsProps> = ({
     if (state.player.currentSong?.service === "soundcloud" && soundcloud) {
       soundcloud?.howler.seek(seekValue);
     }
-
     if (state.player.currentSong?.service === "spotify" && spotify) {
       user?.access_token && client(user?.access_token).seek(seekValue * 1000);
     }
-
     if (state.player.currentSong?.service === "youtube" && youtube) {
       youtube.seekTo(seekValue, true);
     }
     setValue(seekValue);
+  };
+
+  const updateVolume = (volume: number) => {
+    if (state.player.currentSong?.service === "soundcloud" && soundcloud) {
+      soundcloud?.howler.volume(volume / 100);
+    }
+    if (state.player.currentSong?.service === "spotify" && spotify) {
+      user?.access_token && client(user?.access_token).setVolume(volume);
+    }
+    if (state.player.currentSong?.service === "youtube" && youtube) {
+      youtube.setVolume(volume);
+    }
+
+    window.localStorage.setItem("volume", volume.toString());
+  };
+
+  const onMute = () => {
+    if (volume > 0) {
+      setPrevVolume(volume);
+      setVolume(0);
+      updateVolume(0);
+    }
+
+    if (volume === 0) {
+      const newVolume = prevVolume || 50;
+      setVolume(newVolume);
+      updateVolume(newVolume);
+    }
   };
 
   return (
@@ -261,7 +307,7 @@ export const Controls: React.FC<IControlsProps> = ({
           : "var(--light-gray) !important",
       }}
     >
-      <Test>
+      {/* <Test>
         <p>
           {!state.player.isLoading && state.player.isPlaying
             ? "done Loading"
@@ -269,28 +315,33 @@ export const Controls: React.FC<IControlsProps> = ({
         </p>
         <p>{state.player.isPlaying ? "playing" : "pausing"}</p>
         <p>{state.player.isFinished ? "finished" : "not finished"}</p>
-      </Test>
-      <Left>
-        <AlbumCover song={state.player.currentSong} />
+      </Test> */}
+      <AlbumCover song={state.player.currentSong} />
+      <Middle>
         <SongInfo>
           <Album song={state.player.currentSong} />
           <Artists song={state.player.currentSong} />
         </SongInfo>
-      </Left>
-      <Middle>
-        <Top>
+        <PlaybackControlsContainer>
           <Back onClick={handlePrevious} />
           <PlayPause onClick={handlePlayPause} />
           <Next onClick={handleNext} />
-        </Top>
+        </PlaybackControlsContainer>
+        <Volume
+          updateVolume={updateVolume}
+          volume={volume}
+          setVolume={setVolume}
+        />
       </Middle>
-      <UpperRight>
-        <Queue />
-        <Shuffle />
-        <Repeat />
-      </UpperRight>
+      <TopMiddle>
+        <PlaylistControlsContainer>
+          <Queue />
+          <Shuffle />
+          <Repeat />
+        </PlaylistControlsContainer>
+      </TopMiddle>
       <Right>
-        <Volume />
+        <Mute onClick={onMute} volume={volume} />
       </Right>
       <Bottom>
         <Seeker updateSeek={updateSeek} duration={duration} value={value} />

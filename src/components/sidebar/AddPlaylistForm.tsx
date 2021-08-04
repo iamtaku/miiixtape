@@ -6,7 +6,7 @@ import { usePostPlaylist } from "../../queries/hooks";
 
 const Container = styled.div`
   padding: 4px 24px;
-  background: var(--lighter-gray);
+  background: var(--gray);
   border-radius: 8px;
   border: 1px solid transparent;
   width: 100%auto;

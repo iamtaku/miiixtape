@@ -3,7 +3,7 @@ import YouTube, { Options } from "react-youtube";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useIsCurrentTrack } from "../../helpers/hooks";
-import { useGlobalContext } from "../../state/context";
+import { fetchVolume, useGlobalContext } from "../../state/context";
 import { Song } from "../../types/types";
 
 const YoutubeWrapper = styled.div`
@@ -35,6 +35,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri, setYoutube }) => {
 
   const handleOnReady = ({ target, data }: IYoutubeEvent) => {
     target.seekTo(0, true);
+    target.setVolume(fetchVolume());
     dispatch({ type: "LOADING_FINISH", payload: {} });
     setYoutube(target);
   };

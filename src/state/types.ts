@@ -29,6 +29,7 @@ export type PlaybackPayload = {
   PLAYBACK_FINISH: {};
   IS_LOADING: {};
   LOADING_FINISH: {};
+  INITIALIZE: {};
 };
 
 export type PlaybackType = {
@@ -42,4 +43,18 @@ export type PlaybackType = {
   isPlaying: boolean;
   isFinished: boolean;
   isLoading: boolean;
+};
+
+type ModalType = "ADD_MODAL" | "SHARE_MODAL" | null;
+
+export type UIPayload = {
+  OPEN_MODAL: {
+    modalType: ModalType;
+  };
+  CLOSE_MODAL: {};
+};
+
+export type UIType = {
+  isModalOpen: boolean;
+  modalType: ModalType;
 };

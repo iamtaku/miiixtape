@@ -1,14 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPause,
-  faPlay,
-  faEllipsisV,
-} from "@fortawesome/free-solid-svg-icons";
+import { FaEllipsisV, FaPause, FaPlay } from "react-icons/fa";
 
 import { Song } from "../../../types/types";
 import { timeConversion } from "../../../helpers/utils";
@@ -49,7 +44,7 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
       display: block;
     }
     .options {
-      display: block;
+      visibility: initial;
     }
   }
 
@@ -79,12 +74,6 @@ const Item = styled.span<{
   }
 `;
 
-// const ExternalLink = styled.a`
-//   text-align: right;
-//   justify-self: end;
-//   width: 16px;
-// `;
-
 const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: Boolean }>`
   display: ${(props) => (props.isActive ? "default" : "none")};
 `;
@@ -92,46 +81,71 @@ const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: Boolean }>`
 const OptionsButton = styled.button`
   background: none;
   border: none;
-  display: none;
+  visibility: hidden;
   color: var(--secondary);
 `;
 
-const MenuButton: React.FC<{ track: Song; handleUrlClick: () => void }> = ({
-  track,
-  handleUrlClick,
+interface ISubMenu {
+  offsetX?: boolean;
+  offsetY?: boolean;
+  offsetXWidth?: number;
+  offsetYWidth?: number;
+}
+
+type SubMenuProps = ISubMenu & { children: React.ReactNode };
+
+const SubMenuContainer = styled.div<ISubMenu>`
+  border: 1px solid red;
+  position: absolute;
+  right: 12px;
+  transform: ${(props) =>
+    props.offsetXWidth ? `translateX(-${props.offsetXWidth}px)` : "initial"};
+`;
+
+interface ISub extends ISubMenu, HTMLDivElement {}
+
+const SubMenu: React.FC<SubMenuProps> = ({
+  children,
+  offsetX,
+  offsetXWidth,
+  offsetY,
+  offsetYWidth,
 }) => {
+  const ref = useRef<ISub | null>(null);
+  useEffect(() => {
+    if (ref.current == null) return;
+    ref.current.offsetXWidth = ref.current.parentElement?.offsetWidth;
+    console.log(ref.current.offsetXWidth);
+  }, []);
+  return <SubMenuContainer ref={ref}>{children}</SubMenuContainer>;
+};
+
+const MenuButton: React.FC<{ track: Song }> = ({ track }) => {
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const handleClick = () => {
+    setIsOptionsOpen(!isOptionsOpen);
+  };
   return (
-    <OptionsButton className="options">
-      <FontAwesomeIcon icon={faEllipsisV} />
-      {/* <ExternalLink
-        href={track.href}
-        onClick={handleUrlClick}
-        rel="noreferrer"
-        target="_blank"
-      >
-        <FontAwesomeIcon icon={faExternalLinkAlt} />
-      </ExternalLink> */}
-    </OptionsButton>
+    <div ref={ref} style={{ position: "relative" }}>
+      <OptionsButton className="options" onClick={handleClick}>
+        <FaEllipsisV />
+      </OptionsButton>
+      {isOptionsOpen && (
+        <SubMenu>
+          <p>Link</p>
+          <p>delete</p>
+        </SubMenu>
+      )}
+    </div>
   );
 };
 
 export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
   const [isActive, setIsActive] = useState(false);
-  const { dispatch } = useGlobalContext();
-
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
-
-  const handleUrlClick = () => {
-    if (isPlaying && isCurrent) {
-      dispatch({
-        type: "PAUSE_CURRENT",
-        payload: {},
-      });
-    }
-  };
-
   const trackImg = track.img ? track.img : DefaultMusicImage;
 
   return (
@@ -157,9 +171,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
               data={track}
               isActive={isActive || isCurrent}
             >
-              <FontAwesomeIcon
-                icon={isPlaying && isCurrent ? faPause : faPlay}
-              />
+              {isPlaying && isCurrent ? <FaPause /> : <FaPlay />}
             </PlaybackButton>
           </Item>
           {isAlbum ? (
@@ -198,16 +210,8 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
             "-"
           )}
           <Item isRight>{track.time ? timeConversion(track.time) : "-"}</Item>
-          {/* <ExternalLink
-            href={track.href}
-            onClick={handleUrlClick}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <FontAwesomeIcon icon={faExternalLinkAlt} />
-          </ExternalLink> */}
-          <Item isRight>
-            <MenuButton track={track} handleUrlClick={handleUrlClick} />
+          <Item isRight style={{ overflow: "initial" }}>
+            <MenuButton track={track} />
           </Item>
         </Container>
       )}

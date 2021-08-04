@@ -29,7 +29,7 @@ export const SearchBarWrapper = styled.div`
   }
 
   :focus-within {
-    border: 1px solid var(--accent);
+    border: 1px solid var(--secondary);
   }
 `;
 

@@ -16,18 +16,24 @@ import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
 import { Collection, PlaylistInfo, Service } from "../../types/types";
 
 interface IAddByUrl {
-  id: string;
   handleFetch: (collection: Collection) => void;
 }
 
-const FormWrapper = styled(SearchBarWrapper)`
-  background: var(--primary);
+const Container = styled.div`
+  padding: 4px;
+  margin: 8px 0;
+`;
+
+const FormWrapper = styled(SearchBarWrapper)<{ error: Boolean }>`
+  background: (var--primary);
+  margin: 8px 0;
+  border: ${(props) => (props.error ? "1px solid var(--red)" : "none")};
   form {
     display: flex;
   }
 `;
 
-const Input = styled.input<{ error: Boolean }>`
+const Input = styled.input`
   flex-grow: 5;
   padding: 4px;
 `;
@@ -130,7 +136,7 @@ const fetchSC = async (uri: string): Promise<Collection> => {
   };
 };
 
-export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
+export const AddByUrl: React.FC<IAddByUrl> = ({ handleFetch }) => {
   const history = useHistory();
   const { data: userInfo } = useGetUser();
   const [input, setInput] = useState("");
@@ -153,7 +159,7 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
       case "soundcloud":
         return await fetchSC(uri);
       default:
-        break;
+        throw Error();
     }
   };
 
@@ -188,25 +194,21 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
   };
 
   return (
-    <div>
+    <Container>
       <h3>Add by URL</h3>
-      <FormWrapper>
+      <FormWrapper error={isError}>
         <form onSubmit={handleSubmit}>
           <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.currentTarget.value)}
-            error={isError}
             placeholder="Enter Spotify, Soundcloud or Youtube URL's"
           />
-          <EnterBtn type="submit" value="FETCH" />
+          {!isLoading && <EnterBtn type="submit" value="FETCH" />}
+          {isLoading && <Loading />}
         </form>
       </FormWrapper>
-      <Status>
-        {isLoading && <Loading />}
-        {isSuccess && <Success />}
-        {isError && <Error />}
-      </Status>
-    </div>
+      <Status>{isError && <Error />}</Status>
+    </Container>
   );
 };

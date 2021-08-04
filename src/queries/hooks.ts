@@ -21,6 +21,7 @@ import {
   deletePlaylist,
 } from "./api/";
 import { AxiosError } from "axios";
+import { useGlobalContext } from "../state/context";
 // import { useGlobalContext } from "../state/context";
 
 export const useGetArtist = (params: ArtistParams) => {
@@ -90,6 +91,7 @@ export const usePostPlaylistItems = () => {
   // const { dispatch } = useGlobalContext();
   return useMutation(postPlaylistItems, {
     onSuccess: (data) => {
+      // change below so we don't refetch data!!
       queryClient.invalidateQueries([
         "collection",
         { id: params.playlistId, service: params.service },

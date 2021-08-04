@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useRef } from "react";
 import { useQueryClient } from "react-query";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import styled from "styled-components";
-import { useGlobalContext } from "../../state/context";
+import { fetchVolume, useGlobalContext } from "../../state/context";
 
 const Wrapper = styled.div`
   display: none;
@@ -20,7 +20,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
   const queryClient = useQueryClient();
 
   const handleCallback = (state: CallbackState) => {
-    console.log(state);
+    // console.log(state);
     ref.current && setSpotify(ref.current);
     if (state.isInitializing) {
       dispatch({ type: "IS_LOADING", payload: {} });
@@ -29,8 +29,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
     if (state.isPlaying && !state.isInitializing && state.status === "READY") {
       dispatch({ type: "LOADING_FINISH", payload: {} });
       dispatch({ type: "PLAY", payload: {} });
-    }
-    if (state.track.durationMs > 0) {
     }
     if (
       state.type === "player_update" &&
@@ -59,6 +57,8 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
     }
   };
 
+  // console.log(fetchVolume() / 100);
+
   return (
     <Wrapper>
       <SpotifyPlayer
@@ -71,7 +71,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
           state.player.currentSong?.service === "spotify"
         }
         ref={ref}
-        initialVolume={30}
+        initialVolume={0}
       />
     </Wrapper>
   );

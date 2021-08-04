@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 const Input = styled.input.attrs({ type: "range" })`
-  width: 100%;
-  margin: 12.85px 0;
+  display: block;
+  place-self: center end;
+  width: 50% !important;
+  /* margin: 12.85px 0; */
   background-color: transparent;
   -webkit-appearance: none;
 
@@ -19,9 +21,9 @@ const Input = styled.input.attrs({ type: "range" })`
     cursor: pointer;
   }
   &::-webkit-slider-thumb {
-    margin-top: -14.85px;
-    width: 26px;
-    height: 26px;
+    margin-top: -9.85px;
+    width: 20px;
+    height: 20px;
     background: #ffffff;
     border: 0px solid rgba(0, 0, 30, 0);
     border: 0;
@@ -96,12 +98,15 @@ how to remove the virtical space around the range input in IE*/
   }
 `;
 
-export const Volume = () => {
+export const Volume: React.FC<{
+  updateVolume: (volume: number) => void;
+  volume: number;
+  setVolume: (volume: number) => void;
+}> = ({ updateVolume, volume, setVolume }) => {
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    // const seekValue = Math.floor(+e.currentTarget.value);
-    // updateSeek(seekValue);
-    console.log(e.currentTarget.value);
+    setVolume(+e.currentTarget.value);
+    updateVolume(+e.currentTarget.value);
   };
 
-  return <Input max={100} value={50} onChange={handleChange} />;
+  return <Input max={100} value={volume} onChange={handleChange} />;
 };

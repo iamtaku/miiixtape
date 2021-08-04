@@ -10,7 +10,7 @@ export const Global = createGlobalStyle`
 --light-gray: #5c5c5c;
 --lighter-gray: #424242;
 --gray: #353535;
---red: #cf6679;
+--red: #ff0033;
 --primary: var(--gray);
 --secondary: var(--white);
 --accent: var(--orange);
@@ -36,6 +36,7 @@ button {
     cursor: pointer;
   }
   padding: 0;
+  margin: 0;
 }
 
 input[type=text]{

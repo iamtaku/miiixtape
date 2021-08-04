@@ -2,6 +2,7 @@ import React from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { device } from "../globalStyle";
+import { Modal } from "./modal";
 import Player from "./players";
 import { Sidebar } from "./sidebar";
 
@@ -46,6 +47,7 @@ export const Layout: React.FC = ({ children }) => {
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Sidebar />
         <InnerLayout>
+          <Modal />
           {children}
           <Player />
         </InnerLayout>

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
 import ReactHowler from "react-howler";
-import { useGlobalContext } from "../../state/context";
+import { fetchVolume, useGlobalContext } from "../../state/context";
 const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
 
 interface IProps {
@@ -56,6 +56,8 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
         html5
         ref={ref}
         onEnd={handleEnd}
+        volume={fetchVolume() / 100}
+        // onVolume
       />
     </div>
   );

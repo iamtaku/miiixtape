@@ -14,7 +14,12 @@ interface IAddByExisting {
   // handleClick:(id: string)  => void,
   // playlists: Collection[]
 }
-
+const Container = styled.div`
+  padding: 4px;
+`;
+const List = styled.ul`
+  padding: 4px;
+`;
 const Item = styled.li`
   display: flex;
   justify-content: space-between;
@@ -30,7 +35,7 @@ const Item = styled.li`
     background: var(--accent);
     border: 1px solid var(--accent);
     border-radius: 4px;
-    cursor: pointer;
+    /* cursor: pointer; */
 
     span {
       display: initial !important;
@@ -59,10 +64,10 @@ export const AddbyExisting: React.FC<IAddByExisting> = () => {
   if (isLoading) return <h2>Loading...</h2>;
 
   return (
-    <div>
+    <Container>
       <h3>Import Existing Playlists</h3>
       {spotifyPlaylists && spotifyPlaylists.length > 0 ? (
-        <ul>
+        <List>
           {spotifyPlaylists.map((playlist) => {
             return (
               <Item key={playlist.playlistInfo.id}>
@@ -76,12 +81,12 @@ export const AddbyExisting: React.FC<IAddByExisting> = () => {
               </Item>
             );
           })}
-        </ul>
+        </List>
       ) : (
         <p style={{ padding: "2px 24px" }}>
           You don't have any spotify playlists to import
         </p>
       )}
-    </div>
+    </Container>
   );
 };
