@@ -51,4 +51,13 @@ export const parseYoutubeTime = (duration: string): number => {
 
 export const convertMilliSecondstoSeconds = (duration: number) =>
   duration / 1000;
+
 export const isAuthenticated = (): boolean => !!localStorage.getItem("token");
+
+export const pluralize = (word: string, data: any[]): string => {
+  if (data.length === 1) {
+    return data.length.toString() + " " + word;
+  }
+
+  return data.length.toString() + " " + word + "s";
+};

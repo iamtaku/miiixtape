@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import { InnerGridBottom } from "./grid/bottom/index";
 // import { useQueryClient } from "react-query";
 import { useGetAlbum } from "../queries/hooks";

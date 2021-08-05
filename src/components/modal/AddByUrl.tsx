@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { IoIosWarning } from "react-icons/io";
 import {
   stripSpotifyAlbumURI,
   stripSpotifyPlaylistURI,
@@ -19,15 +20,11 @@ interface IAddByUrl {
   handleFetch: (collection: Collection) => void;
 }
 
-const Container = styled.div`
-  padding: 4px;
-  margin: 8px 0;
-`;
-
-const FormWrapper = styled(SearchBarWrapper)<{ error: Boolean }>`
+const FormWrapper = styled(SearchBarWrapper)<{ error: boolean }>`
   background: (var--primary);
   margin: 8px 0;
-  border: ${(props) => (props.error ? "1px solid var(--red)" : "none")};
+  border: ${(props) =>
+    props.error ? "1px solid var(--red)" : "1px solid transparent"};
   form {
     display: flex;
   }
@@ -52,9 +49,76 @@ const EnterBtn = styled.input`
 
 const Status = styled.div``;
 
-const Loading = () => <p>Loading...</p>;
+const Loader = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  div {
+    position: absolute;
+    top: calc(50%);
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(24px, 0);
+    }
+  }
+`;
+
+const Loading = () => (
+  <Loader>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </Loader>
+);
 const Success = () => <p>Success...</p>;
-const Error = () => <p>Error...</p>;
+const Error = () => (
+  <IoIosWarning style={{ color: "var(--red)", placeSelf: "center end" }} />
+);
 
 const findService = (input: string): Service | false => {
   if (input.includes("youtube")) {
@@ -194,8 +258,7 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ handleFetch }) => {
   };
 
   return (
-    <Container>
-      <h3>Add by URL</h3>
+    <>
       <FormWrapper error={isError}>
         <form onSubmit={handleSubmit}>
           <Input
@@ -203,12 +266,20 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ handleFetch }) => {
             value={input}
             onChange={(e) => setInput(e.currentTarget.value)}
             placeholder="Enter Spotify, Soundcloud or Youtube URL's"
+            onFocus={() => setIsError(false)}
           />
-          {!isLoading && <EnterBtn type="submit" value="FETCH" />}
+          {!isLoading && !isError && <EnterBtn type="submit" value="FETCH" />}
           {isLoading && <Loading />}
+          {isError && <Error />}
         </form>
       </FormWrapper>
-      <Status>{isError && <Error />}</Status>
-    </Container>
+      <Status>
+        {isError && (
+          <span style={{ opacity: "0.8" }}>
+            Something went wrong... Try checking the url.
+          </span>
+        )}
+      </Status>
+    </>
   );
 };

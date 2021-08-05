@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import styled from "styled-components";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { usePostPlaylistItems } from "../../queries/hooks";
-import { Collection, PlaylistParam, Song, Tracks } from "../../types/types";
+import { Collection, Song, Tracks } from "../../types/types";
+import { pluralize } from "../../helpers/utils";
+import { useGlobalContext } from "../../state/context";
+import DefaultMusicImage from "../../assets/music-cover.png";
+import { ProfilePlaceholder } from "../placeholders/Placeholder";
 
 const AddContainer = styled.div`
   margin-top: 30px;
@@ -18,6 +22,12 @@ const Button = styled.button`
   padding: 4px 8px;
   margin: 8px;
   border: none;
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--light-gray);
+    border: 1px solid var(--light-gray);
+  }
 `;
 
 const AddButton = styled(Button)`
@@ -26,20 +36,21 @@ const AddButton = styled(Button)`
 `;
 
 const CancelButton = styled(Button)`
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  color: var(--dark-secondary);
+  border: 1px solid var(--dark-secondary);
 `;
 
 const ExpandButton = styled(Button)`
   display: flex;
   align-items: center;
-  border: 1px solid var(--primary);
-  color: var(--primary);
+  border: 1px solid var(--dark-secondary);
+  color: var(--dark-secondary);
   margin-left: 0px;
 `;
 
 const List = styled.ul`
-  max-height: 25vh;
+  padding: 4px;
+  height: 200px;
   overflow-y: scroll;
   overflow-x: hidden;
   ::-webkit-scrollbar-track {
@@ -49,38 +60,60 @@ const List = styled.ul`
   ::-webkit-scrollbar-thumb {
     background: var(--gray);
   }
+
+  li:last-child {
+    margin-bottom: 30px;
+  }
 `;
 
 const Item = styled.li`
-  display: flex;
+  display: grid;
+  grid-template-columns: 0.05fr 0.1fr 0.85fr;
+  grid-column-gap: 8px;
+  height: 20px;
+  align-items: center;
+  margin-bottom: 4px;
 `;
 
-const Checkbox = styled.input.attrs({ type: "checkbox" })``;
-
-const Container = styled.div`
-  display: flex;
+const Checkbox = styled.input.attrs({ type: "checkbox" })`
+  place-self: center;
 `;
 
 const ChecklistContainer = styled.div`
   padding: 8px;
+  border-radius: 8px;
+  background: var(--light-gray);
+  overflow: hidden;
 `;
 
-const SongInfo: React.FC<{ data: Song }> = ({ data }) => {
-  return (
-    <Container>
-      <span>{data.name}</span>
-      {data.artists && <span>{data.artists[0].name}</span>}
-    </Container>
-  );
+const Title = styled.span`
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+`;
+
+const SongTitle: React.FC<{ data: Song }> = ({ data }) => {
+  return <Title>{data.name}</Title>;
 };
 
-const AddBtn: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <AddButton onClick={onClick}>ADD</AddButton>
+const AddBtn: React.FC<{ onClick: () => void; disabled: boolean }> = ({
+  onClick,
+  disabled,
+}) => (
+  <AddButton onClick={onClick} disabled={disabled}>
+    ADD
+  </AddButton>
 );
 
-const ExpandBtn: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+const ExpandBtn: React.FC<{ onClick: () => void; isOpen: boolean }> = ({
+  onClick,
+  isOpen,
+}) => (
   <ExpandButton onClick={onClick}>
-    <FaChevronDown style={{ marginRight: "8px" }} />
+    {isOpen ? (
+      <FaChevronUp style={{ marginRight: "8px" }} />
+    ) : (
+      <FaChevronDown style={{ marginRight: "8px" }} />
+    )}
     OPTIONS
   </ExpandButton>
 );
@@ -89,8 +122,6 @@ const CancelBtn: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   <CancelButton onClick={onClick}>CANCEL</CancelButton>
 );
 
-const Label = styled.label``;
-
 const ButtonContainer = styled.div`
   display: flex;
 `;
@@ -98,6 +129,14 @@ const ButtonContainer = styled.div`
 const OptionsContainer = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--lighter-gray);
+  padding: 4px;
+  margin-bottom: 4px;
 `;
 
 const ExpandCheckList: React.FC<{
@@ -109,12 +148,16 @@ const ExpandCheckList: React.FC<{
 }> = ({ data, handleOnChange, checked, selectAll, handleSelectAll }) => {
   return (
     <ChecklistContainer>
-      <Checkbox
-        checked={selectAll}
-        id="select all"
-        onChange={handleSelectAll}
-      />
-      <label htmlFor="select all">Select All </label>
+      <CheckboxContainer>
+        <Checkbox
+          checked={selectAll}
+          id="select all"
+          onChange={handleSelectAll}
+        />
+        <label htmlFor="select all" style={{ marginLeft: "8px" }}>
+          Select All{" "}
+        </label>
+      </CheckboxContainer>
       <List>
         {data.map((track, index) => (
           <Item key={track.id}>
@@ -122,13 +165,23 @@ const ExpandCheckList: React.FC<{
               checked={checked[index]}
               onChange={() => handleOnChange(index)}
             />
-            <SongInfo data={track} />
+            <LazyLoadImage
+              src={track.img ? track.img : DefaultMusicImage}
+              alt={track.album?.name}
+              style={{ justifySelf: "center" }}
+              placeholder={<ProfilePlaceholder />}
+              width={"20px"}
+              height={"20px"}
+            />
+            <SongTitle data={track} />
           </Item>
         ))}
       </List>
     </ChecklistContainer>
   );
 };
+
+const Error = () => <p>Error</p>;
 
 export const Confirm: React.FC<{
   data: Collection;
@@ -141,20 +194,24 @@ export const Confirm: React.FC<{
   );
   const [selectAll, setSelectAll] = useState(true);
   const mutation = usePostPlaylistItems();
-  const { playlistId: id } = useParams<PlaylistParam>();
-
+  const { state } = useGlobalContext();
   if (!data) return null;
 
   const handleClick = () => setIsOpen(!isOpen);
 
   const handlePostItems = async () => {
+    if (!state.ui.currentModalId) return;
+    const payload = {
+      id: state.ui.currentModalId,
+      tracks: filtered,
+    };
     mutation
-      .mutateAsync({ id, tracks: filtered })
+      .mutateAsync(payload)
       .then((data) => {
-        console.log(data);
+        console.log("items have been added ", data);
       })
       .catch((err) => {
-        throw new Error(err);
+        console.error(err);
       });
   };
 
@@ -189,15 +246,22 @@ export const Confirm: React.FC<{
     <>
       <AddContainer>
         <p>
-          Add {filtered?.length} tracks from {data?.playlistInfo.service}{" "}
+          Add {pluralize("track", filtered)} from {data?.playlistInfo.service}{" "}
           {data.playlistInfo.type} {data?.playlistInfo.name}?
         </p>
       </AddContainer>
       <OptionsContainer>
-        <ExpandBtn onClick={handleClick} />
+        <ExpandBtn onClick={handleClick} isOpen={isOpen} />
         <ButtonContainer>
           <CancelBtn onClick={handleCancel} />
-          <AddBtn onClick={handlePostItems} />
+          {mutation.isLoading && <p>Loading...</p>}
+          {mutation.isError && <Error />}
+          {!mutation.isLoading && !mutation.isError && (
+            <AddBtn
+              onClick={handlePostItems}
+              disabled={filtered.length === 0}
+            />
+          )}
         </ButtonContainer>
       </OptionsContainer>
       {isOpen && (

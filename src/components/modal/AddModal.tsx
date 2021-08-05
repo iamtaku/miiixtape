@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import styled from "styled-components";
+import { ModalSection } from ".";
 import { Collection } from "../../types/types";
 import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";
 import { Confirm } from "./Confirm";
-import { Modal as ModalWrapper } from "./index";
+
+const Wrapper = styled.div`
+  width: 500px;
+`;
 
 export const AddModal = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -17,18 +22,21 @@ export const AddModal = () => {
   const handleConfirmClose = () => setIsConfirmOpen(false);
 
   return (
-    // <ModalWrapper>
     <>
-      <p>Add modal inside</p>
       {isConfirmOpen && data ? (
-        <Confirm data={data} handleConfirmClose={handleConfirmClose} />
+        <Wrapper>
+          <Confirm data={data} handleConfirmClose={handleConfirmClose} />
+        </Wrapper>
       ) : (
-        <>
-          <AddByUrl handleFetch={handleFetch} />
-          <AddbyExisting />
-        </>
+        <Wrapper>
+          <ModalSection title={"Add by URL"}>
+            <AddByUrl handleFetch={handleFetch} />
+          </ModalSection>
+          <ModalSection title={"Add by Importing existing playlists"}>
+            <AddbyExisting />
+          </ModalSection>
+        </Wrapper>
       )}
     </>
-    // </ModalWrapper>
   );
 };

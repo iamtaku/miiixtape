@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Spotify } from "./Spotify";
-import styled from "styled-components";
 import ReactHowler from "react-howler";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import { YouTubePlayer } from "youtube-player/dist/types";
@@ -9,10 +8,6 @@ import { Youtube } from "./Youtube";
 import { Controls } from "./Controls";
 import { Soundcloud } from "./Soundcloud";
 import { useGetUser } from "../../queries/hooks";
-
-const Wrapper = styled.div`
-  position: relative;
-`;
 
 const Player = () => {
   const { state } = useGlobalContext();
@@ -23,7 +18,7 @@ const Player = () => {
   const uri = state.player?.currentSong?.uri;
 
   return (
-    <Wrapper>
+    <>
       {state.player.currentSong?.service === "youtube" && (
         <Youtube setYoutube={setYoutube} uri={uri} />
       )}
@@ -38,7 +33,7 @@ const Player = () => {
         <Soundcloud setSoundCloud={setSoundCloud} uri={uri} />
       )}
       <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />
-    </Wrapper>
+    </>
   );
 };
 

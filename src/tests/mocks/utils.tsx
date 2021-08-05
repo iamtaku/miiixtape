@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Route, MemoryRouter } from "react-router";
+import { Route, MemoryRouter } from "react-router-dom";
 
 const createTestQueryClient = () =>
   new QueryClient({

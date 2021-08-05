@@ -11,8 +11,6 @@ import { NotFound } from "./pages/NotFound";
 import { Artist } from "./components/artist";
 import { Login } from "./pages/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-// import { PlaylistShare } from "./components/playlist/PlaylistShare";
-// import { isAuthenticated } from "./helpers/utils";
 
 export const Routes = () => (
   <BrowserRouter>
@@ -59,7 +57,6 @@ const AppRoutes = () => {
         <ProtectedRoute path={`${path}/artist/:service/:artistId`}>
           <Artist />
         </ProtectedRoute>
-
         <Route path={`${path}/error`}>
           <Error />
         </Route>

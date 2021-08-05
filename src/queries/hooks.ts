@@ -5,7 +5,7 @@ import {
   Collection as CollectionType,
   PlaylistParam,
 } from "../types/types";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import {
   ArtistParams,
   getArtist,
@@ -22,7 +22,6 @@ import {
 } from "./api/";
 import { AxiosError } from "axios";
 import { useGlobalContext } from "../state/context";
-// import { useGlobalContext } from "../state/context";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();

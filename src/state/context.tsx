@@ -30,6 +30,7 @@ export const player: PlaybackType = {
 export const ui: UIType = {
   isModalOpen: false,
   modalType: null,
+  currentModalId: null,
 };
 
 export const initialState = {

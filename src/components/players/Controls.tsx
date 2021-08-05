@@ -46,7 +46,6 @@ const Container = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50px;
-  z-index: 100;
   background-color: rgba(15, 11, 11, 0);
   background-color: linear-gradient(
     270deg,
@@ -300,13 +299,7 @@ export const Controls: React.FC<IControlsProps> = ({
   };
 
   return (
-    <Container
-      style={{
-        color: state.player.currentSong
-          ? "default"
-          : "var(--light-gray) !important",
-      }}
-    >
+    <Container>
       {/* <Test>
         <p>
           {!state.player.isLoading && state.player.isPlaying

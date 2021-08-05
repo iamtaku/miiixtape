@@ -7,7 +7,7 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { device } from "../../../globalStyle";
 import { useIsCurrentPlaylist } from "../../../helpers/hooks";
@@ -16,7 +16,7 @@ import {
   useGetSinglePlaylist,
   useGetUser,
 } from "../../../queries/hooks";
-import { Collection } from "../../../types/types";
+import { Collection, PlaylistParam } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
 import { useGlobalContext } from "../../../state/context";
@@ -114,11 +114,12 @@ const DeleteButton = () => {
   const mutation = useDeletePlaylist();
   const history = useHistory();
   const { dispatch } = useGlobalContext();
+  const { playlistId: id } = useParams<PlaylistParam>();
   const handleClick = async () => {
     mutation
       .mutateAsync()
       .then(() => {
-        dispatch({ type: "INITIALIZE", payload: {} });
+        dispatch({ type: "DELETE_COLLECTION", payload: { id } });
         history.push("/app");
       })
       .catch((err) => console.log(err));
@@ -160,13 +161,20 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
   const { data } = useGetSinglePlaylist();
   const { data: userInfo } = useGetUser();
   const isAuthorized = () => data?.playlistInfo.owner === userInfo?.user_id;
+  let { playlistId: id } = useParams<PlaylistParam>();
 
   const handleAddClick = () => {
-    dispatch({ type: "OPEN_MODAL", payload: { modalType: "ADD_MODAL" } });
+    dispatch({
+      type: "OPEN_MODAL",
+      payload: { modalType: "ADD_MODAL", currentModalId: id },
+    });
   };
 
   const handleShareClick = () => {
-    dispatch({ type: "OPEN_MODAL", payload: { modalType: "SHARE_MODAL" } });
+    dispatch({
+      type: "OPEN_MODAL",
+      payload: { modalType: "SHARE_MODAL", currentModalId: id },
+    });
   };
   return (
     <Wrapper top={top} width={width}>

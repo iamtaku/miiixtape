@@ -2,11 +2,11 @@ import ContentLoader from "react-content-loader";
 
 export const ProfilePlaceholder = (props: any) => (
   <ContentLoader
-    height={60}
-    width={60}
     speed={2}
     foregroundColor="#f93801"
     backgroundColor="#f9b401"
+    style={{ width: "100%" }}
+    {...props}
   >
     <circle cx="30" cy="30" r="30" />
   </ContentLoader>

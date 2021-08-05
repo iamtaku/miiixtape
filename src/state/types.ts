@@ -30,6 +30,7 @@ export type PlaybackPayload = {
   IS_LOADING: {};
   LOADING_FINISH: {};
   INITIALIZE: {};
+  DELETE_COLLECTION: { id: string };
 };
 
 export type PlaybackType = {
@@ -50,6 +51,7 @@ type ModalType = "ADD_MODAL" | "SHARE_MODAL" | null;
 export type UIPayload = {
   OPEN_MODAL: {
     modalType: ModalType;
+    currentModalId: string;
   };
   CLOSE_MODAL: {};
 };
@@ -57,4 +59,5 @@ export type UIPayload = {
 export type UIType = {
   isModalOpen: boolean;
   modalType: ModalType;
+  currentModalId: string | null;
 };

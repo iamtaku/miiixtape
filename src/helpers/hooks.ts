@@ -3,8 +3,8 @@ import { useGlobalContext } from "../state/context";
 import { Collection, Song } from "../types/types";
 
 interface ICurrent {
-  isCurrent: Boolean;
-  isPlaying: Boolean;
+  isCurrent: boolean;
+  isPlaying: boolean;
   collection?: Collection;
 }
 export const useIsCurrentPlaylist = (collection: Collection): ICurrent => {

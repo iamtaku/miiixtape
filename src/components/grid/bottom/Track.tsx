@@ -17,7 +17,7 @@ interface TrackProps {
   index: number;
 }
 
-const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
+const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
   display: grid;
   grid-template-columns: ${(props) =>
     props.isAlbum
@@ -59,9 +59,9 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
 `;
 
 const Item = styled.span<{
-  isRight?: Boolean;
-  isCenter?: Boolean;
-  isActive?: Boolean;
+  isRight?: boolean;
+  isCenter?: boolean;
+  isActive?: boolean;
 }>`
   font-size: 14px;
   white-space: nowrap;
@@ -74,7 +74,7 @@ const Item = styled.span<{
   }
 `;
 
-const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: Boolean }>`
+const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: boolean }>`
   display: ${(props) => (props.isActive ? "default" : "none")};
 `;
 

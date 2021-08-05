@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Spotify } from "../../queries/api";
 import client from "../../queries/api/spotify/api";
@@ -10,16 +10,17 @@ import {
 } from "../../queries/hooks";
 import { PlaylistInfo, PlaylistParam } from "../../types/types";
 
-interface IAddByExisting {
-  // handleClick:(id: string)  => void,
-  // playlists: Collection[]
-}
 const Container = styled.div`
   padding: 4px;
 `;
-const List = styled.ul`
-  padding: 4px;
+
+const List = styled.ul``;
+
+const Title = styled.h3`
+  font-weight: 400;
+  opacity: 0.8;
 `;
+
 const Item = styled.li`
   display: flex;
   justify-content: space-between;
@@ -32,19 +33,32 @@ const Item = styled.li`
     white-space: nowrap;
   }
   &:hover {
-    background: var(--accent);
-    border: 1px solid var(--accent);
+    background: var(--light-gray);
+    border: 1px solid var(--light-gray);
     border-radius: 4px;
     /* cursor: pointer; */
 
-    span {
+    button {
       display: initial !important;
       color: var(--secondary);
     }
   }
 `;
 
-export const AddbyExisting: React.FC<IAddByExisting> = () => {
+const FetchButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: var(--accent) !important;
+  opacity: 1 !important;
+  width: auto !important;
+  flex-grow: 0.5;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const AddbyExisting = () => {
   const params = useParams<PlaylistParam>();
   const { data: spotifyPlaylists, isLoading } = useGetAllSpotifyPlaylist();
   const { data: userInfo } = useGetUser();
@@ -64,20 +78,16 @@ export const AddbyExisting: React.FC<IAddByExisting> = () => {
   if (isLoading) return <h2>Loading...</h2>;
 
   return (
-    <Container>
-      <h3>Import Existing Playlists</h3>
+    <>
       {spotifyPlaylists && spotifyPlaylists.length > 0 ? (
         <List>
           {spotifyPlaylists.map((playlist) => {
             return (
               <Item key={playlist.playlistInfo.id}>
                 <p>{playlist.playlistInfo.name}</p>
-                <span
-                  onClick={() => handleClick(playlist.playlistInfo)}
-                  style={{ display: "none" }}
-                >
+                <FetchButton onClick={() => handleClick(playlist.playlistInfo)}>
                   ADD
-                </span>
+                </FetchButton>
               </Item>
             );
           })}
@@ -87,6 +97,6 @@ export const AddbyExisting: React.FC<IAddByExisting> = () => {
           You don't have any spotify playlists to import
         </p>
       )}
-    </Container>
+    </>
   );
 };

@@ -32,7 +32,7 @@ export const LoginButton: React.FC = ({ children }) => {
 };
 
 export const BasicButton = styled.button<{
-  isPressed?: Boolean;
+  isPressed?: boolean;
 }>`
   padding: 8px 24px;
   border: none;

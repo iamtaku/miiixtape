@@ -10,6 +10,7 @@ export const uiReducer = (state: UIType, action: UIActions): UIType => {
           ...state,
           isModalOpen: true,
           modalType: "ADD_MODAL",
+          currentModalId: action.payload.currentModalId,
         };
       }
 
@@ -18,6 +19,7 @@ export const uiReducer = (state: UIType, action: UIActions): UIType => {
           ...state,
           isModalOpen: true,
           modalType: "SHARE_MODAL",
+          currentModalId: action.payload.currentModalId,
         };
       }
       return state;
@@ -27,6 +29,7 @@ export const uiReducer = (state: UIType, action: UIActions): UIType => {
         ...state,
         isModalOpen: false,
         modalType: null,
+        currentModalId: null,
       };
     default:
       return state;

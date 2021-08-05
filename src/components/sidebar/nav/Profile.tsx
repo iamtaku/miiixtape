@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import { ProfilePlaceholder } from "../../placeholders/Placeholder";
 import { useGetSpotifyUser } from "../../../queries/hooks";
 import { BasicButton } from "../../Buttons";
@@ -41,9 +41,6 @@ export const Profile = () => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { data, isLoading } = useGetSpotifyUser();
-  // const data = {} as any;
-  // const isLoading = true;
-  //
 
   const logOut = () => {
     window.localStorage.removeItem("token");

@@ -193,6 +193,11 @@ export const playbackReducer = (
       return {
         ...initial,
       };
+    case "DELETE_COLLECTION":
+      if (action.payload.id === state.currentCollection?.playlistInfo.id) {
+        return { ...initial };
+      }
+      return state;
 
     default:
       return state;
