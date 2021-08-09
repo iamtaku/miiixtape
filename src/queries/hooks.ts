@@ -21,7 +21,6 @@ import {
   deletePlaylist,
 } from "./api/";
 import { AxiosError } from "axios";
-import { useGlobalContext } from "../state/context";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
@@ -45,6 +44,7 @@ export const useGetSinglePlaylist = () => {
       enabled: !!userInfo,
       staleTime: Infinity,
       refetchInterval: false,
+      retry: 3,
     }
   );
 };

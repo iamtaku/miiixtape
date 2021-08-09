@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { IoIosWarning } from "react-icons/io";
 import {
   stripSpotifyAlbumURI,
   stripSpotifyPlaylistURI,
@@ -15,6 +14,7 @@ import client from "../../queries/api/spotify/api";
 import { useGetUser } from "../../queries/hooks";
 import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
 import { Collection, PlaylistInfo, Service } from "../../types/types";
+import { Loading, Error } from ".";
 
 interface IAddByUrl {
   handleFetch: (collection: Collection) => void;
@@ -26,7 +26,8 @@ const FormWrapper = styled(SearchBarWrapper)<{ error: boolean }>`
   border: ${(props) =>
     props.error ? "1px solid var(--red)" : "1px solid transparent"};
   form {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 0.2fr;
   }
 `;
 
@@ -48,77 +49,6 @@ const EnterBtn = styled.input`
 `;
 
 const Status = styled.div``;
-
-const Loader = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-
-  div {
-    position: absolute;
-    top: calc(50%);
-    left: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border-radius: 50%;
-    background: #fff;
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
-  }
-  div:nth-child(1) {
-    left: 8px;
-    animation: lds-ellipsis1 0.6s infinite;
-  }
-  div:nth-child(2) {
-    left: 8px;
-    animation: lds-ellipsis2 0.6s infinite;
-  }
-  div:nth-child(3) {
-    left: 32px;
-    animation: lds-ellipsis2 0.6s infinite;
-  }
-  div:nth-child(4) {
-    left: 56px;
-    animation: lds-ellipsis3 0.6s infinite;
-  }
-  @keyframes lds-ellipsis1 {
-    0% {
-      transform: scale(0);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  @keyframes lds-ellipsis3 {
-    0% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(0);
-    }
-  }
-  @keyframes lds-ellipsis2 {
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-      transform: translate(24px, 0);
-    }
-  }
-`;
-
-const Loading = () => (
-  <Loader>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </Loader>
-);
-const Success = () => <p>Success...</p>;
-const Error = () => (
-  <IoIosWarning style={{ color: "var(--red)", placeSelf: "center end" }} />
-);
 
 const findService = (input: string): Service | false => {
   if (input.includes("youtube")) {
@@ -191,6 +121,7 @@ const mapSoundCloudPlaylistInfo = (data: any): PlaylistInfo => {
 };
 
 const fetchSC = async (uri: string): Promise<Collection> => {
+  debugger;
   const trackInfo = await SoundCloud.getTrackInfo(uri);
   const playlistInfo = mapSoundCloudPlaylistInfo(trackInfo);
   const data = trackInfo.tracks.map(mapSCTracktoTrack);

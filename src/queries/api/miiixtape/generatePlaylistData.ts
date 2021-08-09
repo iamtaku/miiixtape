@@ -27,14 +27,14 @@ const fetchSpotifyTracks = async (
       stripURI(track.attributes.song.uri)
     )
   ); //fetch them 50 at a time
-  const tracks = Spotify.getTracks(spotifyTracks, client);
+  const tracks = await Spotify.getTracks(spotifyTracks, client);
   return tracks;
 };
 
 const fetchSCTracks = async (data: PlaylistItemItem[]): Promise<Tracks> => {
   const soundcloudTracks = filterTracks(data, "soundcloud");
   const uris = soundcloudTracks.map((item) => item.attributes.song.uri);
-  const res = SoundCloud.getTracks(uris);
+  const res = await SoundCloud.getTracks(uris);
   return res;
 };
 
@@ -43,7 +43,7 @@ const fetchYoutubeTracks = async (
 ): Promise<Tracks> => {
   const youtubeTracks = filterTracks(data, "youtube");
   const uris = youtubeTracks.map((item) => item.attributes.song.uri).join(",");
-  const res = Youtube.getVideo(uris);
+  const res = await Youtube.getVideo(uris);
   return res;
 };
 
@@ -54,13 +54,13 @@ const fetchAppropriateService = async (
 ) => {
   switch (service) {
     case "spotify":
-      return fetchSpotifyTracks(data, client);
+      return await fetchSpotifyTracks(data, client);
     case "soundcloud":
-      return fetchSCTracks(data);
+      return await fetchSCTracks(data);
     case "youtube":
-      return fetchYoutubeTracks(data);
+      return await fetchYoutubeTracks(data);
     default:
-      break;
+      throw Error();
   }
 };
 
@@ -128,13 +128,9 @@ export const generatePlaylistData = async (
       tracks: [],
     };
   }
-  // try {
   const tracks = await generatePlaylistTracks(data, client);
   return {
     playlistInfo,
     tracks,
   };
-  // } catch (err) {
-  // throw new Error(err);
-  // }
 };

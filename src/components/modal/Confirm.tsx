@@ -8,6 +8,7 @@ import { pluralize } from "../../helpers/utils";
 import { useGlobalContext } from "../../state/context";
 import DefaultMusicImage from "../../assets/music-cover.png";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
+import { Success, Error, Loading } from ".";
 
 const AddContainer = styled.div`
   margin-top: 30px;
@@ -124,6 +125,7 @@ const CancelBtn: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 
 const ButtonContainer = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const OptionsContainer = styled.div`
@@ -181,8 +183,6 @@ const ExpandCheckList: React.FC<{
   );
 };
 
-const Error = () => <p>Error</p>;
-
 export const Confirm: React.FC<{
   data: Collection;
   handleConfirmClose: () => void;
@@ -195,7 +195,7 @@ export const Confirm: React.FC<{
   const [selectAll, setSelectAll] = useState(true);
   const mutation = usePostPlaylistItems();
   const { state } = useGlobalContext();
-  if (!data) return null;
+  console.log(data);
 
   const handleClick = () => setIsOpen(!isOpen);
 
@@ -254,14 +254,15 @@ export const Confirm: React.FC<{
         <ExpandBtn onClick={handleClick} isOpen={isOpen} />
         <ButtonContainer>
           <CancelBtn onClick={handleCancel} />
-          {mutation.isLoading && <p>Loading...</p>}
+          {mutation.isLoading && <Loading />}
           {mutation.isError && <Error />}
-          {!mutation.isLoading && !mutation.isError && (
+          {!mutation.isLoading && !mutation.isError && !mutation.isSuccess && (
             <AddBtn
               onClick={handlePostItems}
               disabled={filtered.length === 0}
             />
           )}
+          {mutation.isSuccess && <Success />}
         </ButtonContainer>
       </OptionsContainer>
       {isOpen && (
