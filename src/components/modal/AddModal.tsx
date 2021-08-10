@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ModalSection } from ".";
+import { useGlobalContext } from "../../state/context";
 import { Collection } from "../../types/types";
 import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";
@@ -13,10 +14,10 @@ const Wrapper = styled.div`
 export const AddModal = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [data, setData] = useState<Collection>();
-
   const handleFetch = async (collection: Collection) => {
     setData(collection);
     setIsConfirmOpen(true);
+    console.log(collection);
   };
 
   const handleConfirmClose = () => setIsConfirmOpen(false);

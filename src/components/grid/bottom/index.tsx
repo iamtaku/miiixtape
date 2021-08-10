@@ -73,10 +73,10 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
   return (
     <Wrapper className="main">
       <InnerGridTop data={data} isLoading={isLoading} />
-      {data.playlistInfo.type === "album" ? (
+      {data.playlistInfo?.type === "album" ? (
         <ItemContainer isAlbum>
           <Item>#</Item>
-          {data.playlistInfo.type === "album" && <Item>{` `}</Item>}
+          {data.playlistInfo?.type === "album" && <Item>{` `}</Item>}
           <Item>Title</Item>
           <Item>Artist</Item>
           <Item isRight>Length</Item>

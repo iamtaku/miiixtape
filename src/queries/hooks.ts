@@ -37,7 +37,7 @@ export const useGetSinglePlaylist = () => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
   return useQuery<CollectionType, AxiosError>(
-    ["collection", { id: params.playlistId, service: params.service }],
+    ["collection", { id: params.playlistId }],
     () =>
       getPlaylist({ id: params.playlistId, service: params.service }, userInfo),
     {
@@ -86,17 +86,14 @@ export const useGetAllPlaylists = () =>
 
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
-  const params = useParams<PlaylistParam>();
-  // const { dispatch } = useGlobalContext();
   return useMutation(postPlaylistItems, {
-    onSuccess: (data) => {
+    onMutate: ({ id, tracks }) => console.log(id, tracks),
+    onSuccess: (data, { id, tracks }) => {
       // change below so we don't refetch data!!
-      queryClient.invalidateQueries([
-        "collection",
-        { id: params.playlistId, service: params.service },
-      ]);
+      // queryClient.setQueryData('todos', old => old.map(todo => todo.id === context.optimisticTodo.id ? result : todo))
+      queryClient.invalidateQueries(["collection", { id }]);
       console.log(data);
-      // dispatch({ type: "ADD_TO_QUEUE", payload: data });
+      // dispatch({ type: "ADD_TO_QUEUE", payload: tracks });
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");

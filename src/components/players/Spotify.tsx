@@ -1,7 +1,10 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
+import { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import styled from "styled-components";
+import client from "../../queries/api/spotify/api";
+import { useGetUser } from "../../queries/hooks";
 import { fetchVolume, useGlobalContext } from "../../state/context";
 
 const Wrapper = styled.div`
@@ -10,17 +13,18 @@ const Wrapper = styled.div`
 
 interface SpotifyProps {
   setSpotify: Dispatch<SetStateAction<SpotifyPlayer | undefined>>;
-  uri?: string;
-  token: string;
 }
 
-export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
+export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
+  const { data: userInfo, dataUpdatedAt } = useGetUser();
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
   const queryClient = useQueryClient();
 
+  if (!userInfo) return null;
+  console.log(dataUpdatedAt);
+
   const handleCallback = (state: CallbackState) => {
-    // console.log(state);
     ref.current && setSpotify(ref.current);
     if (state.isInitializing) {
       dispatch({ type: "IS_LOADING", payload: {} });
@@ -28,6 +32,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
 
     if (state.isPlaying && !state.isInitializing && state.status === "READY") {
       dispatch({ type: "LOADING_FINISH", payload: {} });
+      client(userInfo?.access_token).setVolume(fetchVolume());
       dispatch({ type: "PLAY", payload: {} });
     }
     if (
@@ -57,14 +62,14 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify, token, uri }) => {
     }
   };
 
-  // console.log(fetchVolume() / 100);
+  console.log(userInfo.access_token);
 
   return (
     <Wrapper>
       <SpotifyPlayer
-        token={token}
+        token={userInfo.access_token}
         name="plaaaylist player"
-        uris={uri}
+        uris={state.player.currentSong?.uri}
         callback={handleCallback}
         play={
           state.player.isPlaying &&

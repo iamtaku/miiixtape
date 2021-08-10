@@ -67,12 +67,12 @@ const findService = (input: string): Service | false => {
 
 const fetchYoutube = async (uri: string): Promise<Collection> => {
   if (uri.includes("list")) {
-    //if playlist
     const stripped = stripYoutubePlaylistURI(uri);
     const playlist = await Youtube.getPlaylist(stripped);
     return playlist;
   }
   const fetchURI = stripYoutubeURI(uri);
+  debugger;
   const data = await Youtube.getVideo(fetchURI);
   const playlistInfo: PlaylistInfo = {
     id: "",
@@ -89,7 +89,7 @@ const fetchYoutube = async (uri: string): Promise<Collection> => {
 const fetchSpotify = async (
   uri: string,
   token: string
-): Promise<Collection | undefined> => {
+): Promise<Collection> => {
   if (uri.includes("playlist")) {
     const strippedURI = stripSpotifyPlaylistURI(uri);
     const data = await Spotify.getPlaylist(strippedURI, client(token));
@@ -132,19 +132,14 @@ const fetchSC = async (uri: string): Promise<Collection> => {
 };
 
 export const AddByUrl: React.FC<IAddByUrl> = ({ handleFetch }) => {
-  const history = useHistory();
   const { data: userInfo } = useGetUser();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const fetchURL = async (uri: string): Promise<Collection | undefined> => {
-    if (
-      !history.location.pathname.includes("plaaaylist") ||
-      userInfo === undefined
-    )
-      return;
+  const fetchURL = async (uri: string): Promise<Collection> => {
+    if (userInfo === undefined) throw Error();
     const service = findService(uri);
     switch (service) {
       case "youtube":
@@ -162,24 +157,9 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ handleFetch }) => {
     event.preventDefault();
     setIsLoading(true);
     setIsError(false);
-
     try {
       const data = await fetchURL(input);
       data && handleFetch(data);
-      // if (!data) throw Error();
-      // const tracks = Array.isArray(data) ? data : [data];
-      // if (data && tracks) {
-      //   mutation
-      //     .mutateAsync({ id, tracks })
-      //     .then((data) => {
-      //       console.log(data);
-      //       setIsLoading(false);
-      //       setIsSuccess(true);
-      //     })
-      //     .catch((err) => {
-      //       throw Error();
-      //     });
-      // }
     } catch (err) {
       console.error(err);
       setIsSuccess(false);

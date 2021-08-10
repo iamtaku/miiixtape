@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import { useIsCurrentTrack } from "../../helpers/hooks";
 import { fetchVolume, useGlobalContext } from "../../state/context";
-import { Song } from "../../types/types";
 
 const YoutubeWrapper = styled.div`
   width: 100px;
@@ -13,8 +12,6 @@ const YoutubeWrapper = styled.div`
 
 interface YoutubeProps {
   setYoutube: Dispatch<SetStateAction<any>>;
-  uri?: string;
-  track?: Song;
 }
 
 interface IYoutubeEvent {
@@ -22,7 +19,7 @@ interface IYoutubeEvent {
   data: number;
 }
 
-export const Youtube: React.FC<YoutubeProps> = ({ track, uri, setYoutube }) => {
+export const Youtube: React.FC<YoutubeProps> = ({ setYoutube }) => {
   const { dispatch, state } = useGlobalContext();
   const { isPlaying } = useIsCurrentTrack(state.player.currentSong);
   const ref = useRef<YouTube>(null);
@@ -94,7 +91,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ track, uri, setYoutube }) => {
   return (
     <YoutubeWrapper>
       <YouTube
-        videoId={uri}
+        videoId={state.player?.currentSong?.uri}
         onReady={handleOnReady}
         opts={opts}
         onEnd={handleOnEnd}

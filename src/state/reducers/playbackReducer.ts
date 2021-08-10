@@ -1,4 +1,4 @@
-import { Song, Tracks } from "../../types/types";
+import { Collection, Song, Tracks } from "../../types/types";
 import { player as initial } from "../context";
 import { ActionMap, PlaybackPayload, PlaybackType } from "../types";
 
@@ -109,7 +109,6 @@ const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
 const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
   return {
     ...state,
-    currentCollection: undefined,
     currentSong: track,
     isPlaying: true,
   };
@@ -127,7 +126,7 @@ const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
     nextSong,
     previousSong,
   };
-  if (!state.currentCollection?.tracks.includes(newTrack)) {
+  if (!state.currentCollection?.tracks?.includes(newTrack)) {
     newState.currentCollection = undefined;
   }
 
@@ -142,19 +141,21 @@ export const playbackReducer = (
   switch (action.type) {
     case "PLAY_COLLECTION":
       console.log(action.type);
-      if (action.payload.collection.tracks.length > 0) {
-        newState = {
-          ...initial,
-          currentCollection: action.payload.collection,
-          currentSong: action.payload.collection?.tracks[0],
-          nextSong: action.payload.collection?.tracks[1],
-          currentService: action.payload.collection.tracks[0].service,
-          nextService: action.payload.collection.tracks[1]?.service,
-          isPlaying: true,
-        };
-        return newState;
-      }
-      return state;
+      if (
+        !action.payload.collection.tracks ||
+        action.payload?.collection?.tracks?.length < 0
+      )
+        return state;
+      newState = {
+        ...initial,
+        currentCollection: action.payload.collection,
+        currentSong: action.payload.collection?.tracks[0],
+        nextSong: action.payload.collection?.tracks[1],
+        currentService: action.payload.collection?.tracks[0].service,
+        nextService: action.payload.collection?.tracks[1]?.service,
+        isPlaying: true,
+      };
+      return newState;
     case "PLAY_TRACK":
       return handlePlayTrack(state, action.payload.track);
     case "SET_TRACK":
@@ -194,11 +195,23 @@ export const playbackReducer = (
         ...initial,
       };
     case "DELETE_COLLECTION":
-      if (action.payload.id === state.currentCollection?.playlistInfo.id) {
+      if (action.payload.id === state.currentCollection?.playlistInfo?.id) {
         return { ...initial };
       }
       return state;
-
+    case "ADD_TO_QUEUE":
+      debugger;
+      if (!state.currentCollection?.tracks) return state;
+      const newCollection = {
+        ...state.currentCollection,
+        tracks: [...state.currentCollection.tracks, ...action.payload.tracks],
+      } as Collection;
+      newState = {
+        ...state,
+        currentCollection: { ...newCollection },
+      } as PlaybackType;
+      console.log(action.type, newState);
+      return newState;
     default:
       return state;
   }

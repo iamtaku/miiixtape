@@ -39,12 +39,12 @@ export type Collection = {
 export type PlaylistInfo = {
   id: string;
   name: string;
+  service: Service;
   owner?: string;
   external_urls?: string;
   img?: string;
   description?: string;
   type?: ContentType;
-  service: Service;
 };
 
 export interface PlaylistParam {

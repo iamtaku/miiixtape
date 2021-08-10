@@ -194,8 +194,7 @@ export const Confirm: React.FC<{
   );
   const [selectAll, setSelectAll] = useState(true);
   const mutation = usePostPlaylistItems();
-  const { state } = useGlobalContext();
-  console.log(data);
+  const { state, dispatch } = useGlobalContext();
 
   const handleClick = () => setIsOpen(!isOpen);
 
@@ -209,6 +208,7 @@ export const Confirm: React.FC<{
       .mutateAsync(payload)
       .then((data) => {
         console.log("items have been added ", data);
+        dispatch({ type: "ADD_TO_QUEUE", payload: { tracks: filtered } });
       })
       .catch((err) => {
         console.error(err);
@@ -246,8 +246,8 @@ export const Confirm: React.FC<{
     <>
       <AddContainer>
         <p>
-          Add {pluralize("track", filtered)} from {data?.playlistInfo.service}{" "}
-          {data.playlistInfo.type} {data?.playlistInfo.name}?
+          Add {pluralize("track", filtered)} from {data?.playlistInfo?.service}{" "}
+          {data?.playlistInfo?.type} {data?.playlistInfo?.name}?
         </p>
       </AddContainer>
       <OptionsContainer>
