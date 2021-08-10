@@ -10,7 +10,6 @@ const queryClient = new QueryClient({
       refetchInterval: 1000 * 60 * 59,
       refetchOnWindowFocus: false,
       refetchIntervalInBackground: true,
-      retry: false,
     },
   },
 });
@@ -21,7 +20,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <Routes />
-          <ReactQueryDevtoolsPanel />
+          {/* <ReactQueryDevtoolsPanel /> */}
         </AppProvider>
       </QueryClientProvider>
     </div>

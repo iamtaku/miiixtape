@@ -30,8 +30,6 @@ const CollectionWrapper = styled.div`
 `;
 
 export const Sidebar = () => {
-  // const { data: spotifyPlaylists, isLoading: spotifyLoading } =
-  //   useGetAllSpotifyPlaylist();
   const { data: playlists, isLoading, error } = useGetAllPlaylists();
 
   if (!isAuthenticated) {
@@ -49,10 +47,6 @@ export const Sidebar = () => {
         <h2>Loading...</h2>
       </Wrapper>
     );
-
-  // if (error?.response?.status === 401) {
-  //   return <h2>Unauthenticated sidebar</h2>;
-  // }
 
   return (
     <Wrapper>

@@ -71,7 +71,7 @@ export const AddbyExisting = () => {
       client(userInfo?.access_token)
     );
     mutation
-      .mutateAsync({ id: params.playlistId, tracks: playlist.tracks })
+      .mutateAsync({ id: params.id, tracks: playlist.tracks })
       .then(() => console.log("tracks added success"));
   };
 

@@ -5,7 +5,7 @@ import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
 import { Link as ReactLink } from "react-router-dom";
 import { fetchVolume, useGlobalContext } from "../../state/context";
-import { useGetUser } from "../../queries/hooks";
+import { useFetchSongCache, useGetUser } from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
 import { convertMilliSecondstoSeconds } from "../../helpers/utils";
 import { Seeker } from "./Seeker";
@@ -21,6 +21,7 @@ import {
   Shuffle,
   Volume as Mute,
 } from "./Buttons";
+import { useQueryClient } from "react-query";
 
 interface IControlsProps {
   youtube?: YouTubePlayer;
@@ -172,18 +173,11 @@ const Album: React.FC<{ song: Song | undefined }> = ({ song }) => {
 };
 
 const AlbumCover: React.FC<{ song: Song | undefined }> = ({ song }) => {
+  const queryClient = useQueryClient();
   if (!!!song) return null;
-  return (
-    <CoverImg src={song ? song.img : DefaultMusicImage} alt={song?.name} />
-  );
-};
-
-const usePrevious = (value: any) => {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
+  const songCache = queryClient.getQueryData<Song>(["song", song.id]);
+  const trackImg = songCache?.img ? songCache.img : DefaultMusicImage;
+  return <CoverImg src={trackImg} alt={song?.name} />;
 };
 
 export const Controls: React.FC<IControlsProps> = ({
@@ -192,6 +186,7 @@ export const Controls: React.FC<IControlsProps> = ({
   soundcloud,
 }) => {
   const { state, dispatch } = useGlobalContext();
+  const songCache = useFetchSongCache(state.player?.currentSong?.id);
   const { data: user } = useGetUser();
   const [duration, setDuration] = useState(0);
   const [value, setValue] = useState(0);
@@ -199,16 +194,20 @@ export const Controls: React.FC<IControlsProps> = ({
   const [prevVolume, setPrevVolume] = useState(volume);
 
   useEffect(() => {
+    setValue(0);
+  }, [state.player.currentSong]);
+
+  useEffect(() => {
     state.player.isFinished && setValue(0);
   }, [state.player.isFinished]);
 
   useEffect(() => {
-    state?.player?.currentSong?.time &&
-      setDuration(
-        convertMilliSecondstoSeconds(state?.player?.currentSong?.time)
-      );
-    setValue(0);
-  }, [state.player.currentSong]);
+    if (state?.player?.currentSong && songCache?.time) {
+      console.log(songCache);
+      setDuration((_prevState) => convertMilliSecondstoSeconds(songCache.time));
+      setValue(0);
+    }
+  }, [state.player.currentSong, songCache]);
 
   useEffect(() => {
     if (state.player.isLoading || !state.player.isPlaying) return;
@@ -312,8 +311,8 @@ export const Controls: React.FC<IControlsProps> = ({
       <AlbumCover song={state.player.currentSong} />
       <Middle>
         <SongInfo>
-          <Album song={state.player.currentSong} />
-          <Artists song={state.player.currentSong} />
+          <Album song={songCache} />
+          <Artists song={songCache} />
         </SongInfo>
         <PlaybackControlsContainer>
           <Back onClick={handlePrevious} />

@@ -1,9 +1,17 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import {
+  Draggable,
+  DraggableProvided,
+  DraggableRubric,
+  DraggableStateSnapshot,
+  Droppable,
+  DroppableProvided,
+} from "react-beautiful-dnd";
+import LazyLoad from "react-lazyload";
 import styled from "styled-components";
-import { Collection } from "../../../types/types";
+import { Collection, Song, Tracks } from "../../../types/types";
 import { InnerGridTop } from "../top";
-import { Track } from "./Track";
+import { Track, Track as TrackItem } from "./Track";
 
 interface IGridProps {
   data?: Collection;
@@ -13,16 +21,15 @@ interface IGridProps {
 
 const Wrapper = styled.div`
   height: 100%;
-  overflow: overlay;
+  max-width: 100%;
+  overflow: hidden;
   overflow-y: scroll;
 `;
 
 const TrackList = styled.div`
   padding: 4px;
-
-  li:last-child {
-    margin-bottom: 210px;
-  }
+  position: relative;
+  overflow-x: hidden;
 `;
 
 const ItemContainer = styled.li<{ isAlbum?: boolean }>`
@@ -51,6 +58,8 @@ const Item = styled.span<{ isRight?: boolean }>`
   }
 `;
 
+const Placeholder = () => <h1>Placeholder</h1>;
+
 export const InnerGridBottom: React.FC<IGridProps> = ({
   data,
   isLoading,
@@ -65,11 +74,11 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
   if (data?.tracks?.length === 0) {
     return (
       <Wrapper>
-        <InnerGridTop data={data} isLoading={isLoading} />
         <p>No tracks</p>
       </Wrapper>
     );
   }
+
   return (
     <Wrapper className="main">
       <InnerGridTop data={data} isLoading={isLoading} />
@@ -95,12 +104,50 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
         {(provided) => (
           <TrackList ref={provided.innerRef} {...provided.droppableProps}>
             {data?.tracks?.map((track, index) => (
-              <Track key={index.toString()} track={track} index={index} />
+              <LazyLoad
+                placeholder={<Placeholder />}
+                height={40}
+                scrollContainer={".main"}
+              >
+                <Track track={track} index={index} key={index.toString()} />
+              </LazyLoad>
             ))}
             {provided.placeholder}
           </TrackList>
         )}
       </Droppable>
+      {/* <Droppable
+        droppableId="droppable"
+        mode="virtual"
+        renderClone={(
+          provided: DraggableProvided,
+          snapshot: DraggableStateSnapshot,
+          rubric: DraggableRubric
+        ) => (
+          <TrackItem
+            provided={provided}
+            isDragging={snapshot.isDragging}
+            track={data.tracks[rubric.source.index]}
+            style={{ margin: 0 }}
+            index={rubric.source.index}
+          />
+        )}
+      >
+        {(droppableProvided: DroppableProvided) => (
+          <List
+            height={500}
+            itemCount={data.tracks.length}
+            itemSize={100}
+            width={300}
+            // you will want to use List.outerRef rather than List.innerRef as it has the correct height when the list is unpopulated
+            outerRef={droppableProvided.innerRef}
+            itemData={data.tracks}
+          >
+            {Row}
+          </List>
+        )}
+      </Droppable> */}
+      {/* </DragDropContext> */}
     </Wrapper>
   );
 };

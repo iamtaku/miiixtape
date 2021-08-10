@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Draggable } from "react-beautiful-dnd";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import Lazyload from "react-lazyload";
 import { FaEllipsisV, FaPause, FaPlay } from "react-icons/fa";
 
 import { Song } from "../../../types/types";
@@ -11,10 +12,16 @@ import { useGlobalContext } from "../../../state/context";
 import { TrackPlaybackButton } from "../../Buttons";
 import { useIsCurrentTrack } from "../../../helpers/hooks";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
+import { useGetTrack } from "../../../queries/hooks";
+import { BaseParams } from "../../../queries/types";
 
 interface TrackProps {
   track: Song;
   index: number;
+  provided?: DraggableProvided;
+  isDragging?: boolean;
+  isGroupedOver?: boolean;
+  style?: Object;
 }
 
 const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
@@ -141,12 +148,24 @@ const MenuButton: React.FC<{ track: Song }> = ({ track }) => {
   );
 };
 
-export const Track: React.FC<TrackProps> = ({ track, index }) => {
+const Placeholder = () => <h3>Placeholder...</h3>;
+
+export const Track: React.FC<TrackProps> = ({
+  track,
+  index,
+  provided,
+  isDragging,
+}) => {
   const location = useLocation();
   const [isActive, setIsActive] = useState(false);
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
-  const trackImg = track.img ? track.img : DefaultMusicImage;
+  const params = useParams<BaseParams>();
+  const { data } = useGetTrack(track, params.id);
+
+  const trackImg = data?.img ? data.img : DefaultMusicImage;
+
+  if (!data) return null;
 
   return (
     <Draggable draggableId={track.id} index={index}>
@@ -168,7 +187,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
             <div className="index">{index + 1}</div>
             <PlaybackButton
               className="play"
-              data={track}
+              data={data}
               isActive={isActive || isCurrent}
             >
               {isPlaying && isCurrent ? <FaPause /> : <FaPlay />}
@@ -179,20 +198,20 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
           ) : (
             <LazyLoadImage
               src={trackImg}
-              alt={track.album?.name}
+              alt={data.album?.name}
               width="30px"
               height="30px"
               style={{ justifySelf: "center" }}
               placeholderSrc={DefaultMusicImage}
             />
           )}
-          <Item>{track.name}</Item>
+          <Item>{data.name}</Item>
           <Item>
-            {track.artists
-              ? track.artists?.map((artist, index) => (
+            {data.artists
+              ? data.artists?.map((artist, index) => (
                   <Link
                     key={index}
-                    to={`/app/artist/${track.service}/${artist.uri}`}
+                    to={`/app/artist/${data.service}/${artist.uri}`}
                   >
                     {index > 0 && ", "}
                     {artist.name}
@@ -200,16 +219,16 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
                 ))
               : "-"}
           </Item>
-          {isAlbum ? null : track.album ? (
+          {isAlbum ? null : data.album ? (
             <Item>
-              <Link to={`/app/album/${track.service}/${track.album.uri}`}>
-                {track.album.name}
+              <Link to={`/app/album/${data.service}/${data.album.uri}`}>
+                {data.album.name}
               </Link>
             </Item>
           ) : (
             "-"
           )}
-          <Item isRight>{track.time ? timeConversion(track.time) : "-"}</Item>
+          <Item isRight>{data.time ? timeConversion(data.time) : "-"}</Item>
           <Item isRight style={{ overflow: "initial" }}>
             <MenuButton track={track} />
           </Item>

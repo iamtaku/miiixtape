@@ -24,19 +24,8 @@ const Container = styled.div`
 `;
 
 const List = styled.ul<{ isCurrent?: boolean }>`
-  /* padding: 8px; */
-  /* margin: 8px 0; */
   margin-bottom: 8px;
 `;
-
-// const Icon = styled.div`
-//   border: 1px solid var(--gray);
-//   width: 20px;
-//   height: 20px;
-//   border-radius: 50px;
-//   background: #353535;
-//   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-// `;
 
 export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   data,

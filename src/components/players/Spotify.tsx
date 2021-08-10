@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
-import { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import styled from "styled-components";
@@ -16,13 +15,12 @@ interface SpotifyProps {
 }
 
 export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
-  const { data: userInfo, dataUpdatedAt } = useGetUser();
+  const { data: userInfo } = useGetUser();
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<SpotifyPlayer>(null);
   const queryClient = useQueryClient();
 
   if (!userInfo) return null;
-  console.log(dataUpdatedAt);
 
   const handleCallback = (state: CallbackState) => {
     ref.current && setSpotify(ref.current);
@@ -61,8 +59,6 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
       state.needsUpdate = true;
     }
   };
-
-  console.log(userInfo.access_token);
 
   return (
     <Wrapper>

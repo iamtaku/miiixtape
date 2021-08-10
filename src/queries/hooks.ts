@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { UserAttributes } from "./types";
+import { BaseParams, UserAttributes } from "./types";
 import {
   Artist,
   Collection as CollectionType,
   PlaylistParam,
+  Song,
 } from "../types/types";
 import { useParams } from "react-router-dom";
 import {
@@ -13,7 +14,6 @@ import {
   getUser,
   postPlaylist,
   postPlaylistItems,
-  AlbumParam,
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
@@ -21,6 +21,7 @@ import {
   deletePlaylist,
 } from "./api/";
 import { AxiosError } from "axios";
+import { generatePlaylistTracks as getTrackInfo } from "./api/miiixtape/generatePlaylistData";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
@@ -37,9 +38,8 @@ export const useGetSinglePlaylist = () => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
   return useQuery<CollectionType, AxiosError>(
-    ["collection", { id: params.playlistId }],
-    () =>
-      getPlaylist({ id: params.playlistId, service: params.service }, userInfo),
+    ["collection", params.id],
+    () => getPlaylist({ id: params.id, service: params.service }, userInfo),
     {
       enabled: !!userInfo,
       staleTime: Infinity,
@@ -54,14 +54,14 @@ export const useGetUser = () => {
 };
 
 export const useGetAlbum = () => {
-  const params = useParams<AlbumParam>();
+  const params = useParams<BaseParams>();
   const { data: userInfo } = useGetUser();
 
   return useQuery<CollectionType, AxiosError>(
-    ["collection", { id: params.albumId, service: params.service }],
+    ["collection", { id: params.id, service: params.service }],
     () => getAlbum(params, userInfo),
     {
-      enabled: !!userInfo && !!params.albumId,
+      enabled: !!userInfo && !!params.id,
     }
   );
 };
@@ -81,6 +81,22 @@ export const useGetSpotifyUser = () => {
   });
 };
 
+export const useGetTrack = (song: Song, collectionId: string) => {
+  const { data: userInfo } = useGetUser();
+  const queryClient = useQueryClient();
+  return useQuery<Song, AxiosError>(
+    ["song", song.id],
+    () => getTrackInfo(song, userInfo?.access_token),
+    {
+      enabled: !!userInfo,
+      initialData: () =>
+        queryClient
+          .getQueryData<CollectionType>(["collection", collectionId])
+          ?.tracks.find((track) => track.id === song.id),
+    }
+  );
+};
+
 export const useGetAllPlaylists = () =>
   useQuery<CollectionType[], AxiosError>("playlistAll", Playlist.getPlaylists);
 
@@ -91,9 +107,7 @@ export const usePostPlaylistItems = () => {
     onSuccess: (data, { id, tracks }) => {
       // change below so we don't refetch data!!
       // queryClient.setQueryData('todos', old => old.map(todo => todo.id === context.optimisticTodo.id ? result : todo))
-      queryClient.invalidateQueries(["collection", { id }]);
-      console.log(data);
-      // dispatch({ type: "ADD_TO_QUEUE", payload: tracks });
+      queryClient.invalidateQueries(["collection", id]);
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");
@@ -114,11 +128,11 @@ export const usePostPlaylist = () => {
 export const useDeletePlaylist = () => {
   const params = useParams<PlaylistParam>();
   const queryClient = useQueryClient();
-  return useMutation(() => deletePlaylist(params.playlistId), {
+  return useMutation(() => deletePlaylist(params.id), {
     onSuccess: (data, error, editedValue) => {
       queryClient.removeQueries([
         "collection",
-        { id: params.playlistId, service: params.service },
+        { id: params.id, service: params.service },
       ]);
       queryClient.invalidateQueries("playlistAll");
     },
@@ -127,4 +141,11 @@ export const useDeletePlaylist = () => {
       throw new Error(`Error: ${error}`);
     },
   });
+};
+
+export const useFetchSongCache = (id?: string) => {
+  const queryClient = useQueryClient();
+  if (!!!id) return undefined;
+  const songCache = queryClient.getQueryData<Song>(["song", id]);
+  return songCache;
 };

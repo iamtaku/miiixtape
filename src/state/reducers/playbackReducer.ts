@@ -200,18 +200,18 @@ export const playbackReducer = (
       }
       return state;
     case "ADD_TO_QUEUE":
-      debugger;
       if (!state.currentCollection?.tracks) return state;
-      const newCollection = {
+      let newCollection = {
         ...state.currentCollection,
         tracks: [...state.currentCollection.tracks, ...action.payload.tracks],
-      } as Collection;
+      };
       newState = {
         ...state,
         currentCollection: { ...newCollection },
       } as PlaybackType;
       console.log(action.type, newState);
       return newState;
+
     default:
       return state;
   }

@@ -208,7 +208,7 @@ export const Confirm: React.FC<{
       .mutateAsync(payload)
       .then((data) => {
         console.log("items have been added ", data);
-        dispatch({ type: "ADD_TO_QUEUE", payload: { tracks: filtered } });
+        // dispatch({ type: "ADD_TO_QUEUE", payload: { tracks: mapYoutubeTrackstoTrack() } });
       })
       .catch((err) => {
         console.error(err);

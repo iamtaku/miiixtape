@@ -1,4 +1,9 @@
 import { Service, Song } from "../types/types";
+export interface BaseParams {
+  service: string;
+  id: string;
+}
+
 export interface ServerResponse {
   data: UserData;
 }

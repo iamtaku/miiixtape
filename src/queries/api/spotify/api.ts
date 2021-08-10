@@ -7,7 +7,7 @@ import {
   mapSpotifyToPlaylist,
   mapSpotifyTrackstoTracks,
 } from "./mapping";
-import { UserAttributes } from "../../types";
+import { BaseParams, UserAttributes } from "../../types";
 import { Artist, Service, Collection, Tracks } from "../../../types/types";
 
 export const getSpotifyPlaylists = async (
@@ -29,20 +29,15 @@ export const getSpotifyInfo = async (userInfo?: UserAttributes) => {
   }
 };
 
-export interface AlbumParam {
-  service: Service;
-  albumId: string;
-}
-
 export const getAlbum = async (
-  params: AlbumParam,
+  params: BaseParams,
   userInfo?: UserAttributes
 ): Promise<Collection> => {
   const token = window.localStorage.getItem("token");
   if (!token || !userInfo) {
     throw new Error("auth error");
   }
-  return await Spotify.getAlbum(params.albumId, client(userInfo.access_token));
+  return await Spotify.getAlbum(params.id, client(userInfo.access_token));
 };
 export const getSingleSpotifyPlaylist = async (
   playlistId: string,

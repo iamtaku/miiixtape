@@ -1,16 +1,11 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { InnerGridBottom } from "./grid/bottom/index";
-// import { useQueryClient } from "react-query";
 import { useGetAlbum } from "../queries/hooks";
+import { InnerGridTop } from "./grid/top";
 
-export const Album = ({ id }: { id?: string }) => {
+export const Album = () => {
   const { data, isLoading, error, isError } = useGetAlbum();
-  // const test = queryClient.getQueryData<Collection>([
-  //   "playlist",
-  //   { id: data?.playlistInfo.id, service: "spotify" },
-  // ]);
-  // console.log(test);
 
   if (isError) {
     console.error(error);
@@ -18,6 +13,9 @@ export const Album = ({ id }: { id?: string }) => {
   }
 
   return (
-    <InnerGridBottom data={data} isLoading={isLoading} isError={isError} />
+    <>
+      <InnerGridTop data={data} isLoading={isLoading} />
+      <InnerGridBottom data={data} isLoading={isLoading} isError={isError} />
+    </>
   );
 };

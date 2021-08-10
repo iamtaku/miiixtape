@@ -48,7 +48,7 @@ export type PlaylistInfo = {
 };
 
 export interface PlaylistParam {
-  playlistId: string;
+  id: string;
   service: Service;
 }
 

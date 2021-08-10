@@ -49,8 +49,8 @@ export const parseYoutubeTime = (duration: string): number => {
   return seconds * 1000;
 };
 
-export const convertMilliSecondstoSeconds = (duration: number) =>
-  duration / 1000;
+export const convertMilliSecondstoSeconds = (duration?: number) =>
+  duration ? duration / 1000 : 0;
 
 export const isAuthenticated = (): boolean => !!localStorage.getItem("token");
 

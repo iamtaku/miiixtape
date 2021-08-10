@@ -114,7 +114,7 @@ const DeleteButton = () => {
   const mutation = useDeletePlaylist();
   const history = useHistory();
   const { dispatch } = useGlobalContext();
-  const { playlistId: id } = useParams<PlaylistParam>();
+  const { id } = useParams<PlaylistParam>();
   const handleClick = async () => {
     mutation
       .mutateAsync()
@@ -161,7 +161,7 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
   const { data } = useGetSinglePlaylist();
   const { data: userInfo } = useGetUser();
   const isAuthorized = () => data?.playlistInfo.owner === userInfo?.user_id;
-  let { playlistId: id } = useParams<PlaylistParam>();
+  let { id } = useParams<PlaylistParam>();
 
   const handleAddClick = () => {
     dispatch({
