@@ -3,9 +3,13 @@ import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
-import { Link as ReactLink } from "react-router-dom";
+import { Link as ReactLink, useParams } from "react-router-dom";
 import { fetchVolume, useGlobalContext } from "../../state/context";
-import { useFetchSongCache, useGetUser } from "../../queries/hooks";
+import {
+  useFetchSongCache,
+  useGetTrack,
+  useGetUser,
+} from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
 import { convertMilliSecondstoSeconds } from "../../helpers/utils";
 import { Seeker } from "./Seeker";
@@ -22,6 +26,7 @@ import {
   Volume as Mute,
 } from "./Buttons";
 import { useQueryClient } from "react-query";
+import { BaseParams } from "../../queries/types";
 
 interface IControlsProps {
   youtube?: YouTubePlayer;
@@ -172,11 +177,10 @@ const Album: React.FC<{ song: Song | undefined }> = ({ song }) => {
   );
 };
 
-const AlbumCover: React.FC<{ song: Song | undefined }> = ({ song }) => {
-  const queryClient = useQueryClient();
-  if (!!!song) return null;
-  const songCache = queryClient.getQueryData<Song>(["song", song.id]);
-  const trackImg = songCache?.img ? songCache.img : DefaultMusicImage;
+const AlbumCover: React.FC<{ song: Song }> = ({ song }) => {
+  const params = useParams<BaseParams>();
+  const { data } = useGetTrack(song, params.id);
+  const trackImg = data?.img ? data.img : DefaultMusicImage;
   return <CoverImg src={trackImg} alt={song?.name} />;
 };
 
@@ -296,6 +300,8 @@ export const Controls: React.FC<IControlsProps> = ({
       updateVolume(newVolume);
     }
   };
+
+  if (!state.player?.currentSong) return null;
 
   return (
     <Container>

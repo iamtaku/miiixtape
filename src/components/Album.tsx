@@ -14,7 +14,6 @@ export const Album = () => {
 
   return (
     <>
-      <InnerGridTop data={data} isLoading={isLoading} />
       <InnerGridBottom data={data} isLoading={isLoading} isError={isError} />
     </>
   );

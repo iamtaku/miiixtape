@@ -19,6 +19,7 @@ import {
   getSpotifyPlaylists,
   Playlist,
   deletePlaylist,
+  deletePlaylistItem,
 } from "./api/";
 import { AxiosError } from "axios";
 import { generatePlaylistTracks as getTrackInfo } from "./api/miiixtape/generatePlaylistData";
@@ -42,7 +43,6 @@ export const useGetSinglePlaylist = () => {
     () => getPlaylist({ id: params.id, service: params.service }, userInfo),
     {
       enabled: !!userInfo,
-      staleTime: Infinity,
       refetchInterval: false,
       retry: 3,
     }
@@ -77,7 +77,6 @@ export const useGetSpotifyUser = () => {
   const { data: userInfo } = useGetUser();
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,
-    retry: true,
   });
 };
 
@@ -89,6 +88,7 @@ export const useGetTrack = (song: Song, collectionId: string) => {
     () => getTrackInfo(song, userInfo?.access_token),
     {
       enabled: !!userInfo,
+      cacheTime: Infinity,
       initialData: () =>
         queryClient
           .getQueryData<CollectionType>(["collection", collectionId])
@@ -139,6 +139,17 @@ export const useDeletePlaylist = () => {
     onError: (error) => {
       console.error("no joy for deletePlaylistIt");
       throw new Error(`Error: ${error}`);
+    },
+  });
+};
+
+export const useDeletePlaylistItem = () => {
+  const params = useParams<PlaylistParam>();
+  const queryClient = useQueryClient();
+  return useMutation(deletePlaylistItem, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["collection", params.id]);
+      console.log(params.id);
     },
   });
 };

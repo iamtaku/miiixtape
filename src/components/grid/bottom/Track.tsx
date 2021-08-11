@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import Lazyload from "react-lazyload";
-import { FaEllipsisV, FaPause, FaPlay } from "react-icons/fa";
+import LazyLoad from "react-lazyload";
+import { FaEllipsisV, FaPause, FaPlay, FaTrash } from "react-icons/fa";
+import { FiExternalLink } from "react-icons/fi";
 
 import { Song } from "../../../types/types";
 import { timeConversion } from "../../../helpers/utils";
@@ -12,8 +12,13 @@ import { useGlobalContext } from "../../../state/context";
 import { TrackPlaybackButton } from "../../Buttons";
 import { useIsCurrentTrack } from "../../../helpers/hooks";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
-import { useGetTrack } from "../../../queries/hooks";
+import {
+  useDeletePlaylistItem,
+  useFetchSongCache,
+  useGetTrack,
+} from "../../../queries/hooks";
 import { BaseParams } from "../../../queries/types";
+import { TitleAlbum, IndexPlayButton } from "./Items";
 
 interface TrackProps {
   track: Song;
@@ -24,12 +29,17 @@ interface TrackProps {
   style?: Object;
 }
 
-const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
+export const ItemContainer = styled.li`
   display: grid;
-  grid-template-columns: ${(props) =>
-    props.isAlbum
-      ? "20px 50px 2.5fr 1fr 0.5fr 0.2fr "
-      : "20px 50px 2fr 1fr 1fr 0.5fr 0.2fr"};
+  grid-column-gap: 8px;
+  grid-template-columns: 20px 50px 3fr 2fr 0.5fr 0.2fr;
+  padding: 4px 12px;
+  align-items: center;
+  border-radius: 8px;
+`;
+
+const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
+  display: grid;
   grid-column-gap: 8px;
   padding: 0px 12px;
   align-items: center;
@@ -63,6 +73,12 @@ const Container = styled.li<{ isAlbum?: boolean; isCurrent?: boolean }>`
   button {
     ${(props) => (props.isCurrent ? "svg {color: var(--white)}" : null)}
   }
+`;
+
+const DeleteButton = styled.button`
+  background: none;
+  border: none;
+  color: var(--red);
 `;
 
 const Item = styled.span<{
@@ -107,6 +123,8 @@ const SubMenuContainer = styled.div<ISubMenu>`
   right: 12px;
   transform: ${(props) =>
     props.offsetXWidth ? `translateX(-${props.offsetXWidth}px)` : "initial"};
+  display: flex;
+  flex-direction: column;
 `;
 
 interface ISub extends ISubMenu, HTMLDivElement {}
@@ -129,10 +147,35 @@ const SubMenu: React.FC<SubMenuProps> = ({
 
 const MenuButton: React.FC<{ track: Song }> = ({ track }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const { dispatch, state } = useGlobalContext();
+  const mutation = useDeletePlaylistItem();
+  const songCache = useFetchSongCache(track.id);
   const ref = useRef<HTMLDivElement>(null);
   const handleClick = () => {
     setIsOptionsOpen(!isOptionsOpen);
   };
+
+  const handleDeletePlaylistItem = () => {
+    mutation.mutateAsync(track.id).then(() => {
+      dispatch({ type: "DELETE_ITEM", payload: { id: track.id } });
+      setIsOptionsOpen(false);
+      if (state.player?.currentSong?.id === track.id) {
+        dispatch({
+          type: "SONG_END",
+          payload: {},
+        });
+        dispatch({
+          type: "SET_NEXT",
+          payload: {},
+        });
+        dispatch({
+          type: "PLAY",
+          payload: {},
+        });
+      }
+    });
+  };
+
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <OptionsButton className="options" onClick={handleClick}>
@@ -140,15 +183,19 @@ const MenuButton: React.FC<{ track: Song }> = ({ track }) => {
       </OptionsButton>
       {isOptionsOpen && (
         <SubMenu>
-          <p>Link</p>
-          <p>delete</p>
+          <a href={songCache?.href} target="_blank" rel="noreferrer">
+            <FiExternalLink />
+          </a>
+          <DeleteButton onClick={handleDeletePlaylistItem}>
+            <FaTrash />
+          </DeleteButton>
         </SubMenu>
       )}
     </div>
   );
 };
 
-const Placeholder = () => <h3>Placeholder...</h3>;
+const Placeholder = () => <h1>Placeholder</h1>;
 
 export const Track: React.FC<TrackProps> = ({
   track,
@@ -170,69 +217,63 @@ export const Track: React.FC<TrackProps> = ({
   return (
     <Draggable draggableId={track.id} index={index}>
       {(provided) => (
-        <Container
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          isAlbum={isAlbum}
-          onMouseEnter={(e) => {
-            setIsActive(true);
-          }}
-          onMouseLeave={(e) => {
-            setIsActive(false);
-          }}
-          isCurrent={isCurrent}
+        <LazyLoad
+          placeholder={<Placeholder />}
+          height={40}
+          scrollContainer={".main"}
+          key={index.toString()}
         >
-          <Item className="" isCenter>
-            <div className="index">{index + 1}</div>
-            <PlaybackButton
-              className="play"
-              data={data}
-              isActive={isActive || isCurrent}
-            >
-              {isPlaying && isCurrent ? <FaPause /> : <FaPlay />}
-            </PlaybackButton>
-          </Item>
-          {isAlbum ? (
-            <Item>{` `}</Item>
-          ) : (
-            <LazyLoadImage
-              src={trackImg}
-              alt={data.album?.name}
-              width="30px"
-              height="30px"
-              style={{ justifySelf: "center" }}
-              placeholderSrc={DefaultMusicImage}
-            />
-          )}
-          <Item>{data.name}</Item>
-          <Item>
-            {data.artists
-              ? data.artists?.map((artist, index) => (
-                  <Link
-                    key={index}
-                    to={`/app/artist/${data.service}/${artist.uri}`}
-                  >
-                    {index > 0 && ", "}
-                    {artist.name}
-                  </Link>
-                ))
-              : "-"}
-          </Item>
-          {isAlbum ? null : data.album ? (
-            <Item>
-              <Link to={`/app/album/${data.service}/${data.album.uri}`}>
-                {data.album.name}
-              </Link>
+          <Container
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onMouseEnter={(e) => {
+              setIsActive(true);
+            }}
+            onMouseLeave={(e) => {
+              setIsActive(false);
+            }}
+            isCurrent={isCurrent}
+          >
+            <Item className="" isCenter>
+              <IndexPlayButton
+                index={index}
+                isPlaying={isPlaying}
+                isCurrent={isCurrent}
+                data
+              />
             </Item>
-          ) : (
-            "-"
-          )}
-          <Item isRight>{data.time ? timeConversion(data.time) : "-"}</Item>
-          <Item isRight style={{ overflow: "initial" }}>
-            <MenuButton track={track} />
-          </Item>
-        </Container>
+            {isAlbum ? (
+              <Item>{` `}</Item>
+            ) : (
+              <img
+                src={trackImg}
+                alt={data.album?.name}
+                width="30px"
+                height="30px"
+                style={{ justifySelf: "center" }}
+              />
+            )}
+            <TitleAlbum data={data} isAlbum={isAlbum} />
+            <Item>
+              {data.artists
+                ? data.artists?.map((artist, index) => (
+                    <Link
+                      key={index}
+                      to={`/app/artist/${data.service}/${artist.uri}`}
+                    >
+                      {index > 0 && ", "}
+                      {artist.name}
+                    </Link>
+                  ))
+                : "-"}
+            </Item>
+            <Item isRight>{data.time ? timeConversion(data.time) : "-"}</Item>
+            <Item isRight style={{ overflow: "initial" }}>
+              <MenuButton track={track} />
+            </Item>
+          </Container>
+        </LazyLoad>
       )}
     </Draggable>
   );

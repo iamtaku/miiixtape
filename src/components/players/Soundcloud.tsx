@@ -7,7 +7,7 @@ interface IProps {
   setSoundCloud: Dispatch<SetStateAction<ReactHowler | undefined>>;
   uri?: string;
 }
-export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
+export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<ReactHowler>(null);
 
@@ -15,9 +15,9 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
     console.log("soundcloud  went wrong");
   };
 
-  // const handleOnPause = () => {
-  // dispatch({ type: "PAUSE_CURRENT", payload: {} });
-  // };
+  const handleOnPause = () => {
+    dispatch({ type: "PAUSE_CURRENT", payload: {} });
+  };
 
   const handleOnPlay = () => dispatch({ type: "LOADING_FINISH", payload: {} });
 
@@ -46,10 +46,10 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
   return (
     <div>
       <ReactHowler
-        src={`https://api.soundcloud.com/tracks/${uri}/stream?client_id=${KEY}`}
+        src={`https://api.soundcloud.com/tracks/${state.player.currentSong?.uri}/stream?client_id=${KEY}`}
         playing={state.player.isPlaying}
         onLoadError={handleOnLoadError}
-        // onPause={handleOnPause}
+        onPause={handleOnPause}
         onLoad={handleOnLoad}
         onPlay={handleOnPlay}
         preload={true}

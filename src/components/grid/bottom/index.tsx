@@ -1,17 +1,9 @@
 import React from "react";
-import {
-  Draggable,
-  DraggableProvided,
-  DraggableRubric,
-  DraggableStateSnapshot,
-  Droppable,
-  DroppableProvided,
-} from "react-beautiful-dnd";
-import LazyLoad from "react-lazyload";
+import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { Collection, Song, Tracks } from "../../../types/types";
+import { Collection } from "../../../types/types";
 import { InnerGridTop } from "../top";
-import { Track, Track as TrackItem } from "./Track";
+import { Track, ItemContainer as ItemC } from "./Track";
 
 interface IGridProps {
   data?: Collection;
@@ -32,16 +24,8 @@ const TrackList = styled.div`
   overflow-x: hidden;
 `;
 
-const ItemContainer = styled.li<{ isAlbum?: boolean }>`
-  display: grid;
-  grid-template-columns: ${(props) =>
-    props.isAlbum
-      ? "20px 50px 2.5fr 1fr 0.5fr 0.2fr "
-      : "15px 50px 2fr 1fr 1fr 0.5fr 0.2fr"};
-  grid-column-gap: 8px;
-  padding: 4px 12px;
-  align-items: center;
-  border-radius: 8px;
+const ItemContainer = styled(ItemC)`
+  opacity: 0.8;
 `;
 
 const Item = styled.span<{ isRight?: boolean }>`
@@ -57,8 +41,6 @@ const Item = styled.span<{ isRight?: boolean }>`
     text-decoration: underline;
   }
 `;
-
-const Placeholder = () => <h1>Placeholder</h1>;
 
 export const InnerGridBottom: React.FC<IGridProps> = ({
   data,
@@ -83,7 +65,7 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
     <Wrapper className="main">
       <InnerGridTop data={data} isLoading={isLoading} />
       {data.playlistInfo?.type === "album" ? (
-        <ItemContainer isAlbum>
+        <ItemContainer>
           <Item>#</Item>
           {data.playlistInfo?.type === "album" && <Item>{` `}</Item>}
           <Item>Title</Item>
@@ -96,7 +78,6 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
           <Item>{` `}</Item>
           <Item>Title</Item>
           <Item>Artist</Item>
-          <Item>Album</Item>
           <Item isRight>Length</Item>
         </ItemContainer>
       )}
@@ -104,50 +85,12 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
         {(provided) => (
           <TrackList ref={provided.innerRef} {...provided.droppableProps}>
             {data?.tracks?.map((track, index) => (
-              <LazyLoad
-                placeholder={<Placeholder />}
-                height={40}
-                scrollContainer={".main"}
-              >
-                <Track track={track} index={index} key={index.toString()} />
-              </LazyLoad>
+              <Track track={track} index={index} key={index.toString()} />
             ))}
             {provided.placeholder}
           </TrackList>
         )}
       </Droppable>
-      {/* <Droppable
-        droppableId="droppable"
-        mode="virtual"
-        renderClone={(
-          provided: DraggableProvided,
-          snapshot: DraggableStateSnapshot,
-          rubric: DraggableRubric
-        ) => (
-          <TrackItem
-            provided={provided}
-            isDragging={snapshot.isDragging}
-            track={data.tracks[rubric.source.index]}
-            style={{ margin: 0 }}
-            index={rubric.source.index}
-          />
-        )}
-      >
-        {(droppableProvided: DroppableProvided) => (
-          <List
-            height={500}
-            itemCount={data.tracks.length}
-            itemSize={100}
-            width={300}
-            // you will want to use List.outerRef rather than List.innerRef as it has the correct height when the list is unpopulated
-            outerRef={droppableProvided.innerRef}
-            itemData={data.tracks}
-          >
-            {Row}
-          </List>
-        )}
-      </Droppable> */}
-      {/* </DragDropContext> */}
     </Wrapper>
   );
 };

@@ -34,6 +34,9 @@ export type PlaybackPayload = {
   ADD_TO_QUEUE: {
     tracks: Tracks;
   };
+  DELETE_ITEM: {
+    id: string;
+  };
 };
 
 export type PlaybackType = {

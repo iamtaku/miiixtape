@@ -1,46 +1,26 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { generateServices, mapPlaylistItemToTrack } from "./mappingHelpers";
+import { mapPlaylistItemToTrack } from "./mappingHelpers";
 import { stripURI } from "../../../helpers/stripURI";
-import {
-  Collection,
-  PlaylistInfo,
-  Service,
-  Song,
-  Tracks,
-} from "../../../types/types";
+import { Collection, PlaylistInfo, Service, Song } from "../../../types/types";
 import { SoundCloud } from "..";
-import { PlaylistItemItem, ServerPlaylist } from "../../types";
+import { ServerPlaylist } from "../../types";
 import client, { Spotify } from "../spotify/api";
 import { Youtube } from "../youtube/api";
-
-const filterTracks = (data: PlaylistItemItem[], service: Service) =>
-  data.filter((item) => item.attributes.song.service === service);
-
-const removeDuplicate = (data: any): string[] => Array.from(new Set(data));
 
 const fetchSpotifyTracks = async (
   data: Song,
   client: SpotifyWebApi.SpotifyWebApiJs
 ): Promise<Song> => {
-  // const spotifyTracks = removeDuplicate(
-  // filterTracks(data, "spotify").map((track) =>
-  // stripURI(track.attributes.song.uri)
-  // )
-  // ); //fetch them 50 at a time
   const tracks = await Spotify.getTracks([stripURI(data.uri)], client);
   return tracks[0];
 };
 
 const fetchSCTracks = async (data: Song): Promise<Song> => {
-  // const soundcloudTracks = filterTracks(data, "soundcloud");
-  // const uris = soundcloudTracks.map((item) => item.attributes.song.uri);
   const res = await SoundCloud.getTrack(data.uri);
   return res;
 };
 
 const fetchYoutubeTracks = async (data: Song): Promise<Song> => {
-  // const youtubeTracks = filterTracks(data, "youtube");
-  // const uris = youtubeTracks.map((item) => item.attributes.song.uri).join(",");
   const res = await Youtube.getVideo(data.uri);
   return res[0];
 };
@@ -66,14 +46,6 @@ const fetchTracks = async (
   data: Song,
   client: SpotifyWebApi.SpotifyWebApiJs
 ) => {
-  // const tempTracks = data.attributes.song);
-  // const services = generateServices(tempTracks);
-  // const results: Promise<Tracks | undefined>[] = [];
-  // services.forEach((service) => {
-  // results.push(fetchAppropriateService(service, data, client));
-  // });
-
-  // return await Promise.all(results);
   return fetchAppropriateService(data.service, data, client);
 };
 

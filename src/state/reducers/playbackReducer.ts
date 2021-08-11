@@ -63,12 +63,7 @@ const handlePlayPrevious = (state: PlaybackType) => {
 };
 
 const handleSetNext = (state: PlaybackType) => {
-  console.group("setting next...");
-  console.log("before update,", state);
-
   if (!state.nextSong) {
-    console.log("no next song", state);
-    console.groupEnd();
     return state;
   }
 
@@ -104,8 +99,6 @@ const handlePlay = (state: PlaybackType) => {
   return { ...state, isPlaying: true, isFinished: false };
 };
 
-const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
-
 const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
   return {
     ...state,
@@ -138,6 +131,7 @@ export const playbackReducer = (
   action: PlaybackActions
 ) => {
   let newState: PlaybackType;
+  let newCollection: Collection;
   switch (action.type) {
     case "PLAY_COLLECTION":
       console.log(action.type);
@@ -176,7 +170,7 @@ export const playbackReducer = (
       return handlePlay(state);
     case "PAUSE_CURRENT":
       console.log(action.type);
-      return handlePause(state);
+      return { ...state, isPlaying: false };
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);
     case "IS_LOADING":
@@ -201,7 +195,7 @@ export const playbackReducer = (
       return state;
     case "ADD_TO_QUEUE":
       if (!state.currentCollection?.tracks) return state;
-      let newCollection = {
+      newCollection = {
         ...state.currentCollection,
         tracks: [...state.currentCollection.tracks, ...action.payload.tracks],
       };
@@ -211,6 +205,20 @@ export const playbackReducer = (
       } as PlaybackType;
       console.log(action.type, newState);
       return newState;
+    case "DELETE_ITEM":
+      if (!state.currentCollection?.tracks) return state;
+
+      newCollection = {
+        ...state.currentCollection,
+        tracks: state.currentCollection?.tracks.filter(
+          (track) => track.id !== action.payload.id
+        ),
+      };
+      console.log(action.type, newCollection);
+      return {
+        ...state,
+        newCollection,
+      };
 
     default:
       return state;

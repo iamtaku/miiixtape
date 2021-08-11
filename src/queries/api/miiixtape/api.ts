@@ -85,6 +85,10 @@ export const postPlaylist = async (name: string) => {
   return await Playlist.createPlaylist(payload);
 };
 
+export const deletePlaylistItem = async (id: string) => {
+  return await Playlist.deletePlaylistItem(id);
+};
+
 export const deletePlaylist = async (id: string) => {
   return await Playlist.deletePlaylist(id);
 };

@@ -27,9 +27,9 @@ interface ButtonsProps {
 }
 
 const ButtonWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  justify-content: center;
 `;
 
 const buttonStyles = css`
@@ -42,13 +42,13 @@ const buttonStyles = css`
   }
 
   @media ${device.laptop} {
-    max-width: 60px;
+    /* max-width: 60px; */
     span {
       display: initial;
     }
   }
   @media ${device.tablet} {
-    min-width: 90px;
+    /* min-width: 90px; */
   }
   @media ${device.laptopL} {
     min-width: 120px;

@@ -71,6 +71,7 @@ export const Playlist = {
     playlist_items: IPlaylistItems
   ): Promise<ServerPlaylist> =>
     requests.post(`/playlists/${id}/playlist_items`, playlist_items),
+  deletePlaylistItem: (id: string) => requests.delete(`playlist_items/${id}`),
 };
 
 export default playlistInstance;
