@@ -49,7 +49,7 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
         src={`https://api.soundcloud.com/tracks/${state.player.currentSong?.uri}/stream?client_id=${KEY}`}
         playing={state.player.isPlaying}
         onLoadError={handleOnLoadError}
-        onPause={handleOnPause}
+        // onPause={handleOnPause}
         onLoad={handleOnLoad}
         onPlay={handleOnPlay}
         preload={true}

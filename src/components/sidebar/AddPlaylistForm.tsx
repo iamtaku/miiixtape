@@ -46,7 +46,6 @@ const Input = styled.input`
 
 export const AddPlaylistForm = () => {
   const mutation = usePostPlaylist();
-  const history = useHistory();
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [input, setInput] = useState("");
 
@@ -55,7 +54,7 @@ export const AddPlaylistForm = () => {
     try {
       mutation.mutateAsync(input).then((data) => {
         setInput("");
-        data && history.push(`/app/playlist/plaaaylist/${data.data.id}`);
+        setIsInputOpen(false);
       });
     } catch {
       console.error("something went wrong");

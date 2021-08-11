@@ -30,6 +30,7 @@ export const ui: UIType = {
   isModalOpen: false,
   modalType: null,
   currentModalId: null,
+  currentTrack: null,
 };
 
 export const initialState = {

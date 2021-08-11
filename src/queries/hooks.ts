@@ -84,7 +84,7 @@ export const useGetTrack = (song: Song, collectionId: string) => {
   const { data: userInfo } = useGetUser();
   const queryClient = useQueryClient();
   return useQuery<Song, AxiosError>(
-    ["song", song.id],
+    ["song", song.uri],
     () => getTrackInfo(song, userInfo?.access_token),
     {
       enabled: !!userInfo,
@@ -92,7 +92,7 @@ export const useGetTrack = (song: Song, collectionId: string) => {
       initialData: () =>
         queryClient
           .getQueryData<CollectionType>(["collection", collectionId])
-          ?.tracks.find((track) => track.id === song.id),
+          ?.tracks.find((track) => track.uri === song.uri),
     }
   );
 };
@@ -106,7 +106,6 @@ export const usePostPlaylistItems = () => {
     onMutate: ({ id, tracks }) => console.log(id, tracks),
     onSuccess: (data, { id, tracks }) => {
       // change below so we don't refetch data!!
-      // queryClient.setQueryData('todos', old => old.map(todo => todo.id === context.optimisticTodo.id ? result : todo))
       queryClient.invalidateQueries(["collection", id]);
     },
     onError: (error) => {

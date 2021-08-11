@@ -53,13 +53,6 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
   if (isLoading || !data) {
     return <p>Loading...</p>;
   }
-  if (data?.tracks?.length === 0) {
-    return (
-      <Wrapper>
-        <p>No tracks</p>
-      </Wrapper>
-    );
-  }
 
   return (
     <Wrapper className="main">

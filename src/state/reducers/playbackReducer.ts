@@ -108,7 +108,6 @@ const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
 };
 
 const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
-  // debugger;
   console.log("setting track, ", newTrack.name);
   const nextSong = nextTrack(state.currentCollection?.tracks, newTrack);
   const previousSong = previousTrack(state.currentCollection?.tracks, newTrack);
@@ -202,7 +201,7 @@ export const playbackReducer = (
       newState = {
         ...state,
         currentCollection: { ...newCollection },
-      } as PlaybackType;
+      };
       console.log(action.type, newState);
       return newState;
     case "DELETE_ITEM":

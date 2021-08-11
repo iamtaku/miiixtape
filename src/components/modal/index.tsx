@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useGlobalContext } from "../../state/context";
 import { AddModal } from "./AddModal";
 import { ShareModal } from "./ShareModal";
-import { IoIosWarning, IoMdCheckmark } from "react-icons/io";
+import { AddItemModal } from "./AddItemModal";
 
 const BackDrop = styled.div`
   z-index: 1;
@@ -69,101 +69,6 @@ const TitleContainer = styled.div`
   align-items: center;
 `;
 
-const Container = styled.div`
-  padding: 4px;
-  margin: 8px 0 0 0;
-`;
-
-const SubHeader = styled.h3`
-  font-weight: 400;
-`;
-
-const Loader = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-
-  div {
-    position: absolute;
-    top: 20%;
-    transform: translateY(-50%);
-    left: 0;
-    width: 10px;
-    min-height: 10px;
-    border-radius: 50%;
-    background: #fff;
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
-  }
-
-  div:nth-child(1) {
-    left: 8px;
-    animation: lds-ellipsis1 0.6s infinite;
-  }
-  div:nth-child(2) {
-    left: 8px;
-    animation: lds-ellipsis2 0.6s infinite;
-  }
-  div:nth-child(3) {
-    left: 32px;
-    animation: lds-ellipsis2 0.6s infinite;
-  }
-  div:nth-child(4) {
-    left: 56px;
-    animation: lds-ellipsis3 0.6s infinite;
-  }
-  @keyframes lds-ellipsis1 {
-    0% {
-      transform: scale(0, 0);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  @keyframes lds-ellipsis3 {
-    0% {
-      transform: scale(1);
-    }
-    100% {
-      transform: scale(0);
-    }
-  }
-  @keyframes lds-ellipsis2 {
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-      transform: translate(24px, 0);
-    }
-  }
-`;
-
-export const Loading = () => (
-  <Loader>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </Loader>
-);
-
-export const Success = () => <IoMdCheckmark style={{ color: "green" }} />;
-
-export const Error = () => (
-  <IoIosWarning style={{ color: "var(--red)", placeSelf: "center end" }} />
-);
-
-export const ModalSection: React.FC<{ title: string }> = ({
-  title,
-  children,
-}) => {
-  return (
-    <Container>
-      <SubHeader>{title}</SubHeader>
-      {children}
-    </Container>
-  );
-};
-
 export const Modal = () => {
   const { state, dispatch } = useGlobalContext();
 
@@ -175,6 +80,8 @@ export const Modal = () => {
         return "Add Tracks";
       case "SHARE_MODAL":
         return "Share";
+      case "ADD_ITEM_MODAL":
+        return `Add Track to Playlist`;
       default:
         return;
     }
@@ -191,6 +98,7 @@ export const Modal = () => {
         </TitleContainer>
         {state.ui.modalType === "ADD_MODAL" && <AddModal />}
         {state.ui.modalType === "SHARE_MODAL" && <ShareModal />}
+        {state.ui.modalType === "ADD_ITEM_MODAL" && <AddItemModal />}
       </ModalContainer>
     </>
   );

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import {
   stripSpotifyAlbumURI,
@@ -14,7 +13,7 @@ import client from "../../queries/api/spotify/api";
 import { useGetUser } from "../../queries/hooks";
 import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
 import { Collection, PlaylistInfo, Service } from "../../types/types";
-import { Loading, Error } from ".";
+import { Loading, Error } from "./Shared";
 
 interface IAddByUrl {
   handleFetch: (collection: Collection) => void;
@@ -22,7 +21,6 @@ interface IAddByUrl {
 
 const FormWrapper = styled(SearchBarWrapper)<{ error: boolean }>`
   background: (var--primary);
-  margin: 8px 0;
   border: ${(props) =>
     props.error ? "1px solid var(--red)" : "1px solid transparent"};
   form {

@@ -35,12 +35,10 @@ export const Sidebar = () => {
   if (!isAuthenticated) {
     return <h2>UnAuthenticated sidebar</h2>;
   }
-
   if (error) {
     console.log(error.response);
     return <h2>error</h2>;
   }
-
   if (isLoading)
     return (
       <Wrapper>

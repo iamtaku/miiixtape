@@ -8,7 +8,7 @@ import { pluralize } from "../../helpers/utils";
 import { useGlobalContext } from "../../state/context";
 import DefaultMusicImage from "../../assets/music-cover.png";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
-import { Success, Error, Loading } from ".";
+import { Success, Error, Loading, List } from "./Shared";
 
 const AddContainer = styled.div`
   margin-top: 30px;
@@ -44,28 +44,28 @@ const CancelButton = styled(Button)`
 const ExpandButton = styled(Button)`
   display: flex;
   align-items: center;
-  border: 1px solid var(--dark-secondary);
+  /* border: 1px solid var(--dark-secondary); */
   color: var(--dark-secondary);
   margin-left: 0px;
 `;
 
-const List = styled.ul`
-  padding: 4px;
-  height: 200px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  ::-webkit-scrollbar-track {
-    background: var(--lighter-gray);
-  }
+// const List = styled.ul`
+//   padding: 4px;
+//   height: 200px;
+//   overflow-y: scroll;
+//   overflow-x: hidden;
+//   ::-webkit-scrollbar-track {
+//     background: var(--lighter-gray);
+//   }
 
-  ::-webkit-scrollbar-thumb {
-    background: var(--gray);
-  }
+//   ::-webkit-scrollbar-thumb {
+//     background: var(--gray);
+//   }
 
-  li:last-child {
-    margin-bottom: 30px;
-  }
-`;
+//   li:last-child {
+//     margin-bottom: 30px;
+//   }
+// `;
 
 const Item = styled.li`
   display: grid;
@@ -120,7 +120,7 @@ const ExpandBtn: React.FC<{ onClick: () => void; isOpen: boolean }> = ({
 );
 
 const CancelBtn: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <CancelButton onClick={onClick}>CANCEL</CancelButton>
+  <CancelButton onClick={onClick}>BACK</CancelButton>
 );
 
 const ButtonContainer = styled.div`
@@ -208,7 +208,7 @@ export const Confirm: React.FC<{
       .mutateAsync(payload)
       .then((data) => {
         console.log("items have been added ", data);
-        // dispatch({ type: "ADD_TO_QUEUE", payload: { tracks: mapYoutubeTrackstoTrack() } });
+        dispatch({ type: "ADD_TO_QUEUE", payload: { tracks: filtered } });
       })
       .catch((err) => {
         console.error(err);

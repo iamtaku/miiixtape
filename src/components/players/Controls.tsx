@@ -25,7 +25,6 @@ import {
   Shuffle,
   Volume as Mute,
 } from "./Buttons";
-import { useQueryClient } from "react-query";
 import { BaseParams } from "../../queries/types";
 
 interface IControlsProps {
@@ -190,7 +189,7 @@ export const Controls: React.FC<IControlsProps> = ({
   soundcloud,
 }) => {
   const { state, dispatch } = useGlobalContext();
-  const songCache = useFetchSongCache(state.player?.currentSong?.id);
+  const songCache = useFetchSongCache(state.player?.currentSong?.uri);
   const { data: user } = useGetUser();
   const [duration, setDuration] = useState(0);
   const [value, setValue] = useState(0);
@@ -215,6 +214,7 @@ export const Controls: React.FC<IControlsProps> = ({
 
   useEffect(() => {
     if (state.player.isLoading || !state.player.isPlaying) return;
+    console.log(state.player);
 
     const interval = setInterval(() => {
       if (value >= duration) {

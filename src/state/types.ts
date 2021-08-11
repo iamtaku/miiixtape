@@ -52,12 +52,13 @@ export type PlaybackType = {
   isLoading: boolean;
 };
 
-type ModalType = "ADD_MODAL" | "SHARE_MODAL" | null;
+type ModalType = "ADD_MODAL" | "SHARE_MODAL" | "ADD_ITEM_MODAL" | null;
 
 export type UIPayload = {
   OPEN_MODAL: {
     modalType: ModalType;
-    currentModalId: string;
+    currentModalId?: string;
+    track?: Song;
   };
   CLOSE_MODAL: {};
 };
@@ -66,4 +67,5 @@ export type UIType = {
   isModalOpen: boolean;
   modalType: ModalType;
   currentModalId: string | null;
+  currentTrack: Song | null;
 };

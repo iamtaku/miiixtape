@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ModalSection } from ".";
+import { ModalSection } from "./Shared";
 import { useGlobalContext } from "../../state/context";
 import { Collection } from "../../types/types";
 import { AddbyExisting } from "./AddbyExisting";
@@ -34,7 +34,7 @@ export const AddModal = () => {
             <AddByUrl handleFetch={handleFetch} />
           </ModalSection>
           <ModalSection title={"Add by Importing existing playlists"}>
-            <AddbyExisting />
+            <AddbyExisting handleFetch={handleFetch} />
           </ModalSection>
         </Wrapper>
       )}
