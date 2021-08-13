@@ -8,7 +8,7 @@ import {
   mapSpotifyTrackstoTracks,
 } from "./mapping";
 import { BaseParams, UserAttributes } from "../../types";
-import { Artist, Service, Collection, Tracks } from "../../../types/types";
+import { Artist, Collection, Tracks } from "../../../types/types";
 
 export const getSpotifyPlaylists = async (
   userInfo?: UserAttributes

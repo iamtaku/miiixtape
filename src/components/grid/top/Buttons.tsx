@@ -10,12 +10,8 @@ import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { device } from "../../../globalStyle";
-import { useIsCurrentPlaylist } from "../../../helpers/hooks";
-import {
-  useDeletePlaylist,
-  useGetSinglePlaylist,
-  useGetUser,
-} from "../../../queries/hooks";
+import { useIsCurrentPlaylist, useIsOwner } from "../../../helpers/hooks";
+import { useDeletePlaylist } from "../../../queries/hooks";
 import { Collection, PlaylistParam } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
@@ -158,10 +154,8 @@ const Disabled: React.FC<IDisabled> = ({ children, isDisabled }) => {
 
 const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
   const { dispatch } = useGlobalContext();
-  const { data } = useGetSinglePlaylist();
-  const { data: userInfo } = useGetUser();
-  const isAuthorized = () => data?.playlistInfo.owner === userInfo?.user_id;
-  let { id } = useParams<PlaylistParam>();
+  const { id } = useParams<PlaylistParam>();
+  const isOwner = useIsOwner(id);
 
   const handleAddClick = () => {
     dispatch({
@@ -178,18 +172,18 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
   };
   return (
     <Wrapper top={top} width={width}>
-      <Disabled isDisabled={!isAuthorized()}>
+      <Disabled isDisabled={isOwner}>
         <AddButton onClick={handleAddClick}>
           <FaPlus />
           <span>ADD</span>
         </AddButton>
       </Disabled>
-      {!isAuthorized() && <ImportButton />}
+      {isOwner && <ImportButton />}
       <ShareButton onClick={handleShareClick}>
         <FaShare />
         <span>SHARE</span>
       </ShareButton>
-      <Disabled isDisabled={isAuthorized()}>
+      <Disabled isDisabled={isOwner}>
         <DeleteButton />
       </Disabled>
     </Wrapper>
@@ -225,14 +219,6 @@ const OptionsButton = () => {
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
-
-  const openOrCloseModal = (state: boolean) => {
-    const main = document.querySelector(".main")!;
-    if (!main) return;
-    state
-      ? main.classList.remove("modal-open")
-      : main.classList.add("modal-open");
-  };
 
   return (
     <ButtonWrapper>

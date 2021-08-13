@@ -32,6 +32,7 @@ const InnerLayout = styled.div`
 export const Layout: React.FC = ({ children }) => {
   const handleOnDragEnd = (result: DropResult) => {
     const { source, destination } = result;
+    console.log(source, destination);
 
     if (!destination) return;
 

@@ -125,6 +125,22 @@ const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
   return newState;
 };
 
+const insert = (arr: any[], index: number, newItem: any[]) => [
+  ...arr.slice(0, index),
+  ...newItem,
+  ...arr.slice(index),
+];
+
+const handleAddToNext = (
+  currentSong: Song,
+  currentTracks: Tracks,
+  tracks: Tracks
+) => {
+  const index = currentIndex(currentTracks, currentSong);
+  const newTracks = insert(currentTracks, index, tracks);
+  return newTracks;
+};
+
 export const playbackReducer = (
   state: PlaybackType,
   action: PlaybackActions
@@ -198,22 +214,31 @@ export const playbackReducer = (
         ...state.currentCollection,
         tracks: [...state.currentCollection.tracks, ...action.payload.tracks],
       };
-      newState = {
+      return {
         ...state,
-        currentCollection: { ...newCollection },
+        newCollection,
       };
-      console.log(action.type, newState);
-      return newState;
+    case "ADD_TO_NEXT":
+      if (!state.currentCollection?.tracks || !state.currentSong) return state;
+      newCollection = {
+        ...state.currentCollection,
+        tracks: handleAddToNext(
+          state.currentSong,
+          state.currentCollection.tracks,
+          action.payload.tracks
+        ),
+      };
+      console.log(action.type, newCollection);
+      console.log({ ...state, newCollection });
+      return { ...state, currentCollection: newCollection };
     case "DELETE_ITEM":
       if (!state.currentCollection?.tracks) return state;
-
       newCollection = {
         ...state.currentCollection,
         tracks: state.currentCollection?.tracks.filter(
           (track) => track.id !== action.payload.id
         ),
       };
-      console.log(action.type, newCollection);
       return {
         ...state,
         newCollection,

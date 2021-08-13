@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
@@ -206,7 +206,7 @@ export const Controls: React.FC<IControlsProps> = ({
 
   useEffect(() => {
     if (state?.player?.currentSong && songCache?.time) {
-      console.log(songCache);
+      // console.log(songCache);
       setDuration((_prevState) => convertMilliSecondstoSeconds(songCache.time));
       setValue(0);
     }
@@ -214,7 +214,7 @@ export const Controls: React.FC<IControlsProps> = ({
 
   useEffect(() => {
     if (state.player.isLoading || !state.player.isPlaying) return;
-    console.log(state.player);
+    // console.log(state.player);
 
     const interval = setInterval(() => {
       if (value >= duration) {

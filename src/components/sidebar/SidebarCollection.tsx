@@ -16,15 +16,16 @@ const TitleSection = styled.div`
 const Container = styled.div`
   display: flex;
   align-items: flex-start;
-  span {
-    font-size: 1.1rem;
-    opacity: 0.7;
-    margin-right: 8px;
-  }
 `;
 
 const List = styled.ul<{ isCurrent?: boolean }>`
   margin-bottom: 8px;
+`;
+
+const Title = styled.span`
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0 12px;
 `;
 
 export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
@@ -49,7 +50,7 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
     >
       <TitleSection>
         <Container>
-          <span>{title}</span>
+          <Title>{title}</Title>
         </Container>
       </TitleSection>
       {data?.map((playlist) => (

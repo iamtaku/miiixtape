@@ -2,21 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
+import { MdPlaylistAdd } from "react-icons/md";
 import {
   useDeletePlaylistItem,
   useFetchSongCache,
 } from "../../../queries/hooks";
 import { useGlobalContext } from "../../../state/context";
 import { Song } from "../../../types/types";
-
-export const Submenu = () => {
-  return <div></div>;
-};
+import { BaseParams } from "../../../queries/types";
+import { useParams } from "react-router-dom";
+import { useIsOwner } from "../../../helpers/hooks";
 
 const DeleteButton = styled.button`
   background: none;
   border: none;
-  color: var(--red);
+  margin-left: 8px;
+  color: var(--secondary);
 `;
 
 const OptionsButton = styled.button`
@@ -29,28 +30,25 @@ const OptionsButton = styled.button`
 const AddButton = styled.button`
   background: none;
   border: none;
+  margin-right: 8px;
   color: var(--accent);
 `;
 
-interface ISubMenu {
-  offsetX?: boolean;
-  offsetY?: boolean;
-  offsetXWidth?: number;
-  offsetYWidth?: number;
-}
-
-const SubMenuContainer = styled.div<ISubMenu>`
-  background: var(--primary);
+const SubMenuContainer = styled.div`
+  background: var(--light-gray);
   height: 40px;
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  flex-direction: row-reverse;
 `;
 
-export const MenuButton: React.FC<{ track: Song; onClick: () => void }> = ({
-  track,
-  onClick,
-}) => {
+const ExternalLink = styled.a`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const MenuButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   return (
     <OptionsButton className="options" onClick={onClick}>
       <FaEllipsisH />
@@ -58,10 +56,12 @@ export const MenuButton: React.FC<{ track: Song; onClick: () => void }> = ({
   );
 };
 
-export const SubMenu2: React.FC<{ track: Song }> = ({ track }) => {
+export const SubMenu: React.FC<{ track: Song }> = ({ track }) => {
   const { dispatch, state } = useGlobalContext();
   const mutation = useDeletePlaylistItem();
   const songCache = useFetchSongCache(track.id);
+  const { id: playlistId } = useParams<BaseParams>();
+  const isOwner = useIsOwner(playlistId);
 
   const handleDeletePlaylistItem = () => {
     mutation.mutateAsync(track.id).then(() => {
@@ -93,17 +93,26 @@ export const SubMenu2: React.FC<{ track: Song }> = ({ track }) => {
     });
   };
 
+  const handleAddSongToQueue = () => {
+    dispatch({ type: "ADD_TO_NEXT", payload: { tracks: [track] } });
+  };
+
   return (
     <SubMenuContainer>
-      <a href={songCache?.href} target="_blank" rel="noreferrer">
-        <FiExternalLink />
-      </a>
-      <DeleteButton onClick={handleDeletePlaylistItem}>
-        <FaTrash />
-      </DeleteButton>
+      <AddButton onClick={handleAddSongToQueue}>
+        <MdPlaylistAdd />
+      </AddButton>
       <AddButton onClick={handleAddPlaylistItem}>
         <FaPlus />
       </AddButton>
+      <ExternalLink href={songCache?.href} target="_blank" rel="noreferrer">
+        <FiExternalLink />
+      </ExternalLink>
+      {isOwner && (
+        <DeleteButton onClick={handleDeletePlaylistItem}>
+          <FaTrash />
+        </DeleteButton>
+      )}
     </SubMenuContainer>
   );
 };

@@ -1,3 +1,4 @@
+import React from "react";
 import { IoIosWarning, IoMdCheckmark } from "react-icons/io";
 import styled from "styled-components";
 
@@ -70,8 +71,10 @@ const Loader = styled.div`
   }
 `;
 
-export const Loading = () => (
-  <Loader>
+export const Loading: React.FC<{ style?: React.CSSProperties }> = ({
+  style,
+}) => (
+  <Loader style={style}>
     <div></div>
     <div></div>
     <div></div>
@@ -99,8 +102,8 @@ export const ModalSection: React.FC<{ title: string }> = ({
 
 export const List = styled.ul`
   overflow: hidden;
-  overflow-y: auto;
-  max-height: 400px;
+  overflow-y: scroll;
+  max-height: 300px;
   background: var(--light-gray);
   border-radius: 8px;
   padding: 8px 0;

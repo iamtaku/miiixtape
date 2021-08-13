@@ -15,7 +15,8 @@ import {
   Artists,
   Item as ItemStyling,
 } from "./Items";
-import { MenuButton, SubMenu2 } from "./Submenu";
+import { MenuButton, SubMenu } from "./Submenu";
+import { ItemContainer } from "./Shared";
 
 interface TrackProps {
   track: Song;
@@ -28,15 +29,6 @@ interface TrackProps {
 
 const Item = styled.span`
   ${ItemStyling}
-`;
-
-export const ItemContainer = styled.li`
-  display: grid;
-  grid-column-gap: 8px;
-  grid-template-columns: 20px 50px 3.5fr 2fr 0.5fr 0.2fr;
-  padding: 4px 12px;
-  align-items: center;
-  border-radius: 8px;
 `;
 
 const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
@@ -103,40 +95,33 @@ export const Track: React.FC<TrackProps> = ({
 
   if (!data) return null;
 
+  const handleOnMouseLeave = () => {
+    setIsMenuOpen(false);
+  };
   return (
-    <Draggable draggableId={track.id} index={index}>
-      {(provided) => (
-        <LazyLoad
-          placeholder={<Placeholder />}
-          height={40}
-          scrollContainer={".main"}
-          key={index.toString()}
-          // unmountIfInvisible={true}
-        >
-          <Container
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            isCurrent={isCurrent}
-          >
-            <IndexPlayButton
-              index={index}
-              isPlaying={isPlaying}
-              isCurrent={isCurrent}
-              data={data}
-            />
-            <AlbumImage data={data} isAlbum={isAlbum} />
-            <TitleAlbum data={data} isAlbum={isAlbum} />
-            <Artists data={data} />
-            {isMenuOpen ? (
-              <SubMenu2 track={data} />
-            ) : (
-              <Item isRight>{data.time ? timeConversion(data.time) : "-"}</Item>
-            )}
-            <MenuButton track={data} onClick={handleMenuOpen} />
-          </Container>
-        </LazyLoad>
-      )}
-    </Draggable>
+    <LazyLoad
+      placeholder={<Placeholder />}
+      height={40}
+      scrollContainer={".main"}
+      key={index.toString()}
+    >
+      <Container isCurrent={isCurrent} onMouseLeave={handleOnMouseLeave}>
+        <IndexPlayButton
+          index={index}
+          isPlaying={isPlaying}
+          isCurrent={isCurrent}
+          data={data}
+        />
+        <AlbumImage data={data} isAlbum={isAlbum} />
+        <TitleAlbum data={data} isAlbum={isAlbum} />
+        <Artists data={data} />
+        {isMenuOpen ? (
+          <SubMenu track={data} />
+        ) : (
+          <Item isRight>{data.time ? timeConversion(data.time) : "-"}</Item>
+        )}
+        <MenuButton onClick={handleMenuOpen} />
+      </Container>
+    </LazyLoad>
   );
 };

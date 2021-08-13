@@ -88,7 +88,10 @@ export const generatePlaylistTracks = async (
   //   track.id = item.id;
   //   return track;
   // });
-  return fetchedTracks;
+  return {
+    ...fetchedTracks,
+    id: data.id,
+  };
 };
 
 export const generatePlaylistData = async (

@@ -1,9 +1,10 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Collection } from "../../../types/types";
 import { InnerGridTop } from "../top";
-import { Track, ItemContainer as ItemC } from "./Track";
+import { Track } from "./Track";
+import { ItemContainer as ItemC } from "./Shared";
 
 interface IGridProps {
   data?: Collection;
@@ -78,7 +79,17 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
         {(provided) => (
           <TrackList ref={provided.innerRef} {...provided.droppableProps}>
             {data?.tracks?.map((track, index) => (
-              <Track track={track} index={index} key={index.toString()} />
+              <Draggable key={track.id} draggableId={track.id} index={index}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Track track={track} index={index} />
+                  </div>
+                )}
+              </Draggable>
             ))}
             {provided.placeholder}
           </TrackList>

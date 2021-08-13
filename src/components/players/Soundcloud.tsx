@@ -11,6 +11,8 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<ReactHowler>(null);
 
+  // dispatch({ type: "IS_LOADING", payload: {} });
+
   const handleOnLoadError = () => {
     console.log("soundcloud  went wrong");
   };

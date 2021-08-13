@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { useGetUser } from "../queries/hooks";
 import { useGlobalContext } from "../state/context";
 import { Collection, Song } from "../types/types";
 
@@ -13,17 +15,22 @@ export const useIsCurrentPlaylist = (collection: Collection): ICurrent => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    // debugger;
-    collection.playlistInfo.id ===
-    state.player.currentCollection?.playlistInfo.id
-      ? setIsCurrent(true)
-      : setIsCurrent(false);
+    if (
+      collection.playlistInfo.id ===
+      state.player.currentCollection?.playlistInfo.id
+    ) {
+      setIsCurrent(true);
+    } else {
+      setIsCurrent(false);
+    }
   }, [state, collection]);
 
   useEffect(() => {
-    isCurrent && state.player.isPlaying
-      ? setIsPlaying(true)
-      : setIsPlaying(false);
+    if (isCurrent && state.player.isPlaying) {
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
   }, [state, isCurrent]);
 
   return {
@@ -62,4 +69,14 @@ export const useIsCurrentTrack = (track?: Song): ICurrent => {
     isPlaying,
     collection,
   };
+};
+
+export const useIsOwner = (playlistId: string) => {
+  const { data: userInfo } = useGetUser();
+  const queryClient = useQueryClient();
+  const currentPlaylist = queryClient.getQueryData<Collection>([
+    "collection",
+    playlistId,
+  ]);
+  return currentPlaylist?.playlistInfo.owner === userInfo?.user_id;
 };
