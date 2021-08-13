@@ -1,4 +1,5 @@
 import React from "react";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Collection } from "../../types/types";
 import { SidebarItem } from "./SidebarItem";
@@ -28,34 +29,51 @@ const Title = styled.span`
   padding: 0 12px;
 `;
 
+const ItemContainer = styled.div`
+  width: 100%;
+`;
+
 export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   data,
   title,
 }) => {
-  // const [isOpen, setIsOpen] = useState(true);
-  // const [isActive, setIsActive] = useState(false);
-
-  // const handleClick = () => {
-  // setIsOpen(!isOpen);
-  // };
-
   return (
-    <List
-    // onMouseEnter={(e) => {
-    //   setIsActive(true);
-    // }}
-    // onMouseLeave={(e) => {
-    //   setIsActive(false);
-    // }}
-    >
+    <List>
       <TitleSection>
         <Container>
           <Title>{title}</Title>
         </Container>
       </TitleSection>
-      {data?.map((playlist) => (
+      {/* {data?.map((playlist) => (
         <SidebarItem playlist={playlist} key={playlist.playlistInfo.id} />
-      ))}
+      ))} */}
+      <Droppable droppableId={"sidebar"}>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {data?.map((playlist, index) => (
+              <Draggable
+                key={playlist.playlistInfo.id}
+                draggableId={playlist.playlistInfo.id}
+                index={index}
+              >
+                {(provided, snapshot) => (
+                  <ItemContainer
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <SidebarItem
+                      playlist={playlist}
+                      key={playlist.playlistInfo.id}
+                    />
+                  </ItemContainer>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </List>
   );
 };

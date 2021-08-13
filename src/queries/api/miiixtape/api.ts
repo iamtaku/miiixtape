@@ -1,9 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import {
-  Artist,
-  Collection as PlaylistType,
-  Tracks,
-} from "../../../types/types";
+import { Artist, Collection, Tracks } from "../../../types/types";
 import { Playlist, Spotify, SoundCloud } from "../";
 import { UserAttributes } from "../../types";
 
@@ -39,7 +35,7 @@ interface IParam {
 export const getPlaylist = async (
   params: IParam,
   userInfo?: UserAttributes
-): Promise<PlaylistType> => {
+): Promise<Collection> => {
   if (!userInfo) {
     throw new Error("auth error");
   }
@@ -72,7 +68,6 @@ export const postPlaylistItems = async ({
       songs: tracks,
     },
   };
-
   return await Playlist.createPlaylistItems(id, body);
 };
 
@@ -91,4 +86,19 @@ export const deletePlaylistItem = async (id: string) => {
 
 export const deletePlaylist = async (id: string) => {
   return await Playlist.deletePlaylist(id);
+};
+
+export const patchPlaylistItem = async ({
+  id,
+  position,
+}: {
+  id: string;
+  position: number;
+}) => {
+  const payload = {
+    playlist_items: {
+      position,
+    },
+  };
+  return await Playlist.patchPlaylistItem(id, payload);
 };

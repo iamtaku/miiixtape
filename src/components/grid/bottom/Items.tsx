@@ -9,7 +9,6 @@ import DefaultMusicImage from "../../..//assets/music-cover.png";
 export const Item = css<{
   isRight?: boolean;
   isCenter?: boolean;
-  isActive?: boolean;
 }>`
   font-size: 14px;
   white-space: nowrap;

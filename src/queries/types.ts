@@ -1,7 +1,19 @@
-import { Service, Song } from "../types/types";
+import { Service, Song, Tracks } from "../types/types";
 export interface BaseParams {
   service: string;
   id: string;
+}
+
+export interface IPlaylistItems {
+  playlist_items: {
+    songs: Tracks;
+  };
+}
+
+export interface IPlaylistItem {
+  playlist_items: {
+    position: number;
+  };
 }
 
 export interface ServerResponse {

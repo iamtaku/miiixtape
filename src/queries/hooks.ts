@@ -20,9 +20,10 @@ import {
   Playlist,
   deletePlaylist,
   deletePlaylistItem,
+  patchPlaylistItem,
 } from "./api/";
 import { AxiosError } from "axios";
-import { generatePlaylistTracks as getTrackInfo } from "./api/miiixtape/generatePlaylistData";
+import { generatePlaylistTracks } from "./api/miiixtape/generatePlaylistData";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
@@ -85,7 +86,7 @@ export const useGetTrack = (song: Song, collectionId: string) => {
   const queryClient = useQueryClient();
   return useQuery<Song, AxiosError>(
     ["song", song.uri],
-    () => getTrackInfo(song, userInfo?.access_token),
+    () => generatePlaylistTracks(song, userInfo?.access_token),
     {
       enabled: !!userInfo,
       cacheTime: Infinity,
@@ -107,6 +108,22 @@ export const usePostPlaylistItems = () => {
     onSuccess: (data, { id, tracks }) => {
       // change below so we don't refetch data!!
       queryClient.invalidateQueries(["collection", id]);
+    },
+    onError: (error) => {
+      console.error("no joy for postplaylistitems");
+      throw new Error(`Error: ${error}`);
+    },
+  });
+};
+
+export const usePatchPlaylistItems = () => {
+  const queryClient = useQueryClient();
+  return useMutation(patchPlaylistItem, {
+    // onMutate: ({ id, tracks }) => console.log(id, tracks),
+    onSuccess: (data, {}) => {
+      // change below so we don't refetch data!!
+      // queryClient.invalidateQueries(["collection", id]);
+      //
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");

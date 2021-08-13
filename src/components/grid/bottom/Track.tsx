@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
 import { Song } from "../../../types/types";
@@ -21,7 +20,6 @@ import { ItemContainer } from "./Shared";
 interface TrackProps {
   track: Song;
   index: number;
-  provided?: DraggableProvided;
   isDragging?: boolean;
   isGroupedOver?: boolean;
   style?: Object;
@@ -75,12 +73,7 @@ const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
 
 const Placeholder = () => <h1>Placeholder</h1>;
 
-export const Track: React.FC<TrackProps> = ({
-  track,
-  index,
-  provided,
-  isDragging,
-}) => {
+export const Track: React.FC<TrackProps> = ({ track, index, isDragging }) => {
   const location = useLocation();
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);

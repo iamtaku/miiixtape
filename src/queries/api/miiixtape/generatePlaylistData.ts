@@ -1,9 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-js";
-import { mapPlaylistItemToTrack } from "./mappingHelpers";
 import { stripURI } from "../../../helpers/stripURI";
-import { Collection, PlaylistInfo, Service, Song } from "../../../types/types";
+import { Service, Song } from "../../../types/types";
 import { SoundCloud } from "..";
-import { ServerPlaylist } from "../../types";
 import client, { Spotify } from "../spotify/api";
 import { Youtube } from "../youtube/api";
 
@@ -53,17 +51,6 @@ interface IHash {
   [uri: string]: Song;
 }
 
-const generatePlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
-  return {
-    id: data.data.id,
-    name: data.data.attributes.name,
-    description: data.data.attributes.description,
-    owner: data.data.relationships.user.data.id,
-    type: "playlist",
-    service: "plaaaylist",
-  };
-};
-
 export const generatePlaylistTracks = async (
   data: Song,
   token?: string
@@ -91,24 +78,5 @@ export const generatePlaylistTracks = async (
   return {
     ...fetchedTracks,
     id: data.id,
-  };
-};
-
-export const generatePlaylistData = async (
-  data: ServerPlaylist,
-  client: SpotifyWebApi.SpotifyWebApiJs
-): Promise<Collection> => {
-  const playlistInfo = generatePlaylistInfo(data);
-  if (data.included.length === 0) {
-    return {
-      playlistInfo,
-      tracks: [],
-    };
-  }
-  // const tracks = await generatePlaylistTracks(data, client);
-  const tracks = data.included.map(mapPlaylistItemToTrack);
-  return {
-    playlistInfo,
-    tracks,
   };
 };

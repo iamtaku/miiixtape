@@ -75,7 +75,7 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
           <Item isRight>Length</Item>
         </ItemContainer>
       )}
-      <Droppable droppableId={"tracks"}>
+      <Droppable droppableId={`${data.playlistInfo.id}-tracks`}>
         {(provided) => (
           <TrackList ref={provided.innerRef} {...provided.droppableProps}>
             {data?.tracks?.map((track, index) => (
