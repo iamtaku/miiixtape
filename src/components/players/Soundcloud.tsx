@@ -1,23 +1,25 @@
 import React, { Dispatch, SetStateAction, useRef } from "react";
 import ReactHowler from "react-howler";
-import { useGlobalContext } from "../../state/context";
+import { fetchVolume, useGlobalContext } from "../../state/context";
 const KEY = process.env.REACT_APP_SOUNDCLOUD_KEY;
 
 interface IProps {
   setSoundCloud: Dispatch<SetStateAction<ReactHowler | undefined>>;
   uri?: string;
 }
-export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
+export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
   const { dispatch, state } = useGlobalContext();
   const ref = useRef<ReactHowler>(null);
+
+  // dispatch({ type: "IS_LOADING", payload: {} });
 
   const handleOnLoadError = () => {
     console.log("soundcloud  went wrong");
   };
 
-  // const handleOnPause = () => {
-  // dispatch({ type: "PAUSE_CURRENT", payload: {} });
-  // };
+  const handleOnPause = () => {
+    dispatch({ type: "PAUSE_CURRENT", payload: {} });
+  };
 
   const handleOnPlay = () => dispatch({ type: "LOADING_FINISH", payload: {} });
 
@@ -46,7 +48,7 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
   return (
     <div>
       <ReactHowler
-        src={`https://api.soundcloud.com/tracks/${uri}/stream?client_id=${KEY}`}
+        src={`https://api.soundcloud.com/tracks/${state.player.currentSong?.uri}/stream?client_id=${KEY}`}
         playing={state.player.isPlaying}
         onLoadError={handleOnLoadError}
         // onPause={handleOnPause}
@@ -56,6 +58,8 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud, uri }) => {
         html5
         ref={ref}
         onEnd={handleEnd}
+        volume={fetchVolume() / 100}
+        // onVolume
       />
     </div>
   );

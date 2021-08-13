@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { useGetArtist } from "../../queries/hooks";
 import { ArtistParams } from "../../queries/api";
 import { ArtistGridBottom } from "./ArtistGridBottom";

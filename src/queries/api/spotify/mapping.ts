@@ -12,7 +12,6 @@ import {
 export const mapSpotifyArtistToArtist = (
   data: SpotifyApi.SingleArtistResponse
 ): Artist => {
-  debugger;
   return {
     data: {
       playlistInfo: {

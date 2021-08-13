@@ -11,8 +11,6 @@ import { NotFound } from "./pages/NotFound";
 import { Artist } from "./components/artist";
 import { Login } from "./pages/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-// import { PlaylistShare } from "./components/playlist/PlaylistShare";
-// import { isAuthenticated } from "./helpers/utils";
 
 export const Routes = () => (
   <BrowserRouter>
@@ -50,16 +48,15 @@ const AppRoutes = () => {
         <ProtectedRoute path={`${path}/search/:search`}>
           <Search />
         </ProtectedRoute>
-        <Route path={`${path}/playlist/:service/:playlistId`}>
+        <Route path={`${path}/playlist/:service/:id`}>
           <Playlist />
         </Route>
-        <ProtectedRoute path={`${path}/album/:service/:albumId`}>
+        <ProtectedRoute path={`${path}/album/:service/:id`}>
           <Album />
         </ProtectedRoute>
-        <ProtectedRoute path={`${path}/artist/:service/:artistId`}>
+        <ProtectedRoute path={`${path}/artist/:service/:id`}>
           <Artist />
         </ProtectedRoute>
-
         <Route path={`${path}/error`}>
           <Error />
         </Route>

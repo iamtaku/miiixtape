@@ -1,10 +1,17 @@
 import {
   PlaylistItemItem,
+  ServerPlaylist,
   ServerPlaylists,
   ServerUser,
   UserAttributes,
 } from "../../types";
-import { Song, Collection, Tracks, Service } from "../../../types/types";
+import {
+  Song,
+  Collection,
+  Tracks,
+  Service,
+  PlaylistInfo,
+} from "../../../types/types";
 
 export const generateYoutubeURL = (uri: string): string => {
   const YOUTUBE = "https://www.youtube.com/watch?v=";
@@ -12,8 +19,10 @@ export const generateYoutubeURL = (uri: string): string => {
 };
 
 export const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
-  let href = generateYoutubeURL(item.attributes.song.uri);
-  debugger;
+  let href =
+    item.attributes.song.service === "youtube"
+      ? generateYoutubeURL(item.attributes.song.uri)
+      : "";
   return {
     id: item.id,
     name: item.attributes.song.name,
@@ -24,7 +33,9 @@ export const mapPlaylistItemToTrack = (item: PlaylistItemItem): Song => {
   };
 };
 
-export const mapServerPlaylist = (data: ServerPlaylists): Collection[] => {
+export const mapServerPlaylistMultiple = (
+  data: ServerPlaylists
+): Collection[] => {
   const mappedData: Collection[] = data.data.map((item) => {
     return {
       playlistInfo: {
@@ -57,5 +68,31 @@ export const generateServices = (tracks: Tracks): Service[] => {
 export const mapUserAttributes = (data: ServerUser): UserAttributes => {
   return {
     ...data.data.attributes,
+  };
+};
+
+export const mapPlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
+  return {
+    id: data.data.id,
+    name: data.data.attributes.name,
+    description: data.data.attributes.description,
+    owner: data.data.relationships.user.data.id,
+    type: "playlist",
+    service: "plaaaylist",
+  };
+};
+
+export const mapServerPlaylist = (data: ServerPlaylist): Collection => {
+  const playlistInfo = mapPlaylistInfo(data);
+  if (data.included.length === 0) {
+    return {
+      playlistInfo,
+      tracks: [],
+    };
+  }
+  const tracks = data.included.map(mapPlaylistItemToTrack);
+  return {
+    playlistInfo,
+    tracks,
   };
 };

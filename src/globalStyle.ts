@@ -6,13 +6,15 @@ export const Global = createGlobalStyle`
 --orange: #DC481E;
 --dark-orange: #b93d19;
 --black: #121212;
---white: #fff;
+--white: #fafafa;
+--dark-white: #bdc1c6;
 --light-gray: #5c5c5c;
 --lighter-gray: #424242;
 --gray: #353535;
---red: #cf6679;
+--red: #ff0033;
 --primary: var(--gray);
 --secondary: var(--white);
+--dark-secondary: var(--dark-white);
 --accent: var(--orange);
 --dark-accent: var(--dark-orange);
 }
@@ -36,6 +38,7 @@ button {
     cursor: pointer;
   }
   padding: 0;
+  margin: 0;
 }
 
 input[type=text]{

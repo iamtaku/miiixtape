@@ -1,9 +1,10 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Collection } from "../../../types/types";
 import { InnerGridTop } from "../top";
 import { Track } from "./Track";
+import { ItemContainer as ItemC } from "./Shared";
 
 interface IGridProps {
   data?: Collection;
@@ -13,28 +14,19 @@ interface IGridProps {
 
 const Wrapper = styled.div`
   height: 100%;
-  overflow: overlay;
+  max-width: 100%;
+  overflow: hidden;
   overflow-y: scroll;
 `;
 
 const TrackList = styled.div`
   padding: 4px;
-
-  li:last-child {
-    margin-bottom: 110px;
-  }
+  position: relative;
+  overflow-x: hidden;
 `;
 
-const ItemContainer = styled.li<{ isAlbum?: boolean }>`
-  display: grid;
-  grid-template-columns: ${(props) =>
-    props.isAlbum
-      ? "20px 50px 2.5fr 1fr 0.5fr 0.2fr "
-      : "15px 50px 2fr 1fr 1fr 0.5fr 0.2fr"};
-  grid-column-gap: 8px;
-  padding: 4px 12px;
-  align-items: center;
-  border-radius: 8px;
+const ItemContainer = styled(ItemC)`
+  opacity: 0.8;
 `;
 
 const Item = styled.span<{ isRight?: boolean }>`
@@ -62,21 +54,14 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
   if (isLoading || !data) {
     return <p>Loading...</p>;
   }
-  if (data?.tracks?.length === 0) {
-    return (
-      <Wrapper>
-        <InnerGridTop data={data} isLoading={isLoading} />
-        <p>No tracks</p>
-      </Wrapper>
-    );
-  }
+
   return (
     <Wrapper className="main">
       <InnerGridTop data={data} isLoading={isLoading} />
-      {data.playlistInfo.type === "album" ? (
-        <ItemContainer isAlbum>
+      {data.playlistInfo?.type === "album" ? (
+        <ItemContainer>
           <Item>#</Item>
-          {data.playlistInfo.type === "album" && <Item>{` `}</Item>}
+          {data.playlistInfo?.type === "album" && <Item>{` `}</Item>}
           <Item>Title</Item>
           <Item>Artist</Item>
           <Item isRight>Length</Item>
@@ -87,15 +72,24 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
           <Item>{` `}</Item>
           <Item>Title</Item>
           <Item>Artist</Item>
-          <Item>Album</Item>
           <Item isRight>Length</Item>
         </ItemContainer>
       )}
-      <Droppable droppableId={"tracks"}>
+      <Droppable droppableId={`${data.playlistInfo.id}-tracks`}>
         {(provided) => (
           <TrackList ref={provided.innerRef} {...provided.droppableProps}>
             {data?.tracks?.map((track, index) => (
-              <Track key={index.toString()} track={track} index={index} />
+              <Draggable key={track.id} draggableId={track.id} index={index}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Track track={track} index={index} />
+                  </div>
+                )}
+              </Draggable>
             ))}
             {provided.placeholder}
           </TrackList>

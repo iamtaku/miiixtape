@@ -1,43 +1,51 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Draggable } from "react-beautiful-dnd";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPause,
-  faPlay,
-  faEllipsisV,
-} from "@fortawesome/free-solid-svg-icons";
-
+import LazyLoad from "react-lazyload";
 import { Song } from "../../../types/types";
 import { timeConversion } from "../../../helpers/utils";
-import { useGlobalContext } from "../../../state/context";
-import { TrackPlaybackButton } from "../../Buttons";
 import { useIsCurrentTrack } from "../../../helpers/hooks";
-import DefaultMusicImage from "../../..//assets/music-cover.png";
+import { useGetTrack } from "../../../queries/hooks";
+import { BaseParams } from "../../../queries/types";
+import {
+  TitleAlbum,
+  IndexPlayButton,
+  AlbumImage,
+  Artists,
+  Item as ItemStyling,
+} from "./Items";
+import { MenuButton, SubMenu } from "./Submenu";
+import { ItemContainer } from "./Shared";
 
 interface TrackProps {
   track: Song;
   index: number;
+  isDragging?: boolean;
+  isGroupedOver?: boolean;
+  style?: Object;
 }
 
-const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
+const Item = styled.span`
+  ${ItemStyling}
+`;
+
+const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
   display: grid;
-  grid-template-columns: ${(props) =>
-    props.isAlbum
-      ? "20px 50px 2.5fr 1fr 0.5fr 0.2fr "
-      : "20px 50px 2fr 1fr 1fr 0.5fr 0.2fr"};
   grid-column-gap: 8px;
   padding: 0px 12px;
   align-items: center;
   border-radius: 8px;
   min-height: 40px;
+
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
 
   .index {
     display: ${(props) => (props.isCurrent ? "none" : "default")};
+  }
+
+  .play {
+    display: ${(props) => (props.isCurrent ? "default" : "none")};
   }
 
   &:hover {
@@ -49,7 +57,7 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
       display: block;
     }
     .options {
-      display: block;
+      visibility: initial;
     }
   }
 
@@ -63,154 +71,50 @@ const Container = styled.li<{ isAlbum?: Boolean; isCurrent?: Boolean }>`
   }
 `;
 
-const Item = styled.span<{
-  isRight?: Boolean;
-  isCenter?: Boolean;
-  isActive?: Boolean;
-}>`
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  justify-self: ${(props) => (props.isRight ? "flex-end" : "default")};
-  justify-self: ${(props) => (props.isCenter ? "center" : "default")};
-  a:hover {
-    text-decoration: underline;
-  }
-`;
+const Placeholder = () => <h1>Placeholder</h1>;
 
-// const ExternalLink = styled.a`
-//   text-align: right;
-//   justify-self: end;
-//   width: 16px;
-// `;
-
-const PlaybackButton = styled(TrackPlaybackButton)<{ isActive?: Boolean }>`
-  display: ${(props) => (props.isActive ? "default" : "none")};
-`;
-
-const OptionsButton = styled.button`
-  background: none;
-  border: none;
-  display: none;
-  color: var(--secondary);
-`;
-
-const MenuButton: React.FC<{ track: Song; handleUrlClick: () => void }> = ({
-  track,
-  handleUrlClick,
-}) => {
-  return (
-    <OptionsButton className="options">
-      <FontAwesomeIcon icon={faEllipsisV} />
-      {/* <ExternalLink
-        href={track.href}
-        onClick={handleUrlClick}
-        rel="noreferrer"
-        target="_blank"
-      >
-        <FontAwesomeIcon icon={faExternalLinkAlt} />
-      </ExternalLink> */}
-    </OptionsButton>
-  );
-};
-
-export const Track: React.FC<TrackProps> = ({ track, index }) => {
+export const Track: React.FC<TrackProps> = ({ track, index, isDragging }) => {
   const location = useLocation();
-  const [isActive, setIsActive] = useState(false);
-  const { dispatch } = useGlobalContext();
-
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
+  const params = useParams<BaseParams>();
+  const { data } = useGetTrack(track, params.id);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleUrlClick = () => {
-    if (isPlaying && isCurrent) {
-      dispatch({
-        type: "PAUSE_CURRENT",
-        payload: {},
-      });
-    }
+  const handleMenuOpen = () => {
+    setIsMenuOpen((prevState) => !prevState);
+    console.log("opening submenu");
   };
 
-  const trackImg = track.img ? track.img : DefaultMusicImage;
+  if (!data) return null;
 
+  const handleOnMouseLeave = () => {
+    setIsMenuOpen(false);
+  };
   return (
-    <Draggable draggableId={track.id} index={index}>
-      {(provided) => (
-        <Container
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          isAlbum={isAlbum}
-          onMouseEnter={(e) => {
-            setIsActive(true);
-          }}
-          onMouseLeave={(e) => {
-            setIsActive(false);
-          }}
+    <LazyLoad
+      placeholder={<Placeholder />}
+      height={40}
+      scrollContainer={".main"}
+      key={index.toString()}
+    >
+      <Container isCurrent={isCurrent} onMouseLeave={handleOnMouseLeave}>
+        <IndexPlayButton
+          index={index}
+          isPlaying={isPlaying}
           isCurrent={isCurrent}
-        >
-          <Item className="" isCenter>
-            <div className="index">{index + 1}</div>
-            <PlaybackButton
-              className="play"
-              data={track}
-              isActive={isActive || isCurrent}
-            >
-              <FontAwesomeIcon
-                icon={isPlaying && isCurrent ? faPause : faPlay}
-              />
-            </PlaybackButton>
-          </Item>
-          {isAlbum ? (
-            <Item>{` `}</Item>
-          ) : (
-            <LazyLoadImage
-              src={trackImg}
-              alt={track.album?.name}
-              width="30px"
-              height="30px"
-              style={{ justifySelf: "center" }}
-              placeholderSrc={DefaultMusicImage}
-            />
-          )}
-          <Item>{track.name}</Item>
-          <Item>
-            {track.artists
-              ? track.artists?.map((artist, index) => (
-                  <Link
-                    key={index}
-                    to={`/app/artist/${track.service}/${artist.uri}`}
-                  >
-                    {index > 0 && ", "}
-                    {artist.name}
-                  </Link>
-                ))
-              : "-"}
-          </Item>
-          {isAlbum ? null : track.album ? (
-            <Item>
-              <Link to={`/app/album/${track.service}/${track.album.uri}`}>
-                {track.album.name}
-              </Link>
-            </Item>
-          ) : (
-            "-"
-          )}
-          <Item isRight>{track.time ? timeConversion(track.time) : "-"}</Item>
-          {/* <ExternalLink
-            href={track.href}
-            onClick={handleUrlClick}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <FontAwesomeIcon icon={faExternalLinkAlt} />
-          </ExternalLink> */}
-          <Item isRight>
-            <MenuButton track={track} handleUrlClick={handleUrlClick} />
-          </Item>
-        </Container>
-      )}
-    </Draggable>
+          data={data}
+        />
+        <AlbumImage data={data} isAlbum={isAlbum} />
+        <TitleAlbum data={data} isAlbum={isAlbum} />
+        <Artists data={data} />
+        {isMenuOpen ? (
+          <SubMenu track={data} />
+        ) : (
+          <Item isRight>{data.time ? timeConversion(data.time) : "-"}</Item>
+        )}
+        <MenuButton onClick={handleMenuOpen} />
+      </Container>
+    </LazyLoad>
   );
 };

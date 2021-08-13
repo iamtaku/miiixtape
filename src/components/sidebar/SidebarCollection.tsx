@@ -1,4 +1,5 @@
 import React from "react";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Collection } from "../../types/types";
 import { SidebarItem } from "./SidebarItem";
@@ -16,56 +17,63 @@ const TitleSection = styled.div`
 const Container = styled.div`
   display: flex;
   align-items: flex-start;
-  span {
-    font-size: 1.1rem;
-    opacity: 0.7;
-    margin-right: 8px;
-  }
 `;
 
 const List = styled.ul<{ isCurrent?: boolean }>`
-  /* padding: 8px; */
-  /* margin: 8px 0; */
   margin-bottom: 8px;
 `;
 
-// const Icon = styled.div`
-//   border: 1px solid var(--gray);
-//   width: 20px;
-//   height: 20px;
-//   border-radius: 50px;
-//   background: #353535;
-//   box-shadow: 16px 16px 32px #303030, -16px -16px 32px #3a3a3a;
-// `;
+const Title = styled.span`
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0 12px;
+`;
+
+const ItemContainer = styled.div`
+  width: 100%;
+`;
 
 export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   data,
   title,
 }) => {
-  // const [isOpen, setIsOpen] = useState(true);
-  // const [isActive, setIsActive] = useState(false);
-
-  // const handleClick = () => {
-  // setIsOpen(!isOpen);
-  // };
-
   return (
-    <List
-    // onMouseEnter={(e) => {
-    //   setIsActive(true);
-    // }}
-    // onMouseLeave={(e) => {
-    //   setIsActive(false);
-    // }}
-    >
+    <List>
       <TitleSection>
         <Container>
-          <span>{title}</span>
+          <Title>{title}</Title>
         </Container>
       </TitleSection>
-      {data?.map((playlist) => (
+      {/* {data?.map((playlist) => (
         <SidebarItem playlist={playlist} key={playlist.playlistInfo.id} />
-      ))}
+      ))} */}
+      <Droppable droppableId={"sidebar"}>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {data?.map((playlist, index) => (
+              <Draggable
+                key={playlist.playlistInfo.id}
+                draggableId={playlist.playlistInfo.id}
+                index={index}
+              >
+                {(provided, snapshot) => (
+                  <ItemContainer
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <SidebarItem
+                      playlist={playlist}
+                      key={playlist.playlistInfo.id}
+                    />
+                  </ItemContainer>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </List>
   );
 };

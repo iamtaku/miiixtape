@@ -14,9 +14,9 @@ export const SearchBarWrapper = styled.div`
 
   input {
     box-shadow: none;
-    border: none;
     color: var(--secondary);
     background: transparent;
+    border: none;
     opacity: 0.7;
     width: 100%;
 
@@ -29,7 +29,7 @@ export const SearchBarWrapper = styled.div`
   }
 
   :focus-within {
-    border: 1px solid var(--accent);
+    border: 1px solid var(--secondary);
   }
 `;
 

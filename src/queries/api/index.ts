@@ -2,11 +2,16 @@ import axios, { AxiosResponse } from "axios";
 import SpotifyWebApi from "spotify-web-api-js";
 import {
   mapServerPlaylist,
+  mapServerPlaylistMultiple,
   mapUserAttributes,
 } from "./miiixtape/mappingHelpers";
-import { Collection as PlaylistType, Tracks } from "../../types/types";
-import { ServerPlaylist, UserAttributes } from "../types";
-import { generatePlaylistData } from "./miiixtape/generatePlaylistData";
+import { Collection } from "../../types/types";
+import {
+  IPlaylistItem,
+  IPlaylistItems,
+  ServerPlaylist,
+  UserAttributes,
+} from "../types";
 import { isAuthenticated } from "../../helpers/utils";
 export { SoundCloud } from "./soundcloud/api";
 export { Youtube } from "./youtube/api";
@@ -14,12 +19,6 @@ export * from "./spotify/api";
 export * from "./miiixtape/api";
 
 const SERVER = process.env.REACT_APP_BASE_URL;
-
-interface IPlaylistItems {
-  playlist_items: {
-    songs: Tracks;
-  };
-}
 
 const playlistInstance = axios.create({
   baseURL: SERVER,
@@ -50,15 +49,13 @@ const requests = {
 export const Playlist = {
   getUser: (): Promise<UserAttributes> =>
     requests.get("/users").then((data) => mapUserAttributes(data)),
-  getPlaylists: (): Promise<PlaylistType[]> =>
-    requests.get("/playlists").then((data) => mapServerPlaylist(data)),
+  getPlaylists: (): Promise<Collection[]> =>
+    requests.get("/playlists").then((data) => mapServerPlaylistMultiple(data)),
   getPlaylist: (
     id: string,
-    client: SpotifyWebApi.SpotifyWebApiJs
-  ): Promise<PlaylistType> =>
-    requests
-      .get(`/playlists/${id}`)
-      .then((data) => generatePlaylistData(data, client)),
+    _client: SpotifyWebApi.SpotifyWebApiJs
+  ): Promise<Collection> =>
+    requests.get(`/playlists/${id}`).then((data) => mapServerPlaylist(data)),
   createPlaylist: (playlist: {
     playlist: { name: string };
   }): Promise<ServerPlaylist> => requests.post("playlists", playlist),
@@ -71,6 +68,14 @@ export const Playlist = {
     playlist_items: IPlaylistItems
   ): Promise<ServerPlaylist> =>
     requests.post(`/playlists/${id}/playlist_items`, playlist_items),
+  deletePlaylistItem: (id: string) => requests.delete(`playlist_items/${id}`),
+  patchPlaylistItem: (
+    id: string,
+    playlist_items: IPlaylistItem
+  ): Promise<Collection> =>
+    requests
+      .put(`playlist_items/${id}`, playlist_items)
+      .then(mapServerPlaylist),
 };
 
 export default playlistInstance;

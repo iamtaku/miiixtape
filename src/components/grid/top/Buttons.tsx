@@ -1,36 +1,31 @@
 import {
-  faEllipsisV,
-  faPause,
-  faPlay,
-  faPlus,
-  faShare,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router";
+  FaEllipsisV,
+  FaPause,
+  FaPlay,
+  FaPlus,
+  FaShare,
+  FaTrash,
+} from "react-icons/fa";
+import React, { useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { device } from "../../../globalStyle";
-import { useIsCurrentPlaylist } from "../../../helpers/hooks";
-import {
-  useDeletePlaylist,
-  useGetSinglePlaylist,
-  useGetUser,
-} from "../../../queries/hooks";
-import { Collection } from "../../../types/types";
+import { useIsCurrentPlaylist, useIsOwner } from "../../../helpers/hooks";
+import { useDeletePlaylist } from "../../../queries/hooks";
+import { Collection, PlaylistParam } from "../../../types/types";
 import { BasicButton } from "../../Buttons";
 import { PlaybackButton } from "../../Buttons";
-import { AddModal } from "../../modal/AddModal";
-import { ShareModal } from "../../modal/ShareModal";
+import { useGlobalContext } from "../../../state/context";
+import { useRef } from "react";
 
 interface ButtonsProps {
   data: Collection;
 }
 
 const ButtonWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  justify-content: center;
 `;
 
 const buttonStyles = css`
@@ -43,13 +38,13 @@ const buttonStyles = css`
   }
 
   @media ${device.laptop} {
-    max-width: 60px;
+    /* max-width: 60px; */
     span {
       display: initial;
     }
   }
   @media ${device.tablet} {
-    min-width: 90px;
+    /* min-width: 90px; */
   }
   @media ${device.laptopL} {
     min-width: 120px;
@@ -63,6 +58,7 @@ const Btn = styled(BasicButton)`
 
 const GridButton = styled(PlaybackButton)`
   ${buttonStyles}
+  border-radius: 8px;
 `;
 
 const AddButton = styled(Btn)`
@@ -85,9 +81,17 @@ const ImportBtn = styled(Btn)`
   color: var(--secondary);
 `;
 
-const Wrapper = styled.div`
+interface IDropdownContainer {
+  top?: number;
+  width?: number;
+}
+
+const DropdownContainer = styled.div<IDropdownContainer>`
   position: absolute;
-  top: 30px;
+  top: ${(props) => (!!props.top ? `${props.top}px` : "default")};
+  width: ${(props) => (!!props.width ? `${props.width}px` : "default")};
+`;
+const Wrapper = styled(DropdownContainer)`
   background-color: var(--light-gray);
   padding: 8px;
   border: 1px solid var(--light-gray);
@@ -105,18 +109,20 @@ const Wrapper = styled.div`
 const DeleteButton = () => {
   const mutation = useDeletePlaylist();
   const history = useHistory();
+  const { dispatch } = useGlobalContext();
+  const { id } = useParams<PlaylistParam>();
   const handleClick = async () => {
     mutation
       .mutateAsync()
       .then(() => {
-        // dispatch({ type: "PLAYBACK_FINISH", payload: {} });
+        dispatch({ type: "DELETE_COLLECTION", payload: { id } });
         history.push("/app");
       })
       .catch((err) => console.log(err));
   };
   return (
     <DeleteBtn onClick={handleClick}>
-      <FontAwesomeIcon icon={faTrash} />
+      <FaTrash />
       <span>DELETE</span>
     </DeleteBtn>
   );
@@ -146,29 +152,38 @@ const Disabled: React.FC<IDisabled> = ({ children, isDisabled }) => {
   return <DisabledWrapper isDisabled={isDisabled}>{children}</DisabledWrapper>;
 };
 
-const OptionsModal: React.FC<{
-  handleClick: () => void;
-  isModalOpen: boolean;
-  handleShareClick: () => void;
-  isShareModalOpen: boolean;
-}> = ({ handleShareClick, isShareModalOpen, handleClick, isModalOpen }) => {
-  const { data } = useGetSinglePlaylist();
-  const { data: userInfo } = useGetUser();
-  const isAuthorized = () => data?.playlistInfo.owner === userInfo?.user_id;
+const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
+  const { dispatch } = useGlobalContext();
+  const { id } = useParams<PlaylistParam>();
+  const isOwner = useIsOwner(id);
+
+  const handleAddClick = () => {
+    dispatch({
+      type: "OPEN_MODAL",
+      payload: { modalType: "ADD_MODAL", currentModalId: id },
+    });
+  };
+
+  const handleShareClick = () => {
+    dispatch({
+      type: "OPEN_MODAL",
+      payload: { modalType: "SHARE_MODAL", currentModalId: id },
+    });
+  };
   return (
-    <Wrapper>
-      <Disabled isDisabled={!isAuthorized()}>
-        <AddButton onClick={handleClick} isPressed={isModalOpen}>
-          <FontAwesomeIcon icon={faPlus} />
+    <Wrapper top={top} width={width}>
+      <Disabled isDisabled={isOwner}>
+        <AddButton onClick={handleAddClick}>
+          <FaPlus />
           <span>ADD</span>
         </AddButton>
       </Disabled>
-      {!isAuthorized() && <ImportButton />}
-      <ShareButton onClick={handleShareClick} isPressed={isShareModalOpen}>
-        <FontAwesomeIcon icon={faShare} />
+      {isOwner && <ImportButton />}
+      <ShareButton onClick={handleShareClick}>
+        <FaShare />
         <span>SHARE</span>
       </ShareButton>
-      <Disabled isDisabled={isAuthorized()}>
+      <Disabled isDisabled={isOwner}>
         <DeleteButton />
       </Disabled>
     </Wrapper>
@@ -179,92 +194,48 @@ const OptionsBtn = styled(Btn)`
   color: var(--secondary);
 `;
 
-const OptionsButton: React.FC<{
-  handleClick: () => void;
-  isModalOpen: boolean;
-  handleShareClick: () => void;
-  isShareModalOpen: boolean;
-}> = ({ handleClick, isModalOpen, handleShareClick, isShareModalOpen }) => {
+const OptionsButton = () => {
+  const ref = useRef<HTMLDivElement>(null);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-
   const handleOptionsClick = () => {
     console.log("open options");
     setIsOptionsOpen(!isOptionsOpen);
   };
   return (
-    <OptionsBtn onClick={handleOptionsClick} style={{ position: "relative" }}>
-      <FontAwesomeIcon icon={faEllipsisV} />
-      <span>OPTIONS</span>
+    <div ref={ref} style={{ position: "relative" }}>
+      <OptionsBtn onClick={handleOptionsClick}>
+        <FaEllipsisV />
+        <span>OPTIONS</span>
+      </OptionsBtn>
       {isOptionsOpen && (
-        <OptionsModal
-          handleClick={handleClick}
-          isModalOpen={isModalOpen}
-          handleShareClick={handleShareClick}
-          isShareModalOpen={isShareModalOpen}
+        <OptionsDropdown
+          top={ref.current?.clientHeight}
+          width={ref.current?.clientWidth}
         />
       )}
-    </OptionsBtn>
+    </div>
   );
 };
 
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    setIsModalOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (data.tracks.length === 0) {
-      setIsModalOpen(true);
-    }
-  }, [data.tracks.length]);
-
-  const openOrCloseModal = (state: boolean) => {
-    const main = document.querySelector(".main")!;
-    if (!main) return;
-    state
-      ? main.classList.remove("modal-open")
-      : main.classList.add("modal-open");
-  };
-  const handleClick = () => {
-    setIsModalOpen(!isModalOpen);
-    openOrCloseModal(isModalOpen);
-  };
-
-  const handleShareClick = () => {
-    setIsShareModalOpen(!isShareModalOpen);
-    openOrCloseModal(isShareModalOpen);
-  };
 
   return (
     <ButtonWrapper>
       <PlayButton data={data}>
         {isCurrent && isPlaying ? (
           <>
-            <FontAwesomeIcon icon={faPause} />
+            <FaPause />
             <span>PAUSE</span>
           </>
         ) : (
           <>
-            <FontAwesomeIcon icon={faPlay} />
+            <FaPlay />
             <span>PLAY</span>
           </>
         )}
       </PlayButton>
-      <OptionsButton
-        handleClick={handleClick}
-        isModalOpen={isModalOpen}
-        handleShareClick={handleShareClick}
-        isShareModalOpen={isShareModalOpen}
-      />
-      {isModalOpen && (
-        <AddModal handleClick={handleClick} id={data.playlistInfo.id} />
-      )}
-      {isShareModalOpen && <ShareModal handleClick={handleShareClick} />}
+      <OptionsButton />
     </ButtonWrapper>
   );
 };

@@ -18,6 +18,7 @@ const mapYoutubePlaylistItemToTrack = (data: any): Song => {
     name: data.snippet.title,
     service: "youtube",
     uri: data.contentDetails.videoId,
+    img: data.snippet.thumbnails.default.url,
   };
 };
 
@@ -34,7 +35,7 @@ const mapYoutubePlaylisttoPlaylistInfo = (data: any): PlaylistInfo => {
 const validYoutube = (data: any) => data.snippet.title !== "Private video";
 
 export const mapYoutubeTrackstoTrack = (data: any): Tracks => {
-  const mapped: Tracks = data.items.map((item: any) => mapYoutubeToTrack(item));
+  const mapped: Tracks = data.items.map(mapYoutubeToTrack);
   return mapped;
 };
 

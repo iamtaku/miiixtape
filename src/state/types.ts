@@ -1,4 +1,4 @@
-import { Song, Service, Collection } from "../types/types";
+import { Song, Service, Collection, Tracks } from "../types/types";
 
 export type ActionMap<M extends { [index: string]: any }> = {
   [Key in keyof M]: M[Key] extends undefined
@@ -29,6 +29,17 @@ export type PlaybackPayload = {
   PLAYBACK_FINISH: {};
   IS_LOADING: {};
   LOADING_FINISH: {};
+  INITIALIZE: {};
+  DELETE_COLLECTION: { id: string };
+  ADD_TO_QUEUE: {
+    tracks: Tracks;
+  };
+  ADD_TO_NEXT: {
+    tracks: Tracks;
+  };
+  DELETE_ITEM: {
+    id: string;
+  };
 };
 
 export type PlaybackType = {
@@ -42,4 +53,22 @@ export type PlaybackType = {
   isPlaying: boolean;
   isFinished: boolean;
   isLoading: boolean;
+};
+
+type ModalType = "ADD_MODAL" | "SHARE_MODAL" | "ADD_ITEM_MODAL" | null;
+
+export type UIPayload = {
+  OPEN_MODAL: {
+    modalType: ModalType;
+    currentModalId?: string;
+    track?: Song;
+  };
+  CLOSE_MODAL: {};
+};
+
+export type UIType = {
+  isModalOpen: boolean;
+  modalType: ModalType;
+  currentModalId: string | null;
+  currentTrack: Song | null;
 };

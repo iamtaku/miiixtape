@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import { usePostPlaylist } from "../../queries/hooks";
 
 const Container = styled.div`
   padding: 4px 24px;
-  background: var(--lighter-gray);
+  background: var(--gray);
   border-radius: 8px;
   border: 1px solid transparent;
   width: 100%auto;
@@ -46,7 +46,6 @@ const Input = styled.input`
 
 export const AddPlaylistForm = () => {
   const mutation = usePostPlaylist();
-  const history = useHistory();
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [input, setInput] = useState("");
 
@@ -55,7 +54,7 @@ export const AddPlaylistForm = () => {
     try {
       mutation.mutateAsync(input).then((data) => {
         setInput("");
-        data && history.push(`/app/playlist/plaaaylist/${data.data.id}`);
+        setIsInputOpen(false);
       });
     } catch {
       console.error("something went wrong");

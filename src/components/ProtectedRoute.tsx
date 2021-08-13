@@ -1,4 +1,4 @@
-import { Redirect, Route, RouteProps } from "react-router";
+import { Redirect, Route, RouteProps } from "react-router-dom";
 import { isAuthenticated } from "../helpers/utils";
 
 export type ProtectedRouteProps = {

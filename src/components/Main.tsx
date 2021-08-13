@@ -1,4 +1,4 @@
-import { useLocation, useHistory } from "react-router";
+import { useLocation, useHistory } from "react-router-dom";
 import { useGetUser } from "../queries/hooks";
 
 export const Main = () => {

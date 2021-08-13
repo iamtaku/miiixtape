@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
 import styled from "styled-components";
 import {
   stripSpotifyAlbumURI,
@@ -14,20 +13,23 @@ import client from "../../queries/api/spotify/api";
 import { useGetUser } from "../../queries/hooks";
 import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
 import { Collection, PlaylistInfo, Service } from "../../types/types";
+import { Loading, Error } from "./Shared";
 
 interface IAddByUrl {
-  id: string;
   handleFetch: (collection: Collection) => void;
 }
 
-const FormWrapper = styled(SearchBarWrapper)`
-  background: var(--primary);
+const FormWrapper = styled(SearchBarWrapper)<{ error: boolean }>`
+  background: (var--primary);
+  border: ${(props) =>
+    props.error ? "1px solid var(--red)" : "1px solid transparent"};
   form {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 0.2fr;
   }
 `;
 
-const Input = styled.input<{ error: Boolean }>`
+const Input = styled.input`
   flex-grow: 5;
   padding: 4px;
 `;
@@ -46,10 +48,6 @@ const EnterBtn = styled.input`
 
 const Status = styled.div``;
 
-const Loading = () => <p>Loading...</p>;
-const Success = () => <p>Success...</p>;
-const Error = () => <p>Error...</p>;
-
 const findService = (input: string): Service | false => {
   if (input.includes("youtube")) {
     return "youtube";
@@ -67,12 +65,12 @@ const findService = (input: string): Service | false => {
 
 const fetchYoutube = async (uri: string): Promise<Collection> => {
   if (uri.includes("list")) {
-    //if playlist
     const stripped = stripYoutubePlaylistURI(uri);
     const playlist = await Youtube.getPlaylist(stripped);
     return playlist;
   }
   const fetchURI = stripYoutubeURI(uri);
+  debugger;
   const data = await Youtube.getVideo(fetchURI);
   const playlistInfo: PlaylistInfo = {
     id: "",
@@ -89,7 +87,7 @@ const fetchYoutube = async (uri: string): Promise<Collection> => {
 const fetchSpotify = async (
   uri: string,
   token: string
-): Promise<Collection | undefined> => {
+): Promise<Collection> => {
   if (uri.includes("playlist")) {
     const strippedURI = stripSpotifyPlaylistURI(uri);
     const data = await Spotify.getPlaylist(strippedURI, client(token));
@@ -121,6 +119,7 @@ const mapSoundCloudPlaylistInfo = (data: any): PlaylistInfo => {
 };
 
 const fetchSC = async (uri: string): Promise<Collection> => {
+  debugger;
   const trackInfo = await SoundCloud.getTrackInfo(uri);
   const playlistInfo = mapSoundCloudPlaylistInfo(trackInfo);
   const data = trackInfo.tracks.map(mapSCTracktoTrack);
@@ -130,20 +129,15 @@ const fetchSC = async (uri: string): Promise<Collection> => {
   };
 };
 
-export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
-  const history = useHistory();
+export const AddByUrl: React.FC<IAddByUrl> = ({ handleFetch }) => {
   const { data: userInfo } = useGetUser();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const fetchURL = async (uri: string): Promise<Collection | undefined> => {
-    if (
-      !history.location.pathname.includes("plaaaylist") ||
-      userInfo === undefined
-    )
-      return;
+  const fetchURL = async (uri: string): Promise<Collection> => {
+    if (userInfo === undefined) throw Error();
     const service = findService(uri);
     switch (service) {
       case "youtube":
@@ -153,7 +147,7 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
       case "soundcloud":
         return await fetchSC(uri);
       default:
-        break;
+        throw Error();
     }
   };
 
@@ -161,24 +155,9 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
     event.preventDefault();
     setIsLoading(true);
     setIsError(false);
-
     try {
       const data = await fetchURL(input);
       data && handleFetch(data);
-      // if (!data) throw Error();
-      // const tracks = Array.isArray(data) ? data : [data];
-      // if (data && tracks) {
-      //   mutation
-      //     .mutateAsync({ id, tracks })
-      //     .then((data) => {
-      //       console.log(data);
-      //       setIsLoading(false);
-      //       setIsSuccess(true);
-      //     })
-      //     .catch((err) => {
-      //       throw Error();
-      //     });
-      // }
     } catch (err) {
       console.error(err);
       setIsSuccess(false);
@@ -188,25 +167,28 @@ export const AddByUrl: React.FC<IAddByUrl> = ({ id, handleFetch }) => {
   };
 
   return (
-    <div>
-      <h3>Add by URL</h3>
-      <FormWrapper>
+    <>
+      <FormWrapper error={isError}>
         <form onSubmit={handleSubmit}>
           <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.currentTarget.value)}
-            error={isError}
             placeholder="Enter Spotify, Soundcloud or Youtube URL's"
+            onFocus={() => setIsError(false)}
           />
-          <EnterBtn type="submit" value="FETCH" />
+          {!isLoading && !isError && <EnterBtn type="submit" value="FETCH" />}
+          {isLoading && <Loading />}
+          {isError && <Error />}
         </form>
       </FormWrapper>
       <Status>
-        {isLoading && <Loading />}
-        {isSuccess && <Success />}
-        {isError && <Error />}
+        {isError && (
+          <span style={{ opacity: "0.8" }}>
+            Something went wrong... Try checking the url.
+          </span>
+        )}
       </Status>
-    </div>
+    </>
   );
 };

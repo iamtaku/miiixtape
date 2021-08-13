@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { UserAttributes } from "./types";
+import { BaseParams, UserAttributes } from "./types";
 import {
   Artist,
   Collection as CollectionType,
   PlaylistParam,
+  Song,
 } from "../types/types";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import {
   ArtistParams,
   getArtist,
@@ -13,15 +14,16 @@ import {
   getUser,
   postPlaylist,
   postPlaylistItems,
-  AlbumParam,
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
   Playlist,
   deletePlaylist,
+  deletePlaylistItem,
+  patchPlaylistItem,
 } from "./api/";
 import { AxiosError } from "axios";
-// import { useGlobalContext } from "../state/context";
+import { generatePlaylistTracks } from "./api/miiixtape/generatePlaylistData";
 
 export const useGetArtist = (params: ArtistParams) => {
   const { data: userInfo } = useGetUser();
@@ -38,13 +40,12 @@ export const useGetSinglePlaylist = () => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
   return useQuery<CollectionType, AxiosError>(
-    ["collection", { id: params.playlistId, service: params.service }],
-    () =>
-      getPlaylist({ id: params.playlistId, service: params.service }, userInfo),
+    ["collection", params.id],
+    () => getPlaylist({ id: params.id, service: params.service }, userInfo),
     {
       enabled: !!userInfo,
-      staleTime: Infinity,
       refetchInterval: false,
+      retry: 3,
     }
   );
 };
@@ -54,14 +55,14 @@ export const useGetUser = () => {
 };
 
 export const useGetAlbum = () => {
-  const params = useParams<AlbumParam>();
+  const params = useParams<BaseParams>();
   const { data: userInfo } = useGetUser();
 
   return useQuery<CollectionType, AxiosError>(
-    ["collection", { id: params.albumId, service: params.service }],
+    ["collection", { id: params.id, service: params.service }],
     () => getAlbum(params, userInfo),
     {
-      enabled: !!userInfo && !!params.albumId,
+      enabled: !!userInfo && !!params.id,
     }
   );
 };
@@ -77,8 +78,24 @@ export const useGetSpotifyUser = () => {
   const { data: userInfo } = useGetUser();
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,
-    retry: true,
   });
+};
+
+export const useGetTrack = (song: Song, collectionId: string) => {
+  const { data: userInfo } = useGetUser();
+  const queryClient = useQueryClient();
+  return useQuery<Song, AxiosError>(
+    ["song", song.uri],
+    () => generatePlaylistTracks(song, userInfo?.access_token),
+    {
+      enabled: !!userInfo,
+      cacheTime: Infinity,
+      initialData: () =>
+        queryClient
+          .getQueryData<CollectionType>(["collection", collectionId])
+          ?.tracks.find((track) => track.uri === song.uri),
+    }
+  );
 };
 
 export const useGetAllPlaylists = () =>
@@ -86,16 +103,27 @@ export const useGetAllPlaylists = () =>
 
 export const usePostPlaylistItems = () => {
   const queryClient = useQueryClient();
-  const params = useParams<PlaylistParam>();
-  // const { dispatch } = useGlobalContext();
   return useMutation(postPlaylistItems, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries([
-        "collection",
-        { id: params.playlistId, service: params.service },
-      ]);
-      console.log(data);
-      // dispatch({ type: "ADD_TO_QUEUE", payload: data });
+    onMutate: ({ id, tracks }) => console.log(id, tracks),
+    onSuccess: (data, { id, tracks }) => {
+      // change below so we don't refetch data!!
+      queryClient.invalidateQueries(["collection", id]);
+    },
+    onError: (error) => {
+      console.error("no joy for postplaylistitems");
+      throw new Error(`Error: ${error}`);
+    },
+  });
+};
+
+export const usePatchPlaylistItems = () => {
+  const queryClient = useQueryClient();
+  return useMutation(patchPlaylistItem, {
+    // onMutate: ({ id, tracks }) => console.log(id, tracks),
+    onSuccess: (data, {}) => {
+      // change below so we don't refetch data!!
+      // queryClient.invalidateQueries(["collection", id]);
+      //
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");
@@ -116,11 +144,11 @@ export const usePostPlaylist = () => {
 export const useDeletePlaylist = () => {
   const params = useParams<PlaylistParam>();
   const queryClient = useQueryClient();
-  return useMutation(() => deletePlaylist(params.playlistId), {
+  return useMutation(() => deletePlaylist(params.id), {
     onSuccess: (data, error, editedValue) => {
       queryClient.removeQueries([
         "collection",
-        { id: params.playlistId, service: params.service },
+        { id: params.id, service: params.service },
       ]);
       queryClient.invalidateQueries("playlistAll");
     },
@@ -129,4 +157,22 @@ export const useDeletePlaylist = () => {
       throw new Error(`Error: ${error}`);
     },
   });
+};
+
+export const useDeletePlaylistItem = () => {
+  const params = useParams<PlaylistParam>();
+  const queryClient = useQueryClient();
+  return useMutation(deletePlaylistItem, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["collection", params.id]);
+      console.log(params.id);
+    },
+  });
+};
+
+export const useFetchSongCache = (id?: string) => {
+  const queryClient = useQueryClient();
+  if (!!!id) return undefined;
+  const songCache = queryClient.getQueryData<Song>(["song", id]);
+  return songCache;
 };

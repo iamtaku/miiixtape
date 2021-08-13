@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useQueryClient } from "react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
-
 import { Collection, Song } from "../types/types";
 import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/api";
@@ -32,7 +31,7 @@ export const LoginButton: React.FC = ({ children }) => {
 };
 
 export const BasicButton = styled.button<{
-  isPressed?: Boolean;
+  isPressed?: boolean;
 }>`
   padding: 8px 24px;
   border: none;

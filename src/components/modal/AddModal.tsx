@@ -1,34 +1,42 @@
 import React, { useState } from "react";
+import styled from "styled-components";
+import { ModalSection } from "./Shared";
 import { Collection } from "../../types/types";
 import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";
 import { Confirm } from "./Confirm";
-import { Modal as ModalWrapper } from "./index";
 
-interface IAddModalProps {
-  id: string;
-  handleClick: () => void;
-}
+const Wrapper = styled.div`
+  width: 500px;
+`;
 
-export const AddModal: React.FC<IAddModalProps> = ({ id, handleClick }) => {
+export const AddModal = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [data, setData] = useState<Collection>();
-
   const handleFetch = async (collection: Collection) => {
     setData(collection);
     setIsConfirmOpen(true);
+    console.log(collection);
   };
 
+  const handleConfirmClose = () => setIsConfirmOpen(false);
+
   return (
-    <ModalWrapper title={"Add tracks"} handleClick={handleClick}>
+    <>
       {isConfirmOpen && data ? (
-        <Confirm data={data} />
+        <Wrapper>
+          <Confirm data={data} handleConfirmClose={handleConfirmClose} />
+        </Wrapper>
       ) : (
-        <>
-          <AddByUrl id={id} handleFetch={handleFetch} />
-          <AddbyExisting />
-        </>
+        <Wrapper>
+          <ModalSection title={"Add by URL"}>
+            <AddByUrl handleFetch={handleFetch} />
+          </ModalSection>
+          <ModalSection title={"Add by Importing existing playlists"}>
+            <AddbyExisting handleFetch={handleFetch} />
+          </ModalSection>
+        </Wrapper>
       )}
-    </ModalWrapper>
+    </>
   );
 };

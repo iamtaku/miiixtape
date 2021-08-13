@@ -1,4 +1,4 @@
-import { Song, Tracks } from "../../types/types";
+import { Collection, Song, Tracks } from "../../types/types";
 import { player as initial } from "../context";
 import { ActionMap, PlaybackPayload, PlaybackType } from "../types";
 
@@ -63,12 +63,7 @@ const handlePlayPrevious = (state: PlaybackType) => {
 };
 
 const handleSetNext = (state: PlaybackType) => {
-  console.group("setting next...");
-  console.log("before update,", state);
-
   if (!state.nextSong) {
-    console.log("no next song", state);
-    console.groupEnd();
     return state;
   }
 
@@ -104,19 +99,15 @@ const handlePlay = (state: PlaybackType) => {
   return { ...state, isPlaying: true, isFinished: false };
 };
 
-const handlePause = (state: PlaybackType) => ({ ...state, isPlaying: false });
-
 const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
   return {
     ...state,
-    currentCollection: undefined,
     currentSong: track,
     isPlaying: true,
   };
 };
 
 const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
-  // debugger;
   console.log("setting track, ", newTrack.name);
   const nextSong = nextTrack(state.currentCollection?.tracks, newTrack);
   const previousSong = previousTrack(state.currentCollection?.tracks, newTrack);
@@ -127,11 +118,27 @@ const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
     nextSong,
     previousSong,
   };
-  if (!state.currentCollection?.tracks.includes(newTrack)) {
+  if (!state.currentCollection?.tracks?.includes(newTrack)) {
     newState.currentCollection = undefined;
   }
 
   return newState;
+};
+
+const insert = (arr: any[], index: number, newItem: any[]) => [
+  ...arr.slice(0, index),
+  ...newItem,
+  ...arr.slice(index),
+];
+
+const handleAddToNext = (
+  currentSong: Song,
+  currentTracks: Tracks,
+  tracks: Tracks
+) => {
+  const index = currentIndex(currentTracks, currentSong);
+  const newTracks = insert(currentTracks, index, tracks);
+  return newTracks;
 };
 
 export const playbackReducer = (
@@ -139,22 +146,25 @@ export const playbackReducer = (
   action: PlaybackActions
 ) => {
   let newState: PlaybackType;
+  let newCollection: Collection;
   switch (action.type) {
     case "PLAY_COLLECTION":
       console.log(action.type);
-      if (action.payload.collection.tracks.length > 0) {
-        newState = {
-          ...initial,
-          currentCollection: action.payload.collection,
-          currentSong: action.payload.collection?.tracks[0],
-          nextSong: action.payload.collection?.tracks[1],
-          currentService: action.payload.collection.tracks[0].service,
-          nextService: action.payload.collection.tracks[1]?.service,
-          isPlaying: true,
-        };
-        return newState;
-      }
-      return state;
+      if (
+        !action.payload.collection.tracks ||
+        action.payload?.collection?.tracks?.length < 0
+      )
+        return state;
+      newState = {
+        ...initial,
+        currentCollection: action.payload.collection,
+        currentSong: action.payload.collection?.tracks[0],
+        nextSong: action.payload.collection?.tracks[1],
+        currentService: action.payload.collection?.tracks[0].service,
+        nextService: action.payload.collection?.tracks[1]?.service,
+        isPlaying: true,
+      };
+      return newState;
     case "PLAY_TRACK":
       return handlePlayTrack(state, action.payload.track);
     case "SET_TRACK":
@@ -175,7 +185,7 @@ export const playbackReducer = (
       return handlePlay(state);
     case "PAUSE_CURRENT":
       console.log(action.type);
-      return handlePause(state);
+      return { ...state, isPlaying: false };
     case "PLAY_PREVIOUS":
       return handlePlayPrevious(state);
     case "IS_LOADING":
@@ -188,6 +198,50 @@ export const playbackReducer = (
       return {
         ...state,
         isLoading: false,
+      };
+    case "INITIALIZE":
+      return {
+        ...initial,
+      };
+    case "DELETE_COLLECTION":
+      if (action.payload.id === state.currentCollection?.playlistInfo?.id) {
+        return { ...initial };
+      }
+      return state;
+    case "ADD_TO_QUEUE":
+      if (!state.currentCollection?.tracks) return state;
+      newCollection = {
+        ...state.currentCollection,
+        tracks: [...state.currentCollection.tracks, ...action.payload.tracks],
+      };
+      return {
+        ...state,
+        newCollection,
+      };
+    case "ADD_TO_NEXT":
+      if (!state.currentCollection?.tracks || !state.currentSong) return state;
+      newCollection = {
+        ...state.currentCollection,
+        tracks: handleAddToNext(
+          state.currentSong,
+          state.currentCollection.tracks,
+          action.payload.tracks
+        ),
+      };
+      console.log(action.type, newCollection);
+      console.log({ ...state, newCollection });
+      return { ...state, currentCollection: newCollection };
+    case "DELETE_ITEM":
+      if (!state.currentCollection?.tracks) return state;
+      newCollection = {
+        ...state.currentCollection,
+        tracks: state.currentCollection?.tracks.filter(
+          (track) => track.id !== action.payload.id
+        ),
+      };
+      return {
+        ...state,
+        newCollection,
       };
 
     default:

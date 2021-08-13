@@ -5,7 +5,7 @@ import { Description } from "./Description";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
 import { generateServices } from "../../../queries/api/miiixtape/mappingHelpers";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   height: 20vh;
@@ -20,7 +20,7 @@ const Container = styled.div`
   z-index: 1000;
 `;
 
-const CoverImg = styled.img<{ isArtist: Boolean }>`
+const CoverImg = styled.img<{ isArtist: boolean }>`
   justify-self: center;
   max-height: 100%;
   border-radius: 50px;
