@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { Spotify } from "./Spotify";
 import ReactHowler from "react-howler";
@@ -8,7 +9,7 @@ import { Youtube } from "./Youtube";
 import { Controls } from "./Controls";
 import { Soundcloud } from "./Soundcloud";
 
-const Player = () => {
+const Player = (): JSX.Element => {
   const { state } = useGlobalContext();
   const [youtube, setYoutube] = useState<YouTubePlayer>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer>();

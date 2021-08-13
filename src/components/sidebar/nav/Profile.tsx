@@ -37,7 +37,7 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-export const Profile = () => {
+export const Profile = (): JSX.Element => {
   const history = useHistory();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { data, isLoading } = useGetSpotifyUser();

@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import { SidebarCollection } from "./SidebarCollection";
 import { AddPlaylistForm } from "./AddPlaylistForm";
@@ -29,7 +30,7 @@ const CollectionWrapper = styled.div`
   }
 `;
 
-export const Sidebar = () => {
+export const Sidebar = (): JSX.Element => {
   const { data: playlists, isLoading, error } = useGetAllPlaylists();
 
   if (!isAuthenticated) {
@@ -50,7 +51,6 @@ export const Sidebar = () => {
     <Wrapper>
       <Nav />
       <CollectionWrapper>
-        {/* <SidebarCollection data={spotifyPlaylists} title={"spotify"} /> */}
         <SidebarCollection data={playlists} title={"playlists"} />
         <AddPlaylistForm />
       </CollectionWrapper>

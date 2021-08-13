@@ -14,7 +14,7 @@ const queryClient = new QueryClient({
   },
 });
 
-function App() {
+function App(): JSX.Element {
   return (
     <div className="App">
       <QueryClientProvider client={queryClient}>

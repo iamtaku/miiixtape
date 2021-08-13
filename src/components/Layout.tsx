@@ -1,10 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { QueryClient, useQueryClient } from "react-query";
 import styled from "styled-components";
 import { device } from "../globalStyle";
 import { usePatchPlaylistItems } from "../queries/hooks";
-import { Collection, Song } from "../types/types";
+import { Collection } from "../types/types";
 import { Modal } from "./modal";
 import Player from "./players";
 import { Sidebar } from "./sidebar";
@@ -116,4 +117,8 @@ export const Layout: React.FC = ({ children }) => {
       </DragDropContext>
     </LayoutWrapper>
   );
+};
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
 };

@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   width: 500px;
 `;
 
-export const AddModal = () => {
+export const AddModal = (): JSX.Element => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [data, setData] = useState<Collection>();
   const handleFetch = async (collection: Collection) => {

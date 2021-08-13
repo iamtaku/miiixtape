@@ -21,14 +21,14 @@ const Btn = styled.button`
   }
 `;
 
-export const Queue = () => {
+export const Queue = (): JSX.Element => {
   return (
     <Btn style={{ marginLeft: "0px" }}>
       <BsMusicNoteList />
     </Btn>
   );
 };
-export const Shuffle = () => {
+export const Shuffle = (): JSX.Element => {
   return (
     <Btn>
       <IoShuffle />
@@ -36,7 +36,7 @@ export const Shuffle = () => {
   );
 };
 
-export const Repeat = () => {
+export const Repeat = (): JSX.Element => {
   return (
     <Btn>
       <IoRepeat />

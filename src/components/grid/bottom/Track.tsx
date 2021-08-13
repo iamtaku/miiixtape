@@ -22,7 +22,6 @@ interface TrackProps {
   index: number;
   isDragging?: boolean;
   isGroupedOver?: boolean;
-  style?: Object;
 }
 
 const Item = styled.span`
@@ -36,7 +35,6 @@ const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
   align-items: center;
   border-radius: 8px;
   min-height: 40px;
-
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
 
@@ -73,7 +71,7 @@ const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
 
 const Placeholder = () => <h1>Placeholder</h1>;
 
-export const Track: React.FC<TrackProps> = ({ track, index, isDragging }) => {
+export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);

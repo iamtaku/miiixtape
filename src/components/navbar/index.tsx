@@ -43,7 +43,7 @@ const Buttons = () => (
   </div>
 );
 
-export const Navbar = () => {
+export const Navbar = (): JSX.Element => {
   return (
     <Container>
       <List>

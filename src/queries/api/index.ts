@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import SpotifyWebApi from "spotify-web-api-js";
 import {
   mapServerPlaylist,
@@ -6,12 +6,7 @@ import {
   mapUserAttributes,
 } from "./miiixtape/mappingHelpers";
 import { Collection } from "../../types/types";
-import {
-  IPlaylistItem,
-  IPlaylistItems,
-  ServerPlaylist,
-  UserAttributes,
-} from "../types";
+import { PlaylistItems, ServerPlaylistItem, UserAttributes } from "../types";
 import { isAuthenticated } from "../../helpers/utils";
 export { SoundCloud } from "./soundcloud/api";
 export { Youtube } from "./youtube/api";
@@ -33,17 +28,14 @@ playlistInstance.interceptors.request.use((config) => {
   return config;
 });
 
-export const responseBody = (response: AxiosResponse) => {
-  return response.data;
-};
-
 const requests = {
-  get: (url: string) => playlistInstance.get(url).then(responseBody),
-  post: (url: string, body: {}) =>
-    playlistInstance.post(url, body).then(responseBody),
-  put: (url: string, body: {}) =>
-    playlistInstance.put(url, body).then(responseBody),
-  delete: (url: string) => playlistInstance.delete(url).then(responseBody),
+  get: (url: string) => playlistInstance.get(url).then((data) => data.data),
+  post: (url: string, body: Record<string, unknown>) =>
+    playlistInstance.post(url, body).then((data) => data.data),
+  put: (url: string, body: Record<string, unknown>) =>
+    playlistInstance.put(url, body).then((data) => data.data),
+  delete: (url: string) =>
+    playlistInstance.delete(url).then((data) => data.data),
 };
 
 export const Playlist = {
@@ -58,20 +50,24 @@ export const Playlist = {
     requests.get(`/playlists/${id}`).then((data) => mapServerPlaylist(data)),
   createPlaylist: (playlist: {
     playlist: { name: string };
-  }): Promise<ServerPlaylist> => requests.post("playlists", playlist),
+  }): Promise<Collection> =>
+    requests.post("playlists", playlist).then(mapServerPlaylist),
   // updatePost: (post: PostType, id: number): Promise<PostType> =>
   //   requests.put(`posts/${id}`, post),
   deletePlaylist: (id: string): Promise<void> =>
     requests.delete(`playlists/${id}`),
   createPlaylistItems: (
     id: string,
-    playlist_items: IPlaylistItems
-  ): Promise<ServerPlaylist> =>
-    requests.post(`/playlists/${id}/playlist_items`, playlist_items),
-  deletePlaylistItem: (id: string) => requests.delete(`playlist_items/${id}`),
+    playlist_items: PlaylistItems
+  ): Promise<Collection> =>
+    requests
+      .post(`/playlists/${id}/playlist_items`, playlist_items)
+      .then(mapServerPlaylist),
+  deletePlaylistItem: (id: string): Promise<void> =>
+    requests.delete(`playlist_items/${id}`),
   patchPlaylistItem: (
     id: string,
-    playlist_items: IPlaylistItem
+    playlist_items: ServerPlaylistItem
   ): Promise<Collection> =>
     requests
       .put(`playlist_items/${id}`, playlist_items)

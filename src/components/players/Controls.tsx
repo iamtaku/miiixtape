@@ -67,12 +67,12 @@ const PlaybackControlsContainer = styled.div`
   align-items: center;
 `;
 
-const Test = styled.div`
-  position: absolute;
-  z-index: 1000;
-  top: -150px;
-  border: 1px solid red;
-`;
+//const Test = styled.div`
+//  position: absolute;
+//  z-index: 1000;
+//  top: -150px;
+//  border: 1px solid red;
+//`;
 
 const Middle = styled.div`
   grid-area: middle;
@@ -142,8 +142,8 @@ const Link = styled(ReactLink)`
 `;
 
 const Artists: React.FC<{ song: Song | undefined }> = ({ song }) => {
-  if (!!!song || !!!song.artists) return null;
-  if (!!song.artists && !!!song?.artists[0].uri) {
+  if (!song || !song.artists) return null;
+  if (!!song.artists && !song?.artists[0].uri) {
     return <span>{song.artists[0].name}</span>;
   }
   return (
@@ -156,8 +156,8 @@ const Artists: React.FC<{ song: Song | undefined }> = ({ song }) => {
 };
 
 const Album: React.FC<{ song: Song | undefined }> = ({ song }) => {
-  if (!!!song) return null;
-  if (!!!song.album || !!!song?.album.uri) {
+  if (!song) return null;
+  if (!song.album || !song?.album.uri) {
     return <span>{song.name}</span>;
   }
   return (
@@ -206,7 +206,6 @@ export const Controls: React.FC<IControlsProps> = ({
 
   useEffect(() => {
     if (state?.player?.currentSong && songCache?.time) {
-      // console.log(songCache);
       setDuration((_prevState) => convertMilliSecondstoSeconds(songCache.time));
       setValue(0);
     }

@@ -5,7 +5,7 @@ import styled from "styled-components";
 const ErrorWrapper = styled.div`
   grid-area: inner;
 `;
-const Error = () => {
+const Error = (): JSX.Element => {
   console.error("something gone wrong");
   return (
     <ErrorWrapper>

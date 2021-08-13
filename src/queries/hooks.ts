@@ -1,10 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from "react-query";
 import { BaseParams, UserAttributes } from "./types";
 import {
   Artist,
   Collection as CollectionType,
   PlaylistParam,
   Song,
+  Tracks,
 } from "../types/types";
 import { useParams } from "react-router-dom";
 import {
@@ -25,7 +32,9 @@ import {
 import { AxiosError } from "axios";
 import { generatePlaylistTracks } from "./api/miiixtape/generatePlaylistData";
 
-export const useGetArtist = (params: ArtistParams) => {
+export const useGetArtist = (
+  params: ArtistParams
+): UseQueryResult<Artist, Error> => {
   const { data: userInfo } = useGetUser();
   return useQuery<Artist, Error>(
     ["artist", params],
@@ -36,7 +45,10 @@ export const useGetArtist = (params: ArtistParams) => {
   );
 };
 
-export const useGetSinglePlaylist = () => {
+export const useGetSinglePlaylist = (): UseQueryResult<
+  CollectionType,
+  AxiosError
+> => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
   return useQuery<CollectionType, AxiosError>(
@@ -50,11 +62,11 @@ export const useGetSinglePlaylist = () => {
   );
 };
 
-export const useGetUser = () => {
-  return useQuery<UserAttributes>("user", getUser);
+export const useGetUser = (): UseQueryResult<UserAttributes, AxiosError> => {
+  return useQuery<UserAttributes, AxiosError>("user", getUser);
 };
 
-export const useGetAlbum = () => {
+export const useGetAlbum = (): UseQueryResult<CollectionType, AxiosError> => {
   const params = useParams<BaseParams>();
   const { data: userInfo } = useGetUser();
 
@@ -67,21 +79,30 @@ export const useGetAlbum = () => {
   );
 };
 
-export const useGetAllSpotifyPlaylist = () => {
+export const useGetAllSpotifyPlaylist = (): UseQueryResult<
+  CollectionType[],
+  Error
+> => {
   const { data: userInfo } = useGetUser();
   return useQuery("spotifyPlaylistAll", () => getSpotifyPlaylists(userInfo), {
     enabled: !!userInfo,
   });
 };
 
-export const useGetSpotifyUser = () => {
+export const useGetSpotifyUser = (): UseQueryResult<
+  SpotifyApi.UserProfileResponse,
+  Error
+> => {
   const { data: userInfo } = useGetUser();
   return useQuery("spotifyInfo", () => getSpotifyInfo(userInfo), {
     enabled: !!userInfo,
   });
 };
 
-export const useGetTrack = (song: Song, collectionId: string) => {
+export const useGetTrack = (
+  song: Song,
+  collectionId: string
+): UseQueryResult<Song, AxiosError> => {
   const { data: userInfo } = useGetUser();
   const queryClient = useQueryClient();
   return useQuery<Song, AxiosError>(
@@ -98,14 +119,25 @@ export const useGetTrack = (song: Song, collectionId: string) => {
   );
 };
 
-export const useGetAllPlaylists = () =>
+export const useGetAllPlaylists = (): UseQueryResult<
+  CollectionType[],
+  AxiosError
+> =>
   useQuery<CollectionType[], AxiosError>("playlistAll", Playlist.getPlaylists);
 
-export const usePostPlaylistItems = () => {
+export const usePostPlaylistItems = (): UseMutationResult<
+  CollectionType,
+  unknown,
+  {
+    id: string;
+    tracks: Tracks;
+  },
+  void
+> => {
   const queryClient = useQueryClient();
   return useMutation(postPlaylistItems, {
     onMutate: ({ id, tracks }) => console.log(id, tracks),
-    onSuccess: (data, { id, tracks }) => {
+    onSuccess: (_data, { id }) => {
       // change below so we don't refetch data!!
       queryClient.invalidateQueries(["collection", id]);
     },
@@ -116,11 +148,19 @@ export const usePostPlaylistItems = () => {
   });
 };
 
-export const usePatchPlaylistItems = () => {
-  const queryClient = useQueryClient();
+export const usePatchPlaylistItems = (): UseMutationResult<
+  CollectionType,
+  unknown,
+  {
+    id: string;
+    position: number;
+  },
+  unknown
+> => {
+  // const queryClient = useQueryClient();
   return useMutation(patchPlaylistItem, {
     // onMutate: ({ id, tracks }) => console.log(id, tracks),
-    onSuccess: (data, {}) => {
+    onSuccess: (_data) => {
       // change below so we don't refetch data!!
       // queryClient.invalidateQueries(["collection", id]);
       //
@@ -132,20 +172,30 @@ export const usePatchPlaylistItems = () => {
   });
 };
 
-export const usePostPlaylist = () => {
+export const usePostPlaylist = (): UseMutationResult<
+  CollectionType,
+  unknown,
+  string,
+  unknown
+> => {
   const queryClient = useQueryClient();
   return useMutation(postPlaylist, {
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data
     },
   });
 };
 
-export const useDeletePlaylist = () => {
+export const useDeletePlaylist = (): UseMutationResult<
+  void,
+  unknown,
+  void,
+  unknown
+> => {
   const params = useParams<PlaylistParam>();
   const queryClient = useQueryClient();
   return useMutation(() => deletePlaylist(params.id), {
-    onSuccess: (data, error, editedValue) => {
+    onSuccess: (_data) => {
       queryClient.removeQueries([
         "collection",
         { id: params.id, service: params.service },
@@ -159,7 +209,12 @@ export const useDeletePlaylist = () => {
   });
 };
 
-export const useDeletePlaylistItem = () => {
+export const useDeletePlaylistItem = (): UseMutationResult<
+  void,
+  unknown,
+  string,
+  unknown
+> => {
   const params = useParams<PlaylistParam>();
   const queryClient = useQueryClient();
   return useMutation(deletePlaylistItem, {
@@ -170,9 +225,9 @@ export const useDeletePlaylistItem = () => {
   });
 };
 
-export const useFetchSongCache = (id?: string) => {
+export const useFetchSongCache = (id?: string): Song | undefined => {
   const queryClient = useQueryClient();
-  if (!!!id) return undefined;
+  if (!id) return undefined;
   const songCache = queryClient.getQueryData<Song>(["song", id]);
   return songCache;
 };

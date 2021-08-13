@@ -18,10 +18,6 @@ import { PlaybackButton } from "../../Buttons";
 import { useGlobalContext } from "../../../state/context";
 import { useRef } from "react";
 
-interface ButtonsProps {
-  data: Collection;
-}
-
 const ButtonWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -81,15 +77,10 @@ const ImportBtn = styled(Btn)`
   color: var(--secondary);
 `;
 
-interface IDropdownContainer {
-  top?: number;
-  width?: number;
-}
-
 const DropdownContainer = styled.div<IDropdownContainer>`
   position: absolute;
-  top: ${(props) => (!!props.top ? `${props.top}px` : "default")};
-  width: ${(props) => (!!props.width ? `${props.width}px` : "default")};
+  top: ${(props) => (props.top ? `${props.top}px` : "default")};
+  width: ${(props) => (props.width ? `${props.width}px` : "default")};
 `;
 const Wrapper = styled(DropdownContainer)`
   background-color: var(--light-gray);
@@ -140,17 +131,22 @@ const DisabledWrapper = styled.div<{ isDisabled: boolean }>`
       : null}
 `;
 
-interface IDisabled {
-  isDisabled: boolean;
-}
-
 const ImportButton = () => {
   return <ImportBtn>IMPORT</ImportBtn>;
 };
 
+interface IDisabled {
+  isDisabled: boolean;
+}
+
 const Disabled: React.FC<IDisabled> = ({ children, isDisabled }) => {
   return <DisabledWrapper isDisabled={isDisabled}>{children}</DisabledWrapper>;
 };
+
+interface IDropdownContainer {
+  top?: number;
+  width?: number;
+}
 
 const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
   const { dispatch } = useGlobalContext();
@@ -217,23 +213,32 @@ const OptionsButton = () => {
   );
 };
 
+const PauseBtn = () => {
+  return (
+    <FaPause>
+      <span>PAUSE</span>
+    </FaPause>
+  );
+};
+
+const PlayBtn = () => (
+  <FaPlay>
+    <span>PLAY</span>
+  </FaPlay>
+);
+
+interface ButtonsProps {
+  data: Collection;
+}
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
+
+  const isCurrentAndIsPlaying = isCurrent && isPlaying;
 
   return (
     <ButtonWrapper>
       <PlayButton data={data}>
-        {isCurrent && isPlaying ? (
-          <>
-            <FaPause />
-            <span>PAUSE</span>
-          </>
-        ) : (
-          <>
-            <FaPlay />
-            <span>PLAY</span>
-          </>
-        )}
+        {isCurrentAndIsPlaying ? <PauseBtn /> : <PlayBtn />}
       </PlayButton>
       <OptionsButton />
     </ButtonWrapper>

@@ -57,7 +57,7 @@ export const mergeAlbumWithTrack = (
 
 export const mapSpotifyAlbumtoPlaylist = (
   album: SpotifyApi.SingleAlbumResponse
-) => {
+): Collection => {
   const playlistInfo: PlaylistInfo = {
     id: album.id,
     name: album.name,

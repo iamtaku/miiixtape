@@ -19,7 +19,9 @@ export const getSpotifyPlaylists = async (
   throw new Error("something wrong");
 };
 
-export const getSpotifyInfo = async (userInfo?: UserAttributes) => {
+export const getSpotifyInfo = async (
+  userInfo?: UserAttributes
+): Promise<SpotifyApi.UserProfileResponse> => {
   if (!userInfo) throw new Error("spotify auth failed");
   if (userInfo.access_token && userInfo.spotify_id) {
     return await Spotify.getUser(
@@ -27,6 +29,8 @@ export const getSpotifyInfo = async (userInfo?: UserAttributes) => {
       client(userInfo.access_token)
     );
   }
+
+  throw new Error("spotify auth failed");
 };
 
 export const getAlbum = async (

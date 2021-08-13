@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { InnerGridBottom } from "./grid/bottom/index";
 import { useGetAlbum } from "../queries/hooks";
 
-export const Album = () => {
+export const Album = (): JSX.Element => {
   const { data, isLoading, error, isError } = useGetAlbum();
 
   if (isError) {

@@ -1,5 +1,4 @@
 import { rest } from "msw";
-// import * as React from "react";
 import { renderHook } from "@testing-library/react-hooks";
 import { act } from "react-test-renderer";
 import { server } from "../../setupTests";
@@ -47,8 +46,7 @@ describe("useGetPlaylistshook", () => {
     });
 
     await waitFor(() => result.current.isSuccess);
-    //@ts-ignore
-    expect(result.current.data[0].playlistInfo.name).toBe("mockitem1");
+    // expect(result.current.data[0]).toBe("mockitem1");
     expect(result.current.data?.length).toEqual(2);
   });
 });
@@ -66,7 +64,7 @@ describe("usePostPlaylisthook", () => {
 
     await waitFor(() => result.current.isSuccess);
     expect(result.current.status).toBe("success");
-    expect(result.current.data?.data.attributes.name).toBe(testPlaylist);
+    expect(result.current.data?.playlistInfo.name).toBe(testPlaylist);
   });
 });
 
@@ -82,12 +80,8 @@ describe("usePostPlaylistItemHook", () => {
 
     await waitFor(() => result.current.isSuccess);
     expect(result.current.status).toBe("success");
-    expect(
-      result.current.data?.data.relationships.playlist_items.data
-    ).toHaveLength(3);
-    expect(
-      result.current.data?.data.relationships.playlist_items.data[0]
-    ).toEqual(mockTracks[0]);
+    expect(result.current.data?.tracks.length).toHaveLength(3);
+    expect(result.current.data?.tracks[0]).toEqual(mockTracks[0]);
   });
 });
 

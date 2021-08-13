@@ -1,6 +1,6 @@
 import React from "react";
 
-export const UnAuthenticatedSidebar = () => {
+export const UnAuthenticatedSidebar = (): JSX.Element => {
   return (
     <div>
       <p>not authenticated</p>
