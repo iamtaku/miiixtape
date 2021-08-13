@@ -1,6 +1,6 @@
 import { Song, Service, Collection, Tracks } from "../types/types";
 
-export type ActionMap<M extends { [index: string]: any }> = {
+export type ActionMap<M extends { [index: string]: unknown }> = {
   [Key in keyof M]: M[Key] extends undefined
     ? {
         type: Key;
@@ -21,15 +21,15 @@ export type PlaybackPayload = {
   SET_TRACK: {
     track: Song;
   };
-  SONG_END: {};
-  SET_NEXT: {};
-  PAUSE_CURRENT: {};
-  PLAY: {};
-  PLAY_PREVIOUS: {};
-  PLAYBACK_FINISH: {};
-  IS_LOADING: {};
-  LOADING_FINISH: {};
-  INITIALIZE: {};
+  SONG_END: Record<string, never>;
+  SET_NEXT: Record<string, never>;
+  PAUSE_CURRENT: Record<string, never>;
+  PLAY: Record<string, never>;
+  PLAY_PREVIOUS: Record<string, never>;
+  PLAYBACK_FINISH: Record<string, never>;
+  IS_LOADING: Record<string, never>;
+  LOADING_FINISH: Record<string, never>;
+  INITIALIZE: Record<string, never>;
   DELETE_COLLECTION: { id: string };
   ADD_TO_QUEUE: {
     tracks: Tracks;
@@ -63,7 +63,7 @@ export type UIPayload = {
     currentModalId?: string;
     track?: Song;
   };
-  CLOSE_MODAL: {};
+  CLOSE_MODAL: Record<string, never>;
 };
 
 export type UIType = {

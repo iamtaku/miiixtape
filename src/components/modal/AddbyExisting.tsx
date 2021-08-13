@@ -51,7 +51,7 @@ export const AddbyExisting: React.FC<{
         </List>
       ) : (
         <p style={{ padding: "2px 24px" }}>
-          You don't have any spotify playlists to import
+          You don&apos;t have any spotify playlists to import
         </p>
       )}
     </>

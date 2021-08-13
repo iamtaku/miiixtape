@@ -56,7 +56,7 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
                 draggableId={playlist.playlistInfo.id}
                 index={index}
               >
-                {(provided, snapshot) => (
+                {(provided, _snapshot) => (
                   <ItemContainer
                     ref={provided.innerRef}
                     {...provided.draggableProps}

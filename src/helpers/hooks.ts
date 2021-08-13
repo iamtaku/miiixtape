@@ -71,7 +71,7 @@ export const useIsCurrentTrack = (track?: Song): ICurrent => {
   };
 };
 
-export const useIsOwner = (playlistId: string) => {
+export const useIsOwner = (playlistId: string): boolean => {
   const { data: userInfo } = useGetUser();
   const queryClient = useQueryClient();
   const currentPlaylist = queryClient.getQueryData<Collection>([

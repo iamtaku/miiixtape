@@ -56,7 +56,7 @@ const FetchButton = styled.button`
   }
 `;
 
-export const AddItemModal = () => {
+export const AddItemModal = (): JSX.Element => {
   const { state } = useGlobalContext();
   const { data, isLoading } = useGetAllPlaylists();
 
@@ -74,7 +74,7 @@ export const AddItemModal = () => {
         </List>
       ) : (
         <p style={{ padding: "2px 24px" }}>
-          You don't have any spotify playlists to import
+          You don&apos;t have any spotify playlists to import
         </p>
       )}
       <button>Close</button>

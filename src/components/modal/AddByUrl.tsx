@@ -14,6 +14,7 @@ import { useGetUser } from "../../queries/hooks";
 import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
 import { Collection, PlaylistInfo, Service } from "../../types/types";
 import { Loading, Error } from "./Shared";
+import { SoundcloudPlaylist } from "soundcloud.ts";
 
 interface IAddByUrl {
   handleFetch: (collection: Collection) => void;
@@ -70,7 +71,6 @@ const fetchYoutube = async (uri: string): Promise<Collection> => {
     return playlist;
   }
   const fetchURI = stripYoutubeURI(uri);
-  debugger;
   const data = await Youtube.getVideo(fetchURI);
   const playlistInfo: PlaylistInfo = {
     id: "",
@@ -108,9 +108,9 @@ const fetchSpotify = async (
   };
 };
 
-const mapSoundCloudPlaylistInfo = (data: any): PlaylistInfo => {
+const mapSoundCloudPlaylistInfo = (data: SoundcloudPlaylist): PlaylistInfo => {
   return {
-    id: data.id,
+    id: data.id.toString(),
     name: data.title,
     service: "soundcloud",
     external_urls: data.permalink_url,
@@ -119,8 +119,7 @@ const mapSoundCloudPlaylistInfo = (data: any): PlaylistInfo => {
 };
 
 const fetchSC = async (uri: string): Promise<Collection> => {
-  debugger;
-  const trackInfo = await SoundCloud.getTrackInfo(uri);
+  const trackInfo = await SoundCloud.getTrackInfo<SoundcloudPlaylist>(uri);
   const playlistInfo = mapSoundCloudPlaylistInfo(trackInfo);
   const data = trackInfo.tracks.map(mapSCTracktoTrack);
   return {

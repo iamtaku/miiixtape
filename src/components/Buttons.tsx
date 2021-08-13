@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useQueryClient } from "react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +9,15 @@ import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/api";
 import { useGetUser } from "../queries/hooks";
 import { useIsCurrentPlaylist, useIsCurrentTrack } from "../helpers/hooks";
+
+const Button = styled.button`
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 const LoginBtn = styled.a`
   margin: 16px;
@@ -20,7 +30,7 @@ const LoginBtn = styled.a`
   align-self: center;
 `;
 
-export const LoginButton: React.FC = ({ children }) => {
+export const LoginButton: React.FC = () => {
   const URL = `${process.env.REACT_APP_BASE_URL}/auth`;
 
   return (
@@ -64,18 +74,11 @@ box-shadow: inset 20px 20px 60px #2d2d2d,
 
 interface IProps {
   data: Collection;
+  className?: string;
+  children: React.ReactChild;
 }
 
-const Button = styled.button`
-  border: none;
-  background: transparent;
-  color: var(--accent);
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
+export const PlaybackButton: React.FC<IProps> = ({
   data,
   children,
   className,
@@ -86,7 +89,7 @@ export const PlaybackButton: React.FC<IProps & { className?: string }> = ({
   const queryClient = useQueryClient();
 
   const handlePlayback = async (data: Collection) => {
-    let cache = queryClient.getQueryData<Collection>([
+    const cache = queryClient.getQueryData<Collection>([
       "collection",
       {
         id: data.playlistInfo.id,
@@ -202,4 +205,8 @@ export const TrackPlaybackButton: React.FC<
       {children}
     </Button>
   );
+};
+
+LoginButton.propTypes = {
+  children: PropTypes.node.isRequired,
 };

@@ -1,4 +1,5 @@
 // import { LoginButton } from "../components/Buttons";
+import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Navbar } from "../components/navbar";
@@ -16,8 +17,6 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-// const LoginButton = () =>
-
 const Hero = () => (
   <Container>
     <h1>Create Your Digital Mixtape</h1>
@@ -25,7 +24,7 @@ const Hero = () => (
   </Container>
 );
 
-const Landing = () => {
+const Landing = (): JSX.Element => {
   return (
     <LandingWrapper>
       <Navbar />

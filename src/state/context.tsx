@@ -5,7 +5,7 @@ import { PlaybackType, UIType } from "./types";
 
 export const fetchVolume = (): number => {
   const local = window.localStorage.getItem("volume");
-  if (!!local) return +local;
+  if (local) return +local;
   return 50;
 };
 
@@ -63,6 +63,9 @@ const AppProvider: React.FC = ({ children }) => {
   );
 };
 
-export const useGlobalContext = () => useContext(AppContext);
+export const useGlobalContext = (): {
+  state: InitialStateType;
+  dispatch: Dispatch<PlaybackActions | UIActions>;
+} => useContext(AppContext);
 
 export { AppContext, AppProvider };

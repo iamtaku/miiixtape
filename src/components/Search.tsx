@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams } from "react-router-dom";
 import { QueryClient } from "react-query";
 import styled from "styled-components";
@@ -10,9 +11,8 @@ const SearchWrapper = styled.div`
   grid-area: inner;
 `;
 
-export const Search = () => {
+export const Search = (): JSX.Element => {
   const location = useParams<SearchParam>();
-  console.log(location);
   const queryClient = new QueryClient();
   const data = queryClient.getQueryData(["userInfo"]);
   console.log(data);

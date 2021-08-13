@@ -80,7 +80,7 @@ export const InnerGridBottom: React.FC<IGridProps> = ({
           <TrackList ref={provided.innerRef} {...provided.droppableProps}>
             {data?.tracks?.map((track, index) => (
               <Draggable key={track.id} draggableId={track.id} index={index}>
-                {(provided, snapshot) => (
+                {(provided, _snapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}

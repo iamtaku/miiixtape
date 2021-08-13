@@ -82,9 +82,11 @@ export const Loading: React.FC<{ style?: React.CSSProperties }> = ({
   </Loader>
 );
 
-export const Success = () => <IoMdCheckmark style={{ color: "green" }} />;
+export const Success = (): JSX.Element => (
+  <IoMdCheckmark style={{ color: "green" }} />
+);
 
-export const Error = () => (
+export const Error = (): JSX.Element => (
   <IoIosWarning style={{ color: "var(--red)", placeSelf: "center end" }} />
 );
 

@@ -28,8 +28,8 @@ const SecondaryText = styled.span`
   opacity: 0.7;
 `;
 
-export const Login = () => {
-  let history = useHistory();
+export const Login = (): JSX.Element => {
+  const history = useHistory();
   useEffect(() => {
     if (history.location.search.includes("code=")) {
       api

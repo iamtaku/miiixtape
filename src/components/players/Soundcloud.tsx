@@ -17,9 +17,9 @@ export const Soundcloud: React.FC<IProps> = ({ setSoundCloud }) => {
     console.log("soundcloud  went wrong");
   };
 
-  const handleOnPause = () => {
-    dispatch({ type: "PAUSE_CURRENT", payload: {} });
-  };
+  //  const handleOnPause = () => {
+  //    dispatch({ type: "PAUSE_CURRENT", payload: {} });
+  //  };
 
   const handleOnPlay = () => dispatch({ type: "LOADING_FINISH", payload: {} });
 

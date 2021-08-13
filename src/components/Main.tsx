@@ -1,7 +1,8 @@
+import React from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useGetUser } from "../queries/hooks";
 
-export const Main = () => {
+export const Main = (): JSX.Element => {
   const { search } = useLocation();
   const history = useHistory();
   console.log(window.localStorage.getItem("token"));

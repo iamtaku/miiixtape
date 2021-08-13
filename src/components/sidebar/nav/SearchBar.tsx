@@ -33,7 +33,7 @@ export const SearchBarWrapper = styled.div`
   }
 `;
 
-export const SearchBar = () => {
+export const SearchBar = (): JSX.Element => {
   const [search, setSearch] = useState("");
   const history = useHistory();
 

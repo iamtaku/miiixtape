@@ -1,20 +1,34 @@
+import {
+  YoutubeSearch,
+  YoutubeVideoContentDetails,
+  YoutubeVideoSearchItem,
+} from "youtube.ts";
 import { Service, Song, Tracks } from "../types/types";
+
+export interface YoutubeVideoSearchItemFull extends YoutubeVideoSearchItem {
+  contentDetails: YoutubeVideoContentDetails;
+}
+
+export interface YoutubeVideoSearchFull extends YoutubeSearch {
+  items: YoutubeVideoSearchItemFull[];
+}
+
 export interface BaseParams {
   service: string;
   id: string;
 }
 
-export interface IPlaylistItems {
+export type PlaylistItems = {
   playlist_items: {
     songs: Tracks;
   };
-}
+};
 
-export interface IPlaylistItem {
+export type ServerPlaylistItem = {
   playlist_items: {
     position: number;
   };
-}
+};
 
 export interface ServerResponse {
   data: UserData;

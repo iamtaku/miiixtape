@@ -12,7 +12,7 @@ import { Artist } from "./components/artist";
 import { Login } from "./pages/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
-export const Routes = () => (
+export const Routes = (): JSX.Element => (
   <BrowserRouter>
     <Switch>
       <Route path="/app">

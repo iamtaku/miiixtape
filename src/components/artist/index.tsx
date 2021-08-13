@@ -4,7 +4,7 @@ import { useGetArtist } from "../../queries/hooks";
 import { ArtistParams } from "../../queries/api";
 import { ArtistGridBottom } from "./ArtistGridBottom";
 
-export const Artist = () => {
+export const Artist = (): JSX.Element => {
   const params = useParams<ArtistParams>();
   const { data, isLoading, isError } = useGetArtist(params);
   console.log(data, isError);

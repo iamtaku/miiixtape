@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import { usePostPlaylist } from "../../queries/hooks";
@@ -44,7 +43,7 @@ const Input = styled.input`
   }
 `;
 
-export const AddPlaylistForm = () => {
+export const AddPlaylistForm = (): JSX.Element => {
   const mutation = usePostPlaylist();
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -52,7 +51,7 @@ export const AddPlaylistForm = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      mutation.mutateAsync(input).then((data) => {
+      mutation.mutateAsync(input).then((_data) => {
         setInput("");
         setIsInputOpen(false);
       });

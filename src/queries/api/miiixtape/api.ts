@@ -62,7 +62,7 @@ export const postPlaylistItems = async ({
 }: {
   id: string;
   tracks: Tracks;
-}) => {
+}): Promise<Collection> => {
   const body = {
     playlist_items: {
       songs: tracks,
@@ -71,7 +71,7 @@ export const postPlaylistItems = async ({
   return await Playlist.createPlaylistItems(id, body);
 };
 
-export const postPlaylist = async (name: string) => {
+export const postPlaylist = async (name: string): Promise<Collection> => {
   const payload = {
     playlist: {
       name,
@@ -80,11 +80,11 @@ export const postPlaylist = async (name: string) => {
   return await Playlist.createPlaylist(payload);
 };
 
-export const deletePlaylistItem = async (id: string) => {
+export const deletePlaylistItem = async (id: string): Promise<void> => {
   return await Playlist.deletePlaylistItem(id);
 };
 
-export const deletePlaylist = async (id: string) => {
+export const deletePlaylist = async (id: string): Promise<void> => {
   return await Playlist.deletePlaylist(id);
 };
 
@@ -94,7 +94,7 @@ export const patchPlaylistItem = async ({
 }: {
   id: string;
   position: number;
-}) => {
+}): Promise<Collection> => {
   const payload = {
     playlist_items: {
       position,

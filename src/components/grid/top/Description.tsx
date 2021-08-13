@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import { Collection, Service } from "../../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -69,7 +69,7 @@ const TitleContainer = styled.div`
   align-items: center;
 `;
 
-export const Modal = () => {
+export const Modal = (): JSX.Element | null => {
   const { state, dispatch } = useGlobalContext();
 
   if (!state.ui.isModalOpen || state.ui.modalType === null) return null;

@@ -1,3 +1,4 @@
+import { insertItemsToArray } from "../../helpers/utils";
 import { Collection, Song, Tracks } from "../../types/types";
 import { player as initial } from "../context";
 import { ActionMap, PlaybackPayload, PlaybackType } from "../types";
@@ -125,26 +126,20 @@ const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
   return newState;
 };
 
-const insert = (arr: any[], index: number, newItem: any[]) => [
-  ...arr.slice(0, index),
-  ...newItem,
-  ...arr.slice(index),
-];
-
 const handleAddToNext = (
   currentSong: Song,
   currentTracks: Tracks,
   tracks: Tracks
 ) => {
   const index = currentIndex(currentTracks, currentSong);
-  const newTracks = insert(currentTracks, index, tracks);
+  const newTracks = insertItemsToArray(currentTracks, index, tracks);
   return newTracks;
 };
 
 export const playbackReducer = (
   state: PlaybackType,
   action: PlaybackActions
-) => {
+): PlaybackType => {
   let newState: PlaybackType;
   let newCollection: Collection;
   switch (action.type) {
@@ -216,7 +211,7 @@ export const playbackReducer = (
       };
       return {
         ...state,
-        newCollection,
+        currentCollection: newCollection,
       };
     case "ADD_TO_NEXT":
       if (!state.currentCollection?.tracks || !state.currentSong) return state;
@@ -241,7 +236,7 @@ export const playbackReducer = (
       };
       return {
         ...state,
-        newCollection,
+        currentCollection: newCollection,
       };
 
     default:

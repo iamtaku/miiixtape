@@ -11,7 +11,7 @@ const YoutubeWrapper = styled.div`
 `;
 
 interface YoutubeProps {
-  setYoutube: Dispatch<SetStateAction<any>>;
+  setYoutube: Dispatch<SetStateAction<YouTubePlayer | undefined>>;
 }
 
 interface IYoutubeEvent {
@@ -30,14 +30,14 @@ export const Youtube: React.FC<YoutubeProps> = ({ setYoutube }) => {
       : ref.current?.getInternalPlayer().pauseVideo();
   }, [isPlaying]);
 
-  const handleOnReady = ({ target, data }: IYoutubeEvent) => {
+  const handleOnReady = ({ target }: IYoutubeEvent) => {
     target.seekTo(0, true);
     target.setVolume(fetchVolume());
     dispatch({ type: "LOADING_FINISH", payload: {} });
     setYoutube(target);
   };
 
-  const handleOnEnd = ({ target, data }: IYoutubeEvent) => {
+  const handleOnEnd = () => {
     console.log("youtubed finished!");
     dispatch({
       type: "SONG_END",
@@ -53,14 +53,13 @@ export const Youtube: React.FC<YoutubeProps> = ({ setYoutube }) => {
     });
   };
 
-  const handleOnPause = ({ target, data }: IYoutubeEvent) => {
+  const handleOnPause = () => {
     console.log("pausing youtube");
     !isPlaying && dispatch({ type: "PAUSE_CURRENT", payload: {} });
   };
 
   const handleOnStateChange = ({
     target,
-    data,
   }: {
     target: YouTubePlayer;
     data: number;
@@ -75,7 +74,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ setYoutube }) => {
     }
   };
 
-  const handleOnError = ({ target, data }: IYoutubeEvent) => {
+  const handleOnError = () => {
     console.error("youtube err");
   };
 
@@ -83,7 +82,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ setYoutube }) => {
     height: "100",
     width: "100",
     playerVars: {
-      autoplay: 1 as 1,
+      autoplay: 1 as const,
       start: 0,
     },
   };
