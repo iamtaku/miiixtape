@@ -136,7 +136,6 @@ export const usePostPlaylistItems = (): UseMutationResult<
 > => {
   const queryClient = useQueryClient();
   return useMutation(postPlaylistItems, {
-    onMutate: ({ id, tracks }) => console.log(id, tracks),
     onSuccess: (_data, { id }) => {
       // change below so we don't refetch data!!
       queryClient.invalidateQueries(["collection", id]);

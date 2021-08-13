@@ -84,7 +84,7 @@ export const mapPlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
 
 export const mapServerPlaylist = (data: ServerPlaylist): Collection => {
   const playlistInfo = mapPlaylistInfo(data);
-  if (data.included.length === 0) {
+  if (!data.included) {
     return {
       playlistInfo,
       tracks: [],
