@@ -20,6 +20,7 @@ import { ItemContainer } from "./Shared";
 interface TrackProps {
   track: Song;
   index: number;
+  isDragDisabled: boolean;
   isDragging?: boolean;
   isGroupedOver?: boolean;
 }
@@ -28,7 +29,12 @@ const Item = styled.span`
   ${ItemStyling}
 `;
 
-const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
+const Container = styled(ItemContainer)<{
+  isCurrent?: boolean;
+  isDragDisabled?: boolean;
+}>`
+  position: relative;
+  opacity: ${(props) => (props.isDragDisabled ? "0.2" : "1")};
   display: grid;
   grid-column-gap: 8px;
   padding: 0px 12px;
@@ -71,7 +77,11 @@ const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
 
 const Placeholder = () => <h1>Placeholder</h1>;
 
-export const Track: React.FC<TrackProps> = ({ track, index }) => {
+export const Track: React.FC<TrackProps> = ({
+  track,
+  index,
+  isDragDisabled,
+}) => {
   const location = useLocation();
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
@@ -96,7 +106,11 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
       scrollContainer={".main"}
       key={index.toString()}
     >
-      <Container isCurrent={isCurrent} onMouseLeave={handleOnMouseLeave}>
+      <Container
+        isCurrent={isCurrent}
+        onMouseLeave={handleOnMouseLeave}
+        isDragDisabled={isDragDisabled}
+      >
         <IndexPlayButton
           index={index}
           isPlaying={isPlaying}

@@ -47,6 +47,16 @@ export const uiReducer = (state: UIType, action: UIActions): UIType => {
         currentModalId: null,
         currentTrack: null,
       };
+    case "DISABLE_DROP":
+      return {
+        ...state,
+        disabledSection: action.payload.section,
+      };
+    case "RESET_DROP":
+      return {
+        ...state,
+        disabledSection: null,
+      };
     default:
       return state;
   }

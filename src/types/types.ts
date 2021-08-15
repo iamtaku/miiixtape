@@ -34,6 +34,7 @@ export type Tracks = Song[];
 export type Collection = {
   playlistInfo: PlaylistInfo;
   tracks: Tracks;
+  position: number | null;
 };
 
 export type PlaylistInfo = {

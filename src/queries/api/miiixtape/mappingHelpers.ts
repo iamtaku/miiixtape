@@ -45,6 +45,7 @@ export const mapServerPlaylistMultiple = (
         owner: item.relationships.user.data.id,
       },
       tracks: [],
+      position: item.attributes.position,
     };
   });
   return mappedData;
@@ -57,6 +58,7 @@ export const mapTrackToPlaylist = (track: Song): Collection => ({
     owner: "",
   },
   tracks: [{ ...track }],
+  position: null,
 });
 
 export const generateServices = (tracks: Tracks): Service[] => {
@@ -88,11 +90,13 @@ export const mapServerPlaylist = (data: ServerPlaylist): Collection => {
     return {
       playlistInfo,
       tracks: [],
+      position: data.data.attributes.position,
     };
   }
   const tracks = data.included.map(mapPlaylistItemToTrack);
   return {
     playlistInfo,
     tracks,
+    position: data.data.attributes.position,
   };
 };

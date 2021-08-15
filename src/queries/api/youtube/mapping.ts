@@ -63,5 +63,6 @@ export const mapYoutubePlaylistToPlaylist = ({
   return {
     playlistInfo,
     tracks,
+    position: null,
   };
 };

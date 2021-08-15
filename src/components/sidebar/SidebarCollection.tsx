@@ -1,6 +1,7 @@
 import React from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
+import { useGlobalContext } from "../../state/context";
 import { Collection } from "../../types/types";
 import { SidebarItem } from "./SidebarItem";
 
@@ -37,6 +38,7 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   data,
   title,
 }) => {
+  const { state } = useGlobalContext();
   return (
     <List>
       <TitleSection>
@@ -44,16 +46,16 @@ export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
           <Title>{title}</Title>
         </Container>
       </TitleSection>
-      {/* {data?.map((playlist) => (
-        <SidebarItem playlist={playlist} key={playlist.playlistInfo.id} />
-      ))} */}
-      <Droppable droppableId={"sidebar"}>
+      <Droppable
+        droppableId={"sidebar"}
+        isCombineEnabled={state.ui.disabledSection !== "TRACKS"}
+      >
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {data?.map((playlist, index) => (
               <Draggable
                 key={playlist.playlistInfo.id}
-                draggableId={playlist.playlistInfo.id}
+                draggableId={`${playlist.playlistInfo.id}/sidebar`}
                 index={index}
               >
                 {(provided, _snapshot) => (

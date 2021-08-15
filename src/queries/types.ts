@@ -30,6 +30,14 @@ export type ServerPlaylistItem = {
   };
 };
 
+export type ServerPlaylistPayload = {
+  playlist: {
+    position?: number;
+    name?: string;
+    editable?: boolean;
+  };
+};
+
 export interface ServerResponse {
   data: UserData;
 }
@@ -81,6 +89,7 @@ interface PlaylistItem extends SingleDataItem {
 interface ServerPlaylistsItem extends PlaylistItem {
   attributes: {
     name: string;
+    position: number;
   };
   relationships: {
     user: {
@@ -156,6 +165,7 @@ interface RelationshipItem {
 export interface PlaylistAttributes {
   name: string;
   description?: string;
+  position: number | null;
 }
 
 export interface SongRelationshipAttribute {

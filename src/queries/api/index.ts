@@ -6,7 +6,12 @@ import {
   mapUserAttributes,
 } from "./miiixtape/mappingHelpers";
 import { Collection } from "../../types/types";
-import { PlaylistItems, ServerPlaylistItem, UserAttributes } from "../types";
+import {
+  PlaylistItems,
+  ServerPlaylistItem,
+  UserAttributes,
+  ServerPlaylistPayload,
+} from "../types";
 import { isAuthenticated } from "../../helpers/utils";
 export { SoundCloud } from "./soundcloud/api";
 export { Youtube } from "./youtube/api";
@@ -47,13 +52,16 @@ export const Playlist = {
     id: string,
     _client: SpotifyWebApi.SpotifyWebApiJs
   ): Promise<Collection> =>
-    requests.get(`/playlists/${id}`).then((data) => mapServerPlaylist(data)),
+    requests.get(`/playlists/${id}`).then(mapServerPlaylist),
   createPlaylist: (playlist: {
     playlist: { name: string };
   }): Promise<Collection> =>
     requests.post("playlists", playlist).then(mapServerPlaylist),
-  // updatePost: (post: PostType, id: number): Promise<PostType> =>
-  //   requests.put(`posts/${id}`, post),
+  patchPlaylist: (
+    id: string,
+    playlist: ServerPlaylistPayload
+  ): Promise<Collection> =>
+    requests.put(`playlists/${id}`, playlist).then(mapServerPlaylist),
   deletePlaylist: (id: string): Promise<void> =>
     requests.delete(`playlists/${id}`),
   createPlaylistItems: (

@@ -39,6 +39,7 @@ export const mapSpotifyToPlaylist = (
         service: "spotify",
       },
       tracks: [],
+      position: null,
     };
   });
   return mappedData;
@@ -74,6 +75,7 @@ export const mapSpotifyAlbumtoPlaylist = (
   return {
     playlistInfo,
     tracks,
+    position: null,
   };
 };
 
@@ -131,6 +133,7 @@ export const mapSpotifyPlaylistToPlaylist = (
   return {
     playlistInfo,
     tracks,
+    position: null,
   };
 };
 

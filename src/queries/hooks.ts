@@ -28,6 +28,7 @@ import {
   deletePlaylist,
   deletePlaylistItem,
   patchPlaylistItem,
+  patchPlaylist,
 } from "./api/";
 import { AxiosError } from "axios";
 import { generatePlaylistTracks } from "./api/miiixtape/generatePlaylistData";
@@ -41,23 +42,6 @@ export const useGetArtist = (
     () => getArtist(params, userInfo),
     {
       enabled: !!userInfo,
-    }
-  );
-};
-
-export const useGetSinglePlaylist = (): UseQueryResult<
-  CollectionType,
-  AxiosError
-> => {
-  const params = useParams<PlaylistParam>();
-  const { data: userInfo } = useGetUser();
-  return useQuery<CollectionType, AxiosError>(
-    ["collection", params.id],
-    () => getPlaylist({ id: params.id, service: params.service }, userInfo),
-    {
-      enabled: !!userInfo,
-      refetchInterval: false,
-      retry: 3,
     }
   );
 };
@@ -136,9 +120,8 @@ export const usePostPlaylistItems = (): UseMutationResult<
 > => {
   const queryClient = useQueryClient();
   return useMutation(postPlaylistItems, {
-    onSuccess: (_data, { id }) => {
-      // change below so we don't refetch data!!
-      queryClient.invalidateQueries(["collection", id]);
+    onSuccess: (data, { id }) => {
+      queryClient.setQueryData(["collection", id], data);
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");
@@ -153,16 +136,17 @@ export const usePatchPlaylistItems = (): UseMutationResult<
   {
     id: string;
     position: number;
+    updatedTracks?: Tracks;
   },
   unknown
 > => {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation(patchPlaylistItem, {
-    // onMutate: ({ id, tracks }) => console.log(id, tracks),
-    onSuccess: (_data) => {
-      // change below so we don't refetch data!!
-      // queryClient.invalidateQueries(["collection", id]);
-      //
+    onSuccess: (data, { id, updatedTracks }) => {
+      queryClient.setQueryData(["collection", id], () => ({
+        ...data,
+        tracks: updatedTracks,
+      }));
     },
     onError: (error) => {
       console.error("no joy for postplaylistitems");
@@ -181,6 +165,24 @@ export const usePostPlaylist = (): UseMutationResult<
   return useMutation(postPlaylist, {
     onSuccess: (_data) => {
       queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data
+    },
+  });
+};
+
+export const usePatchPlaylist = (): UseMutationResult<
+  CollectionType,
+  unknown,
+  {
+    id: string;
+    name?: string | undefined;
+    position?: number | undefined;
+    isEditable?: boolean | undefined;
+  },
+  unknown
+> => {
+  return useMutation(patchPlaylist, {
+    onSuccess: (_data) => {
+      // queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data
     },
   });
 };
@@ -206,6 +208,23 @@ export const useDeletePlaylist = (): UseMutationResult<
       throw new Error(`Error: ${error}`);
     },
   });
+};
+
+export const useGetSinglePlaylist = (): UseQueryResult<
+  CollectionType,
+  AxiosError
+> => {
+  const params = useParams<PlaylistParam>();
+  const { data: userInfo } = useGetUser();
+  return useQuery<CollectionType, AxiosError>(
+    ["collection", params.id],
+    () => getPlaylist({ id: params.id, service: params.service }, userInfo),
+    {
+      enabled: !!userInfo,
+      refetchInterval: false,
+      retry: 3,
+    }
+  );
 };
 
 export const useDeletePlaylistItem = (): UseMutationResult<

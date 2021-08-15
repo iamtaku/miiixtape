@@ -81,6 +81,7 @@ const fetchYoutube = async (uri: string): Promise<Collection> => {
   return {
     playlistInfo,
     tracks: data,
+    position: null,
   };
 };
 
@@ -105,6 +106,7 @@ const fetchSpotify = async (
   return {
     playlistInfo: { id: "", name: "", owner: "", service: "spotify" },
     tracks: data,
+    position: null,
   };
 };
 
@@ -125,6 +127,7 @@ const fetchSC = async (uri: string): Promise<Collection> => {
   return {
     playlistInfo,
     tracks: data,
+    position: null,
   };
 };
 
