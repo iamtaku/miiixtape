@@ -9,13 +9,13 @@ import {
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { device } from "../../../globalStyle";
-import { useIsCurrentPlaylist, useIsOwner } from "../../../helpers/hooks";
-import { useDeletePlaylist } from "../../../queries/hooks";
-import { Collection, PlaylistParam } from "../../../types/types";
-import { BasicButton } from "../../Buttons";
-import { PlaybackButton } from "../../Buttons";
-import { useGlobalContext } from "../../../state/context";
+import { device } from "../../globalStyle";
+import { useIsCurrentPlaylist, useIsOwner } from "../../helpers/hooks";
+import { useDeletePlaylist } from "../../queries/hooks";
+import { Collection, PlaylistParam } from "../../types/types";
+import { BasicButton } from "../Buttons";
+import { PlaybackButton } from "../Buttons";
+import { useGlobalContext } from "../../state/context";
 import { useRef } from "react";
 
 const ButtonWrapper = styled.div`

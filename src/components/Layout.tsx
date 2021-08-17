@@ -12,17 +12,14 @@ const LayoutWrapper = styled.div`
   width: 100vw;
   position: relative;
   display: grid;
-  overflow: hidden;
   grid-template-rows: 1fr;
   grid-template-columns: 0.6fr 3fr;
   grid-template-areas: "sidebar inner";
+  background-color: var(--primary);
 `;
 
 const InnerLayout = styled.div`
   grid-area: inner;
-  overflow: hidden;
-  width: 100%;
-  height: 100%auto;
   background-color: var(--primary);
   position: relative;
   @media ${device.laptop} {
@@ -32,16 +29,16 @@ const InnerLayout = styled.div`
 
 export const Layout: React.FC = ({ children }) => {
   return (
-    <LayoutWrapper>
-      <DragDropContext>
+    <DragDropContext>
+      <LayoutWrapper>
         <Sidebar />
         <InnerLayout>
           <Modal />
           {children}
           <Player />
         </InnerLayout>
-      </DragDropContext>
-    </LayoutWrapper>
+      </LayoutWrapper>
+    </DragDropContext>
   );
 };
 

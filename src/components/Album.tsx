@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import { InnerGridBottom } from "./grid/bottom/index";
+import { Bottom } from "./grid/Bottom";
 import { useGetAlbum } from "../queries/hooks";
 
 export const Album = (): JSX.Element => {
@@ -13,7 +13,7 @@ export const Album = (): JSX.Element => {
 
   return (
     <>
-      <InnerGridBottom data={data} isLoading={isLoading} isError={isError} />
+      <Bottom data={data} isLoading={isLoading} isError={isError} />
     </>
   );
 };

@@ -100,12 +100,7 @@ export const Track: React.FC<TrackProps> = ({
     setIsMenuOpen(false);
   };
   return (
-    <LazyLoad
-      placeholder={<Placeholder />}
-      height={40}
-      scrollContainer={".main"}
-      key={index.toString()}
-    >
+    <LazyLoad placeholder={<Placeholder />} height={40} key={index.toString()}>
       <Container
         isCurrent={isCurrent}
         onMouseLeave={handleOnMouseLeave}

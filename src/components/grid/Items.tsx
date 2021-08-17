@@ -2,9 +2,9 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link as ReactLink } from "react-router-dom";
 import { FaPause, FaPlay } from "react-icons/fa";
-import { Song } from "../../../types/types";
-import { TrackPlaybackButton as PlaybackButton } from "../../Buttons";
+import { TrackPlaybackButton as PlaybackButton } from "../Buttons";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
+import { Song } from "../../types/types";
 
 export const Item = css<{
   isRight?: boolean;

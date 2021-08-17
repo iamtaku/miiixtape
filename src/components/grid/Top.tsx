@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Collection } from "../../../types/types";
 import { Description } from "./Description";
 import DefaultMusicImage from "../../..//assets/music-cover.png";
 import { Buttons } from "./Buttons";
-import { generateServices } from "../../../queries/api/miiixtape/mappingHelpers";
 import { useHistory } from "react-router-dom";
+import { Collection } from "../../types/types";
+import { generateServices } from "../../queries/api/miiixtape/mappingHelpers";
 
 const Container = styled.div`
   height: 20vh;
@@ -40,7 +40,7 @@ interface PropTypes {
   isLoading: boolean;
 }
 
-export const InnerGridTop: React.FC<PropTypes> = ({ data, isLoading }) => {
+export const Top: React.FC<PropTypes> = ({ data, isLoading }) => {
   //add loading placeholder...
   const history = useHistory();
   const isArtist = history.location.pathname.includes("artist");
