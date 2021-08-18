@@ -151,7 +151,7 @@ interface IDropdownContainer {
 const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
   const { dispatch } = useGlobalContext();
   const { id } = useParams<PlaylistParam>();
-  const isOwner = useIsOwner(id);
+  const { isOwner, isEditable } = useIsOwner(id);
 
   const handleAddClick = () => {
     dispatch({
@@ -166,15 +166,24 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
       payload: { modalType: "SHARE_MODAL", currentModalId: id },
     });
   };
+
+  const handleImportClick = () => {
+    dispatch({
+      type: "OPEN_MODAL",
+      payload: { modalType: "SHARE_MODAL", currentModalId: id },
+    });
+  };
   return (
     <Wrapper top={top} width={width}>
       <Disabled isDisabled={isOwner}>
-        <AddButton onClick={handleAddClick}>
-          <FaPlus />
-          <span>ADD</span>
-        </AddButton>
+        {(isEditable || isOwner) && (
+          <AddButton onClick={handleAddClick}>
+            <FaPlus />
+            <span>ADD</span>
+          </AddButton>
+        )}
       </Disabled>
-      {!isOwner && <ImportButton />}
+      <ImportButton />
       <ShareButton onClick={handleShareClick}>
         <FaShare />
         <span>SHARE</span>

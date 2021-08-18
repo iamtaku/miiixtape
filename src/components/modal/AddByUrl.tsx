@@ -77,6 +77,7 @@ const fetchYoutube = async (uri: string): Promise<Collection> => {
     name: "",
     owner: "",
     service: "youtube",
+    isEditable: false,
   };
   return {
     playlistInfo,
@@ -104,7 +105,13 @@ const fetchSpotify = async (
   const strippedURI = stripSpotifyTrackURI(uri);
   const data = await Spotify.getTracks([strippedURI], client(token));
   return {
-    playlistInfo: { id: "", name: "", owner: "", service: "spotify" },
+    playlistInfo: {
+      id: "",
+      name: "",
+      owner: "",
+      service: "spotify",
+      isEditable: false,
+    },
     tracks: data,
     position: null,
   };
@@ -115,6 +122,7 @@ const mapSoundCloudPlaylistInfo = (data: SoundcloudPlaylist): PlaylistInfo => {
     id: data.id.toString(),
     name: data.title,
     service: "soundcloud",
+    isEditable: false,
     external_urls: data.permalink_url,
     type: "playlist",
   };

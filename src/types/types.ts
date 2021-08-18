@@ -41,6 +41,7 @@ export type PlaylistInfo = {
   id: string;
   name: string;
   service: Service;
+  isEditable: boolean;
   owner?: string;
   external_urls?: string;
   img?: string;

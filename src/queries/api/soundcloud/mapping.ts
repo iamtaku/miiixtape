@@ -20,6 +20,7 @@ export const mapSCArtistToArtist = ([dataInfo, dataTracks]: any[]): Artist => {
     id: dataInfo.id,
     name: dataInfo.username,
     service: "soundcloud",
+    isEditable: false,
     description: dataInfo.description,
     external_urls: dataInfo.permalink_url,
     img: dataInfo.avatar_url,

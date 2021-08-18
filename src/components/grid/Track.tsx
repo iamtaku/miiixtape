@@ -63,6 +63,12 @@ const Container = styled(ItemContainer)<{
     .options {
       visibility: initial;
     }
+
+    button {
+      &:hover {
+        color: var(--white);
+      }
+    }
   }
 `;
 

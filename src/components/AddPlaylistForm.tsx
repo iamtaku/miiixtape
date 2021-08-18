@@ -56,14 +56,10 @@ export const AddPlaylistForm: React.FC<IAddPlaylistFormProps> = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      mutation.mutateAsync(input).then((_data) => {
-        setInput("");
-        setIsInputOpen(false);
-      });
-    } catch {
-      console.error("something went wrong");
-    }
+    mutation.mutateAsync(input).then((_data) => {
+      setInput("");
+      setIsInputOpen(false);
+    });
   };
 
   const handleBlur = () => {

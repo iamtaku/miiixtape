@@ -29,10 +29,12 @@ export const AddModal = (): JSX.Element => {
         </Wrapper>
       ) : (
         <Wrapper>
-          <ModalSection title={"Add by URL"}>
+          <ModalSection title={<span>Add by URL</span>}>
             <AddByUrl handleFetch={handleFetch} />
           </ModalSection>
-          <ModalSection title={"Add by Importing existing playlists"}>
+          <ModalSection
+            title={<span>Add by Importing existing playlists</span>}
+          >
             <AddbyExisting handleFetch={handleFetch} />
           </ModalSection>
         </Wrapper>

@@ -71,12 +71,21 @@ export const useIsCurrentTrack = (track?: Song): ICurrent => {
   };
 };
 
-export const useIsOwner = (playlistId: string): boolean => {
+interface IEditable {
+  isOwner: boolean;
+  isEditable: boolean;
+}
+
+export const useIsOwner = (playlistId: string): IEditable => {
   const { data: userInfo } = useGetUser();
   const queryClient = useQueryClient();
   const currentPlaylist = queryClient.getQueryData<Collection>([
     "collection",
     playlistId,
   ]);
-  return currentPlaylist?.playlistInfo.owner === userInfo?.user_id;
+  if (!currentPlaylist) return { isOwner: false, isEditable: false };
+  return {
+    isOwner: currentPlaylist?.playlistInfo.owner === userInfo?.user_id,
+    isEditable: currentPlaylist?.playlistInfo.isEditable,
+  };
 };

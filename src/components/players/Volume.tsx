@@ -105,8 +105,17 @@ export const Volume: React.FC<{
 }> = ({ updateVolume, volume, setVolume }) => {
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setVolume(+e.currentTarget.value);
-    updateVolume(+e.currentTarget.value);
+  };
+  const handleOnMouseUp = () => {
+    updateVolume(volume);
   };
 
-  return <Input max={100} value={volume} onChange={handleChange} />;
+  return (
+    <Input
+      max={100}
+      value={volume}
+      onChange={handleChange}
+      onMouseUp={handleOnMouseUp}
+    />
+  );
 };

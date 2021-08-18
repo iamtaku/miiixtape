@@ -188,7 +188,6 @@ export const playbackReducer = (
         ...state,
         isLoading: true,
       };
-
     case "LOADING_FINISH":
       return {
         ...state,
@@ -203,7 +202,7 @@ export const playbackReducer = (
         return { ...initial };
       }
       return state;
-    case "ADD_TO_QUEUE":
+    case "ADD_TO_CURRENT_COLLECTION":
       if (!state.currentCollection?.tracks) return state;
       newCollection = {
         ...state.currentCollection,
@@ -225,8 +224,11 @@ export const playbackReducer = (
         ),
       };
       console.log(action.type, newCollection);
-      console.log({ ...state, newCollection });
-      return { ...state, currentCollection: newCollection };
+      return {
+        ...state,
+        nextSong: action.payload.tracks[0],
+        currentCollection: newCollection,
+      };
     case "DELETE_ITEM":
       if (!state.currentCollection?.tracks) return state;
       newCollection = {

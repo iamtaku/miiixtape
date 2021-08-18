@@ -47,10 +47,6 @@ const fetchTracks = async (
   return fetchAppropriateService(data.service, data, client);
 };
 
-// interface IHash {
-//   [uri: string]: Song;
-// }
-
 export const generatePlaylistTracks = async (
   data: Song,
   token?: string

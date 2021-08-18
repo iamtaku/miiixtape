@@ -35,6 +35,16 @@ const SubMenuContainer = styled.div`
 
   button {
     color: var(--white);
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+
+  a {
+    &:hover {
+      color: var(--accent);
+    }
   }
 `;
 
@@ -50,6 +60,9 @@ const OptionsButton = styled.button`
   border: none;
   visibility: hidden;
   color: var(--white);
+  &:hover {
+    color: var(--accent);
+  }
 `;
 
 const AddButton = styled.button`

@@ -209,7 +209,7 @@ export const Confirm: React.FC<{
       .then((data) => {
         updatedTracks(data.tracks, state.player.currentCollection?.tracks);
         dispatch({
-          type: "ADD_TO_QUEUE",
+          type: "ADD_TO_CURRENT_COLLECTION",
           payload: {
             tracks: updatedTracks(
               data.tracks,
@@ -255,7 +255,7 @@ export const Confirm: React.FC<{
       <AddContainer>
         <p>
           Add {pluralize("track", filtered)} from {data?.playlistInfo?.service}{" "}
-          {data?.playlistInfo?.type} {data?.playlistInfo?.name}?
+          {data?.playlistInfo?.type} <em>{data?.playlistInfo?.name}?</em>
         </p>
       </AddContainer>
       <OptionsContainer>

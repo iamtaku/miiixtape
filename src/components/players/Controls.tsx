@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link as ReactLink, useParams } from "react-router-dom";
+import { Link as ReactLink } from "react-router-dom";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
@@ -25,7 +25,6 @@ import {
   Shuffle,
   Volume as Mute,
 } from "./Buttons";
-import { BaseParams } from "../../queries/types";
 import { setIcon } from "../Shared";
 
 interface IControlsProps {
@@ -183,7 +182,6 @@ const Album: React.FC<{ song: Song | undefined }> = ({ song }) => {
 };
 
 const AlbumCover: React.FC<{ song: Song }> = ({ song }) => {
-  const params = useParams<BaseParams>();
   const { data } = useGetTrack(song);
   const trackImg = data?.img ? data.img : DefaultMusicImage;
   return <CoverImg src={trackImg} alt={song?.name} />;

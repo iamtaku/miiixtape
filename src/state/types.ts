@@ -31,7 +31,7 @@ export type PlaybackPayload = {
   LOADING_FINISH: Record<string, never>;
   INITIALIZE: Record<string, never>;
   DELETE_COLLECTION: { id: string };
-  ADD_TO_QUEUE: {
+  ADD_TO_CURRENT_COLLECTION: {
     tracks: Tracks;
   };
   ADD_TO_NEXT: {

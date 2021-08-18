@@ -9,7 +9,7 @@ const Container = styled.div`
   margin: 8px 0 0 0;
 `;
 
-const SubHeader = styled.h3`
+const SubHeader = styled.div`
   font-weight: 400;
   margin-bottom: 8px;
 `;
@@ -92,13 +92,15 @@ export const Error = (): JSX.Element => (
   <IoIosWarning style={{ color: "var(--red)", placeSelf: "center end" }} />
 );
 
-export const ModalSection: React.FC<{ title: string }> = ({
+export const ModalSection: React.FC<{ title: JSX.Element | string }> = ({
   title,
   children,
 }) => {
   return (
     <Container>
-      <SubHeader>{title}</SubHeader>
+      <SubHeader>
+        {typeof title === "string" ? <span>{title}</span> : title}
+      </SubHeader>
       {children}
     </Container>
   );

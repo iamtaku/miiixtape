@@ -90,6 +90,7 @@ interface ServerPlaylistsItem extends PlaylistItem {
   attributes: {
     name: string;
     position: number;
+    editable: boolean;
   };
   relationships: {
     user: {
@@ -166,6 +167,7 @@ export interface PlaylistAttributes {
   name: string;
   description?: string;
   position: number | null;
+  editable: boolean;
 }
 
 export interface SongRelationshipAttribute {

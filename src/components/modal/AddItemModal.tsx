@@ -70,7 +70,11 @@ export const AddItemModal = (): JSX.Element => {
 
   return (
     <ModalSection
-      title={`Select a playlist to add  ${state.ui.currentTrack?.name} `}
+      title={
+        <span>
+          Select a playlist to add <em>{state.ui.currentTrack?.name}</em>
+        </span>
+      }
     >
       {data && data.length > 0 ? (
         <List>
