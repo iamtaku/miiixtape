@@ -9,6 +9,8 @@ const queryClient = new QueryClient({
       refetchInterval: 1000 * 60 * 59,
       refetchOnWindowFocus: false,
       refetchIntervalInBackground: true,
+      cacheTime: 1000 * 60 * 59,
+      staleTime: 1000 * 60 * 59,
     },
   },
 });

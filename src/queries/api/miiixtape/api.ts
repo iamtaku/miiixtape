@@ -75,6 +75,7 @@ export const postPlaylist = async (name: string): Promise<Collection> => {
   const payload = {
     playlist: {
       name,
+      position: 0,
     },
   };
   return await Playlist.createPlaylist(payload);

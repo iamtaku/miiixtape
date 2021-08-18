@@ -12,7 +12,6 @@ interface SidebarCollectionProps {
 const DroppableWrapperList = styled.ul<{ isCurrent?: boolean }>`
   margin-bottom: 8px;
   overflow: hidden auto;
-  margin-top: 8px;
   ::-webkit-scrollbar-track {
     background: var(--lighter-gray);
   }

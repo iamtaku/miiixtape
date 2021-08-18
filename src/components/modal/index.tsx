@@ -8,7 +8,7 @@ import { AddItemModal } from "./AddItemModal";
 
 const BackDrop = styled.div`
   z-index: 1;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

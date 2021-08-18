@@ -13,7 +13,7 @@ import client from "../../queries/api/spotify/api";
 import { useGetUser } from "../../queries/hooks";
 import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
 import { Collection, PlaylistInfo, Service } from "../../types/types";
-import { Loading, Error } from "./Shared";
+import { Loading, Error } from "../Shared";
 import { SoundcloudPlaylist } from "soundcloud.ts";
 
 interface IAddByUrl {

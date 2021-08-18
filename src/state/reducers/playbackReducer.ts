@@ -211,6 +211,7 @@ export const playbackReducer = (
       };
       return {
         ...state,
+        nextSong: action.payload.tracks[0],
         currentCollection: newCollection,
       };
     case "ADD_TO_NEXT":

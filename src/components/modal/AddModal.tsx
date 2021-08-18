@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ModalSection } from "./Shared";
+import { ModalSection } from "../Shared";
 import { Collection } from "../../types/types";
 import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";

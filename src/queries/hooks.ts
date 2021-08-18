@@ -84,8 +84,8 @@ export const useGetSpotifyUser = (): UseQueryResult<
 };
 
 export const useGetTrack = (
-  song: Song,
-  collectionId: string
+  song: Song
+  // collectionId: string
 ): UseQueryResult<Song, AxiosError> => {
   const { data: userInfo } = useGetUser();
   const queryClient = useQueryClient();
@@ -95,10 +95,10 @@ export const useGetTrack = (
     {
       enabled: !!userInfo,
       cacheTime: Infinity,
-      initialData: () =>
-        queryClient
-          .getQueryData<CollectionType>(["collection", collectionId])
-          ?.tracks.find((track) => track.uri === song.uri),
+      // initialData: () =>
+      // queryClient
+      // .getQueryData<CollectionType>(["collection", collectionId])
+      // ?.tracks.find((track) => track.uri === song.uri),
     }
   );
 };
@@ -216,6 +216,7 @@ export const useGetSinglePlaylist = (): UseQueryResult<
 > => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
+  const queryClient = useQueryClient();
   return useQuery<CollectionType, AxiosError>(
     ["collection", params.id],
     () => getPlaylist({ id: params.id, service: params.service }, userInfo),
@@ -223,6 +224,11 @@ export const useGetSinglePlaylist = (): UseQueryResult<
       enabled: !!userInfo,
       refetchInterval: false,
       retry: 3,
+      onSuccess: (data) => {
+        data.tracks.forEach((track) =>
+          queryClient.setQueryData(["track", track.uri], track)
+        );
+      },
     }
   );
 };

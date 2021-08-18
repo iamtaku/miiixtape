@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Description } from "./Description";
-import DefaultMusicImage from "../../..//assets/music-cover.png";
+import DefaultMusicImage from "../../assets/music-cover.png";
 import { Buttons } from "./Buttons";
 import { useHistory } from "react-router-dom";
 import { Collection } from "../../types/types";

@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { Link as ReactLink } from "react-router-dom";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { TrackPlaybackButton as PlaybackButton } from "../Buttons";
-import DefaultMusicImage from "../../..//assets/music-cover.png";
+import DefaultMusicImage from "../../assets/music-cover.png";
 import { Song } from "../../types/types";
 
 export const Item = css<{
@@ -19,6 +19,11 @@ export const Item = css<{
   a:hover {
     text-decoration: underline;
   }
+`;
+
+const Index = styled.span`
+  margin: 0 auto;
+  font-size: 0.8rem;
 `;
 
 const Link = styled(ReactLink)`
@@ -74,7 +79,7 @@ export const IndexPlayButton: React.FC<{
 }> = ({ index, isCurrent, data, isPlaying }) => {
   return (
     <>
-      <span className="index">{index + 1}</span>
+      <Index className="index">{index + 1}</Index>
       <PlaybackButton className="play" data={data}>
         {isPlaying && isCurrent ? <FaPause /> : <FaPlay />}
       </PlaybackButton>
@@ -89,9 +94,7 @@ export const AlbumImage: React.FC<{ data: Song; isAlbum: boolean }> = ({
   const trackImg = data?.img ? data.img : DefaultMusicImage;
   return (
     <>
-      {isAlbum ? (
-        <span>{` `}</span>
-      ) : (
+      {isAlbum ? null : (
         <img
           src={trackImg}
           alt={data.album?.name}

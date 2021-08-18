@@ -1,6 +1,8 @@
 import React from "react";
+import { FaSpotify, FaYoutube, FaSoundcloud } from "react-icons/fa";
 import { IoIosWarning, IoMdCheckmark } from "react-icons/io";
 import styled from "styled-components";
+import { Service } from "../types/types";
 
 const Container = styled.div`
   padding: 4px;
@@ -128,3 +130,19 @@ export const Item = styled.li`
     }
   }
 `;
+export const setIcon = (
+  service?: Service,
+  index?: number
+): JSX.Element | null => {
+  if (!service) return null;
+  switch (service) {
+    case "spotify":
+      return <FaSpotify key={index} />;
+    case "youtube":
+      return <FaYoutube key={index} />;
+    case "soundcloud":
+      return <FaSoundcloud key={index} />;
+    default:
+      return null;
+  }
+};

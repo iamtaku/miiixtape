@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Link as ReactLink, useParams } from "react-router-dom";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
-import { Link as ReactLink, useParams } from "react-router-dom";
 import { fetchVolume, useGlobalContext } from "../../state/context";
 import {
   useFetchSongCache,
@@ -26,6 +26,7 @@ import {
   Volume as Mute,
 } from "./Buttons";
 import { BaseParams } from "../../queries/types";
+import { setIcon } from "../Shared";
 
 interface IControlsProps {
   youtube?: YouTubePlayer;
@@ -42,7 +43,7 @@ const Container = styled.div`
     "left middle right"
     ". bottom .";
   width: 100%;
-  grid-column-gap: 4px;
+  grid-column-gap: 8px;
   max-height: 120px;
   min-height: 120px;
   max-width: 800px;
@@ -67,12 +68,12 @@ const PlaybackControlsContainer = styled.div`
   align-items: center;
 `;
 
-//const Test = styled.div`
-//  position: absolute;
-//  z-index: 1000;
-//  top: -150px;
-//  border: 1px solid red;
-//`;
+const Test = styled.div`
+  position: fixed;
+  z-index: 1000;
+  top: 0px;
+  border: 1px solid red;
+`;
 
 const Middle = styled.div`
   grid-area: middle;
@@ -108,7 +109,7 @@ const TopMiddle = styled.div`
   grid-area: top-middle;
   display: grid;
   grid-template-columns: 1fr 0.6fr 1fr;
-  grid-template-areas: ". . top-right";
+  grid-template-areas: "top-left . top-right";
 `;
 
 const PlaylistControlsContainer = styled(Middle)`
@@ -117,6 +118,11 @@ const PlaylistControlsContainer = styled(Middle)`
   place-self: end end;
   display: flex;
   justify-content: space-between;
+`;
+
+const SongServiceContainer = styled.div`
+  grid-area: top-left;
+  place-self: end start;
 `;
 
 const CoverImg = styled.img`
@@ -178,7 +184,7 @@ const Album: React.FC<{ song: Song | undefined }> = ({ song }) => {
 
 const AlbumCover: React.FC<{ song: Song }> = ({ song }) => {
   const params = useParams<BaseParams>();
-  const { data } = useGetTrack(song, params.id);
+  const { data } = useGetTrack(song);
   const trackImg = data?.img ? data.img : DefaultMusicImage;
   return <CoverImg src={trackImg} alt={song?.name} />;
 };
@@ -213,7 +219,6 @@ export const Controls: React.FC<IControlsProps> = ({
 
   useEffect(() => {
     if (state.player.isLoading || !state.player.isPlaying) return;
-    // console.log(state.player);
 
     const interval = setInterval(() => {
       if (value >= duration) {
@@ -304,7 +309,7 @@ export const Controls: React.FC<IControlsProps> = ({
 
   return (
     <Container>
-      {/* <Test>
+      <Test>
         <p>
           {!state.player.isLoading && state.player.isPlaying
             ? "done Loading"
@@ -312,7 +317,8 @@ export const Controls: React.FC<IControlsProps> = ({
         </p>
         <p>{state.player.isPlaying ? "playing" : "pausing"}</p>
         <p>{state.player.isFinished ? "finished" : "not finished"}</p>
-      </Test> */}
+        <p>{state.player.currentSong.id}</p>
+      </Test>
       <AlbumCover song={state.player.currentSong} />
       <Middle>
         <SongInfo>
@@ -331,6 +337,9 @@ export const Controls: React.FC<IControlsProps> = ({
         />
       </Middle>
       <TopMiddle>
+        <SongServiceContainer>
+          {setIcon(state.player.currentSong.service)}
+        </SongServiceContainer>
         <PlaylistControlsContainer>
           <Queue />
           <Shuffle />

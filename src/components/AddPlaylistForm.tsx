@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaPlus } from "react-icons/fa";
-import { usePostPlaylist } from "../../queries/hooks";
+import { usePostPlaylist } from "../queries/hooks";
 
 const Container = styled.div`
   padding: 4px 24px;
@@ -43,7 +42,14 @@ const Input = styled.input`
   }
 `;
 
-export const AddPlaylistForm = (): JSX.Element => {
+interface IAddPlaylistFormProps {
+  styles?: React.CSSProperties;
+}
+
+export const AddPlaylistForm: React.FC<IAddPlaylistFormProps> = ({
+  children,
+  styles,
+}) => {
   const mutation = usePostPlaylist();
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -66,7 +72,7 @@ export const AddPlaylistForm = (): JSX.Element => {
   };
 
   return (
-    <Container>
+    <Container style={styles}>
       {isInputOpen ? (
         <form onSubmit={handleSubmit}>
           <Input
@@ -80,7 +86,7 @@ export const AddPlaylistForm = (): JSX.Element => {
         </form>
       ) : (
         <AddPlaylistButton onClick={() => setIsInputOpen(true)}>
-          <FaPlus />
+          {children}
         </AddPlaylistButton>
       )}
     </Container>

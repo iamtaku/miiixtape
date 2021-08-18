@@ -84,16 +84,15 @@ export const Bottom: React.FC<IGridProps> = ({ data, isLoading, isError }) => {
     <Container className="main">
       <Top data={data} isLoading={isLoading} />
       {data.playlistInfo?.type === "album" ? (
-        <ItemContainer>
-          <Item>#</Item>
-          {data.playlistInfo?.type === "album" && <Item>{` `}</Item>}
+        <ItemContainer isAlbum>
+          <Item style={{ margin: "0 auto" }}>#</Item>
           <Item>Title</Item>
           <Item>Artist</Item>
           <Item isRight>Length</Item>
         </ItemContainer>
       ) : (
         <ItemContainer>
-          <Item isRight>#</Item>
+          <Item style={{ margin: "0 auto" }}>#</Item>
           <Item>{` `}</Item>
           <Item>Title</Item>
           <Item>Artist</Item>

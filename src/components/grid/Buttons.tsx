@@ -174,7 +174,7 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
           <span>ADD</span>
         </AddButton>
       </Disabled>
-      {isOwner && <ImportButton />}
+      {!isOwner && <ImportButton />}
       <ShareButton onClick={handleShareClick}>
         <FaShare />
         <span>SHARE</span>
@@ -232,7 +232,6 @@ interface ButtonsProps {
 }
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
-
   const isCurrentAndIsPlaying = isCurrent && isPlaying;
 
   return (

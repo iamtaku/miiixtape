@@ -5,12 +5,18 @@ import {
   ModalSection,
   Error,
   Success,
-  List,
+  List as ListStyles,
   Item as ItemStyles,
-} from "./Shared";
+} from "../Shared";
 import { useGetAllPlaylists, usePostPlaylistItems } from "../../queries/hooks";
 import { useGlobalContext } from "../../state/context";
 import { Collection } from "../../types/types";
+import { AddPlaylistForm } from "../AddPlaylistForm";
+import { FaPlus } from "react-icons/fa";
+
+const List = styled(ListStyles)`
+  padding-top: 0;
+`;
 
 const Item: React.FC<{ data: Collection }> = ({ data }) => {
   const { state } = useGlobalContext();
@@ -68,9 +74,13 @@ export const AddItemModal = (): JSX.Element => {
     >
       {data && data.length > 0 ? (
         <List>
-          {data.map((playlist, index) => {
-            return <Item data={playlist} key={index} />;
-          })}
+          <AddPlaylistForm>
+            <span style={{ marginRight: "8px" }}>Create new </span>
+            <FaPlus />
+          </AddPlaylistForm>
+          {data.map((playlist, index) => (
+            <Item data={playlist} key={index} />
+          ))}
         </List>
       ) : (
         <p style={{ padding: "2px 24px" }}>

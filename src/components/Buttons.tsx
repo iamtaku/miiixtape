@@ -11,9 +11,11 @@ import { useGetUser } from "../queries/hooks";
 import { useIsCurrentPlaylist, useIsCurrentTrack } from "../helpers/hooks";
 
 const Button = styled.button`
+  margin: 0 auto;
   border: none;
   background: transparent;
   color: var(--accent);
+  font-size: 0.9rem;
   &:hover {
     cursor: pointer;
   }
@@ -143,7 +145,6 @@ export const PlaybackButton: React.FC<IProps> = ({
   };
 
   const handleClick = async (data: Collection) => {
-    // debugger;
     try {
       await handlePlayback(data);
     } catch (err) {

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
-import { Song } from "../../../types/types";
-import { timeConversion } from "../../../helpers/utils";
-import { useIsCurrentTrack } from "../../../helpers/hooks";
-import { useGetTrack } from "../../../queries/hooks";
-import { BaseParams } from "../../../queries/types";
+import { Song } from "../../types/types";
+import { timeConversion } from "../../helpers/utils";
+import { useIsCurrentTrack } from "../../helpers/hooks";
+import { useGetTrack } from "../../queries/hooks";
 import {
   TitleAlbum,
   IndexPlayButton,
@@ -50,6 +49,7 @@ const Container = styled(ItemContainer)<{
 
   .play {
     display: ${(props) => (props.isCurrent ? "default" : "none")};
+    color: ${(props) => props.isCurrent && "var(--white)"};
   }
 
   &:hover {
@@ -64,15 +64,6 @@ const Container = styled(ItemContainer)<{
       visibility: initial;
     }
   }
-
-  .index {
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  button {
-    ${(props) => (props.isCurrent ? "svg {color: var(--white)}" : null)}
-  }
 `;
 
 const Placeholder = () => <h1>Placeholder</h1>;
@@ -85,8 +76,7 @@ export const Track: React.FC<TrackProps> = ({
   const location = useLocation();
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
-  const params = useParams<BaseParams>();
-  const { data } = useGetTrack(track, params.id);
+  const { data } = useGetTrack(track);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuOpen = () => {
@@ -105,6 +95,7 @@ export const Track: React.FC<TrackProps> = ({
         isCurrent={isCurrent}
         onMouseLeave={handleOnMouseLeave}
         isDragDisabled={isDragDisabled}
+        isAlbum={isAlbum}
       >
         <IndexPlayButton
           index={index}

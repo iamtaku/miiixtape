@@ -115,7 +115,7 @@ a:not([class]) {
 
 /* Make images easier to work with */
 img,
-picture {
+picture, svg {
   max-width: 100%;
   display: block;
 }
