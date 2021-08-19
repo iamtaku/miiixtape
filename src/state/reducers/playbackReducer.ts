@@ -157,6 +157,7 @@ export const playbackReducer = (
         nextSong: action.payload.collection?.tracks[1],
         currentService: action.payload.collection?.tracks[0].service,
         nextService: action.payload.collection?.tracks[1]?.service,
+        isLoading: true,
         isPlaying: true,
       };
       return newState;
@@ -171,7 +172,6 @@ export const playbackReducer = (
       return {
         ...state,
         isFinished: true,
-        isPlaying: false,
       };
     case "PLAYBACK_FINISH":
       return initial;

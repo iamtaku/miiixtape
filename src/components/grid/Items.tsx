@@ -5,6 +5,7 @@ import { FaPause, FaPlay } from "react-icons/fa";
 import { TrackPlaybackButton as PlaybackButton } from "../Buttons";
 import DefaultMusicImage from "../../assets/music-cover.png";
 import { Song } from "../../types/types";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export const Item = css<{
   isRight?: boolean;
@@ -95,12 +96,13 @@ export const AlbumImage: React.FC<{ data: Song; isAlbum: boolean }> = ({
   return (
     <>
       {isAlbum ? null : (
-        <img
+        <LazyLoadImage
           src={trackImg}
           alt={data.album?.name}
           width="30px"
           height="30px"
           style={{ justifySelf: "center" }}
+          placeholderSrc={DefaultMusicImage}
         />
       )}
     </>

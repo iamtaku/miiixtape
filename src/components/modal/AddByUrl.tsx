@@ -37,7 +37,8 @@ const Input = styled.input`
 
 const EnterBtn = styled.input`
   background: none;
-  border: none;
+  border: 1px solid var(--accent) !important;
+  border-radius: 8px;
   color: var(--accent) !important;
   opacity: 1 !important;
   width: auto !important;

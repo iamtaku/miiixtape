@@ -64,11 +64,15 @@ const Container = styled(ItemContainer)<{
       visibility: initial;
     }
 
+    ${(props) =>
+      props.isCurrent &&
+      `
     button {
       &:hover {
         color: var(--white);
       }
     }
+`}
   }
 `;
 

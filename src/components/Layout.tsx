@@ -8,8 +8,6 @@ import { Sidebar } from "./sidebar";
 import { DragDropContextWrapper as DragDropContext } from "./DragDropContextWrapper";
 
 const LayoutWrapper = styled.div`
-  height: 100vh;
-  width: 100vw;
   position: relative;
   display: grid;
   grid-template-rows: 1fr;
@@ -20,6 +18,7 @@ const LayoutWrapper = styled.div`
 
 const InnerLayout = styled.div`
   grid-area: inner;
+  padding: 4px 8px;
   background-color: var(--primary);
   position: relative;
   @media ${device.laptop} {

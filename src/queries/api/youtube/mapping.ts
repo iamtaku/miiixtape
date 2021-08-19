@@ -36,7 +36,7 @@ const mapYoutubePlaylisttoPlaylistInfo = (
     isEditable: false,
     service: "youtube",
     type: "playlist",
-    img: data.items[0].snippet.thumbnails.default.url,
+    img: data.items[0].snippet.thumbnails.default?.url,
   };
 };
 

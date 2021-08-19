@@ -5,17 +5,25 @@ import {
   ModalSection,
   Error,
   Success,
-  List as ListStyles,
+  List,
   Item as ItemStyles,
 } from "../Shared";
 import { useGetAllPlaylists, usePostPlaylistItems } from "../../queries/hooks";
 import { useGlobalContext } from "../../state/context";
 import { Collection } from "../../types/types";
 import { AddPlaylistForm } from "../AddPlaylistForm";
-import { FaPlus } from "react-icons/fa";
 
-const List = styled(ListStyles)`
-  padding-top: 0;
+const Wrapper = styled.div`
+  div.create-new {
+    border-radius: none;
+    box-shadow: none;
+    padding: 2px 32px;
+  }
+
+  .create-new button {
+    width: initial;
+    height: initial;
+  }
 `;
 
 const Item: React.FC<{ data: Collection }> = ({ data }) => {
@@ -77,21 +85,21 @@ export const AddItemModal = (): JSX.Element => {
       }
     >
       {data && data.length > 0 ? (
-        <List>
-          <AddPlaylistForm>
-            <span style={{ marginRight: "8px" }}>Create new </span>
-            <FaPlus />
-          </AddPlaylistForm>
-          {data.map((playlist, index) => (
-            <Item data={playlist} key={index} />
-          ))}
-        </List>
+        <Wrapper>
+          <List>
+            <AddPlaylistForm className={"create-new"}>
+              <span style={{ marginRight: "8px" }}>Create new </span>
+            </AddPlaylistForm>
+            {data.map((playlist, index) => (
+              <Item data={playlist} key={index} />
+            ))}
+          </List>
+        </Wrapper>
       ) : (
         <p style={{ padding: "2px 24px" }}>
           You don&apos;t have any spotify playlists to import
         </p>
       )}
-      <button>Close</button>
     </ModalSection>
   );
 };

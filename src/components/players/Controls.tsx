@@ -34,6 +34,8 @@ interface IControlsProps {
 }
 
 const Container = styled.div`
+  position: sticky;
+  top: 0vh;
   display: grid;
   grid-template-rows: 20% 60% 20%;
   grid-template-columns: 1fr 80% 1fr;
@@ -47,7 +49,6 @@ const Container = styled.div`
   min-height: 120px;
   max-width: 800px;
   position: absolute;
-  bottom: 0px;
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50px;
@@ -245,6 +246,7 @@ export const Controls: React.FC<IControlsProps> = ({
       type: "SONG_END",
       payload: {},
     });
+    dispatch({ type: "IS_LOADING", payload: {} });
     dispatch({
       type: "SET_NEXT",
       payload: {},

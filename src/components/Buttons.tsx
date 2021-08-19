@@ -2,13 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useQueryClient } from "react-query";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { Collection, Song } from "../types/types";
 import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/api";
 import { useGetUser } from "../queries/hooks";
 import { useIsCurrentPlaylist, useIsCurrentTrack } from "../helpers/hooks";
+import { FaSpotify } from "react-icons/fa";
 
 const Button = styled.button`
   margin: 0 auto;
@@ -37,7 +36,7 @@ export const LoginButton: React.FC = () => {
 
   return (
     <LoginBtn href={URL}>
-      Login with Spotify <FontAwesomeIcon icon={faSpotify} />
+      Login with Spotify <FaSpotify />
     </LoginBtn>
   );
 };
@@ -122,6 +121,7 @@ export const PlaybackButton: React.FC<IProps> = ({
           service: data.playlistInfo.service,
         };
         const playlist = await getPlaylist(params, user);
+        dispatch({ type: "IS_LOADING", payload: {} });
         dispatch({
           type: "PLAY_COLLECTION",
           payload: {
@@ -135,6 +135,7 @@ export const PlaybackButton: React.FC<IProps> = ({
     }
 
     if (cache) {
+      dispatch({ type: "IS_LOADING", payload: {} });
       dispatch({
         type: "PLAY_COLLECTION",
         payload: {

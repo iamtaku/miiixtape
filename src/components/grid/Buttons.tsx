@@ -146,9 +146,14 @@ const Disabled: React.FC<IDisabled> = ({ children, isDisabled }) => {
 interface IDropdownContainer {
   top?: number;
   width?: number;
+  handleOptionsClick?: () => void;
 }
 
-const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
+const OptionsDropdown: React.FC<IDropdownContainer> = ({
+  top,
+  width,
+  handleOptionsClick,
+}) => {
   const { dispatch } = useGlobalContext();
   const { id } = useParams<PlaylistParam>();
   const { isOwner, isEditable } = useIsOwner(id);
@@ -158,6 +163,7 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
       type: "OPEN_MODAL",
       payload: { modalType: "ADD_MODAL", currentModalId: id },
     });
+    handleOptionsClick && handleOptionsClick();
   };
 
   const handleShareClick = () => {
@@ -165,6 +171,7 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
       type: "OPEN_MODAL",
       payload: { modalType: "SHARE_MODAL", currentModalId: id },
     });
+    handleOptionsClick && handleOptionsClick();
   };
 
   const handleImportClick = () => {
@@ -172,7 +179,9 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
       type: "OPEN_MODAL",
       payload: { modalType: "SHARE_MODAL", currentModalId: id },
     });
+    handleOptionsClick && handleOptionsClick();
   };
+
   return (
     <Wrapper top={top} width={width}>
       <Disabled isDisabled={isOwner}>
@@ -216,6 +225,7 @@ const OptionsButton = () => {
         <OptionsDropdown
           top={ref.current?.clientHeight}
           width={ref.current?.clientWidth}
+          handleOptionsClick={handleOptionsClick}
         />
       )}
     </div>

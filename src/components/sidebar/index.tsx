@@ -8,15 +8,20 @@ import { Navbar as Nav } from "./nav";
 import { isAuthenticated } from "../../helpers/utils";
 
 const Container = styled.div`
-  z-index: 10;
   grid-area: sidebar;
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  /* max-width: 18%; */
+  /* width: inherit; */
+  z-index: 10;
   padding: 8px;
   display: flex;
   flex-direction: column;
   white-space: nowrap;
   text-overflow: ellipsis;
   background: var(--lighter-gray);
-  overflow: hidden;
+  /* overflow: hidden; */
 `;
 
 const Title = styled.span`

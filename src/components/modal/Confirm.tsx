@@ -64,7 +64,7 @@ const Checkbox = styled.input.attrs({ type: "checkbox" })`
 const ChecklistContainer = styled.div`
   padding: 8px;
   border-radius: 8px;
-  background: var(--light-gray);
+  background: var(--primary);
   overflow: hidden;
 `;
 
@@ -118,8 +118,8 @@ const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--lighter-gray);
-  padding: 4px;
-  margin-bottom: 4px;
+  padding: 12px;
+  margin-bottom: 8px;
 `;
 
 const ExpandCheckList: React.FC<{
@@ -137,7 +137,7 @@ const ExpandCheckList: React.FC<{
           id="select all"
           onChange={handleSelectAll}
         />
-        <label htmlFor="select all" style={{ marginLeft: "8px" }}>
+        <label htmlFor="select all" style={{ marginLeft: "24px" }}>
           Select All{" "}
         </label>
       </CheckboxContainer>

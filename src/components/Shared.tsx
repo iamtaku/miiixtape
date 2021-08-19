@@ -85,47 +85,83 @@ export const Loading: React.FC<{ style?: React.CSSProperties }> = ({
 );
 
 export const Success = (): JSX.Element => (
-  <IoMdCheckmark style={{ color: "green" }} />
+  <IoMdCheckmark style={{ color: "green", fontSize: "1.5rem" }} />
 );
 
 export const Error = (): JSX.Element => (
-  <IoIosWarning style={{ color: "var(--red)", placeSelf: "center end" }} />
+  <IoIosWarning
+    style={{ color: "var(--red)", placeSelf: "center end", fontSize: "1.5rem" }}
+  />
 );
 
-export const ModalSection: React.FC<{ title: JSX.Element | string }> = ({
-  title,
-  children,
-}) => {
+const SubTitle = styled.span`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const ModalSection: React.FC<{
+  title: JSX.Element | string;
+  onClick?: () => void;
+}> = ({ title, children, onClick }) => {
   return (
     <Container>
       <SubHeader>
-        {typeof title === "string" ? <span>{title}</span> : title}
+        {typeof title === "string" ? (
+          onClick ? (
+            <SubTitle onClick={onClick}>{title}</SubTitle>
+          ) : (
+            <span>{title}</span>
+          )
+        ) : (
+          title
+        )}
       </SubHeader>
       {children}
     </Container>
   );
 };
 
-export const List = styled.ul`
+const Wrapper = styled.div`
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--gray);
+
+  ::-webkit-scrollbar-track {
+    background: var(--lighter-gray);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--gray);
+  }
+`;
+
+const ListContainer = styled.ul`
   overflow: hidden;
   overflow-y: scroll;
   max-height: 300px;
-  background: var(--light-gray);
-  border-radius: 8px;
-  padding: 8px 0;
+  /* background: var(--light-gray); */
 `;
+
+export const List: React.FC = ({ children }) => (
+  <Wrapper>
+    <ListContainer>{children}</ListContainer>
+  </Wrapper>
+);
 
 export const Item = styled.li`
   display: flex;
+  min-height: 30px;
   justify-content: space-between;
-  padding: 2px 26px;
+  align-items: center;
+  padding: 2px 32px;
   border: 1px solid transparent;
   overflow: hidden;
   text-overflow: ellipsis;
 
   &:hover {
     background: var(--lighter-gray);
-    border-radius: 4px;
+    border-radius: 8px;
 
     button {
       visibility: visible;

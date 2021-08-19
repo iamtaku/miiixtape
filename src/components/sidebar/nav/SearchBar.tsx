@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 export const SearchBarWrapper = styled.div`
   border-radius: 8px;
-  padding: 4px 24px;
+  padding: 4px 32px;
   background-color: var(--primary);
   width: 100%;
   border: 1px solid transparent;

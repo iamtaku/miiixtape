@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { usePostPlaylist } from "../queries/hooks";
 
 const Container = styled.div`
-  padding: 4px 24px;
+  padding: 4px 10px;
   background: var(--gray);
   border-radius: 8px;
   border: 1px solid transparent;
@@ -44,11 +44,13 @@ const Input = styled.input`
 
 interface IAddPlaylistFormProps {
   styles?: React.CSSProperties;
+  className?: string;
 }
 
 export const AddPlaylistForm: React.FC<IAddPlaylistFormProps> = ({
   children,
   styles,
+  className,
 }) => {
   const mutation = usePostPlaylist();
   const [isInputOpen, setIsInputOpen] = useState(false);
@@ -68,7 +70,7 @@ export const AddPlaylistForm: React.FC<IAddPlaylistFormProps> = ({
   };
 
   return (
-    <Container style={styles}>
+    <Container style={styles} className={className}>
       {isInputOpen ? (
         <form onSubmit={handleSubmit}>
           <Input
