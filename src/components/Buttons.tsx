@@ -121,6 +121,7 @@ export const PlaybackButton: React.FC<IProps> = ({
           service: data.playlistInfo.service,
         };
         const playlist = await getPlaylist(params, user);
+        if (playlist.tracks.length === 0) return;
         dispatch({ type: "IS_LOADING", payload: {} });
         dispatch({
           type: "PLAY_COLLECTION",
@@ -128,7 +129,6 @@ export const PlaybackButton: React.FC<IProps> = ({
             collection: playlist,
           },
         });
-        return;
       } catch (err) {
         throw new Error(err);
       }
@@ -167,10 +167,11 @@ interface ITrackButtonProps {
 export const TrackPlaybackButton: React.FC<
   ITrackButtonProps & { className?: string }
 > = ({ data, children, className }) => {
-  const { dispatch } = useGlobalContext();
+  const { dispatch, state } = useGlobalContext();
   const { isPlaying } = useIsCurrentTrack(data);
 
   const handleClick = (track: Song) => {
+    console.log(track, state.player.currentCollection);
     if (isPlaying) {
       dispatch({
         type: "PAUSE_CURRENT",
@@ -179,20 +180,24 @@ export const TrackPlaybackButton: React.FC<
       return;
     }
 
-    if (!data) {
-      dispatch({
-        type: "PLAY_TRACK",
-        payload: { track },
-      });
-      return;
-    }
-
-    if (data) {
+    if (
+      state.player.currentCollection?.tracks.some(
+        (track) => track.id === data.id
+      )
+    ) {
       dispatch({
         type: "SET_TRACK",
         payload: { track },
       });
     }
+
+    // if (!data) {
+    dispatch({
+      type: "PLAY_TRACK",
+      payload: { track },
+    });
+    return;
+    // }
 
     if (!isPlaying) {
       dispatch({

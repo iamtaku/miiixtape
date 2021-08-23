@@ -9,11 +9,9 @@ import { isAuthenticated } from "../../helpers/utils";
 
 const Container = styled.div`
   grid-area: sidebar;
-  position: sticky;
+  position: fixed;
   top: 0;
   min-height: 100vh;
-  /* max-width: 18%; */
-  /* width: inherit; */
   z-index: 10;
   padding: 8px;
   display: flex;
@@ -21,7 +19,6 @@ const Container = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   background: var(--lighter-gray);
-  /* overflow: hidden; */
 `;
 
 const Title = styled.span`

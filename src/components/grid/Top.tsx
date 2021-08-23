@@ -7,17 +7,25 @@ import { useHistory } from "react-router-dom";
 import { Collection } from "../../types/types";
 import { generateServices } from "../../queries/api/miiixtape/mappingHelpers";
 
-const Container = styled.div`
-  height: 20vh;
+const Container = styled.div<{ isCollapsed: boolean }>`
+  top: 0px;
+  height: ${({ isCollapsed }) => (isCollapsed ? "5vh" : "20vh")};
   display: grid;
   max-width: 1440px;
-  grid-template-columns: 30% 40% 30%;
+  grid-template-columns: 30% 30% 40%;
   grid-template-rows: 100%;
   grid-column-gap: 8px;
-  padding: 8px 24px 24px 24px;
-  margin-bottom: 46px;
-  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
+  padding: ${({ isCollapsed }) =>
+    isCollapsed ? "0px 24px" : "8px 24px 24px 24px;"};
+  margin-bottom: ${({ isCollapsed }) => (isCollapsed ? "0px" : "22px")};
+  box-shadow: ${({ isCollapsed }) =>
+    isCollapsed ? "none" : "20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;"};
   z-index: 1000;
+  transition: 0.5s ease;
+
+  .description-hideable {
+    display: ${({ isCollapsed }) => (isCollapsed ? "none" : "flex")};
+  }
 `;
 
 const CoverImg = styled.img<{ isArtist: boolean }>`
@@ -35,28 +43,38 @@ const CoverImg = styled.img<{ isArtist: boolean }>`
       : null}
 `;
 
-interface PropTypes {
+type TopProps = {
   data?: Collection;
   isLoading: boolean;
-}
-
-export const Top: React.FC<PropTypes> = ({ data, isLoading }) => {
-  //add loading placeholder...
-  const history = useHistory();
-  const isArtist = history.location.pathname.includes("artist");
-  if (!data || isLoading) return <h1>loading...</h1>;
-
-  const services = generateServices(data.tracks);
-
-  return (
-    <Container>
-      <CoverImg
-        src={data.playlistInfo.img || DefaultMusicImage}
-        alt={data.playlistInfo.description}
-        isArtist={isArtist}
-      />
-      <Description data={data} services={services} />
-      <Buttons data={data} />
-    </Container>
-  );
+  isCollapsed?: boolean;
 };
+
+const Top = React.forwardRef<HTMLDivElement, TopProps>(
+  ({ data, isLoading, isCollapsed }, ref) => {
+    //add loading placeholder...
+    const history = useHistory();
+    const isArtist = history.location.pathname.includes("artist");
+    if (!data || isLoading) return <h1>loading...</h1>;
+
+    const services = generateServices(data.tracks);
+
+    return (
+      <Container
+        ref={ref}
+        isCollapsed={isCollapsed !== undefined ? isCollapsed : false}
+      >
+        <CoverImg
+          src={data.playlistInfo.img || DefaultMusicImage}
+          alt={data.playlistInfo.description}
+          isArtist={isArtist}
+        />
+        <Description data={data} services={services} />
+        <Buttons data={data} />
+      </Container>
+    );
+  }
+);
+
+Top.displayName = `Top`;
+
+export { Top };

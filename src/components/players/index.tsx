@@ -8,6 +8,34 @@ import { useGlobalContext } from "../../state/context";
 import { Youtube } from "./Youtube";
 import { Controls } from "./Controls";
 import { Soundcloud } from "./Soundcloud";
+import styled from "styled-components";
+
+const Container = styled.div`
+  position: absolute;
+  bottom: 0;
+  display: grid;
+  grid-template-rows: 20% 60% 20%;
+  grid-template-columns: 1fr 80% 1fr;
+  grid-template-areas:
+    ". top-middle ."
+    "left middle right"
+    ". bottom .";
+  width: 100%;
+  grid-column-gap: 8px;
+  height: 120px;
+  max-width: 800px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50px;
+  background-color: rgba(15, 11, 11, 0);
+  background-color: linear-gradient(
+    270deg,
+    rgba(142, 142, 142, 1) 0%,
+    rgba(53, 53, 53, 1) 100%
+  );
+  backdrop-filter: blur(10px) contrast(0.8);
+  box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
+`;
 
 const Player = (): JSX.Element => {
   const { state } = useGlobalContext();
@@ -17,7 +45,7 @@ const Player = (): JSX.Element => {
   const uri = state.player?.currentSong?.uri;
 
   return (
-    <>
+    <Container>
       {state.player.currentSong?.service === "youtube" && (
         <Youtube setYoutube={setYoutube} />
       )}
@@ -28,7 +56,7 @@ const Player = (): JSX.Element => {
         <Soundcloud setSoundCloud={setSoundCloud} uri={uri} />
       )}
       <Controls youtube={youtube} spotify={spotify} soundcloud={soundcloud} />
-    </>
+    </Container>
   );
 };
 

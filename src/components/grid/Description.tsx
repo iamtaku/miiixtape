@@ -48,16 +48,25 @@ const Tag = styled.span`
 `;
 
 export const Description: React.FC<IProps> = ({ data, services }) => {
+  const handleOnDoubleClick = () => {
+    console.log("double clicked");
+  };
   return (
     <Wrapper>
       <Container>
-        <Tag>{data.playlistInfo.type}</Tag>
-        <ServiceWrapper>
+        <Tag className={"description-hideable"}>{data.playlistInfo.type}</Tag>
+        <ServiceWrapper className={"description-hideable"}>
           {services?.map((service, index) => setIcon(service, index))}
         </ServiceWrapper>
       </Container>
-      <Title>{data.playlistInfo.name}</Title>
-      {data.tracks.length > 0 && <span>{`${data.tracks.length} Tracks`}</span>}
+      <Title onDoubleClick={handleOnDoubleClick}>
+        {data.playlistInfo.name}
+      </Title>
+      {data.tracks.length > 0 && (
+        <span
+          className={"description-hideable"}
+        >{`${data.tracks.length} Tracks`}</span>
+      )}
     </Wrapper>
   );
 };

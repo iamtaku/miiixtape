@@ -78,6 +78,10 @@ export const Youtube: React.FC<YoutubeProps> = ({ setYoutube }) => {
     console.error("youtube err");
   };
 
+  const handleOnPlay = () => {
+    dispatch({ type: "LOADING_FINISH", payload: {} });
+  };
+
   const opts: Options = {
     height: "100",
     width: "100",
@@ -97,7 +101,7 @@ export const Youtube: React.FC<YoutubeProps> = ({ setYoutube }) => {
         onPause={handleOnPause}
         onStateChange={handleOnStateChange}
         onError={handleOnError}
-        // onPlay={handleOnPlay}
+        onPlay={handleOnPlay}
         ref={ref}
       />
     </YoutubeWrapper>

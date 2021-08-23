@@ -6,40 +6,34 @@ import { ActionMap, PlaybackPayload, PlaybackType } from "../types";
 export type PlaybackActions =
   ActionMap<PlaybackPayload>[keyof ActionMap<PlaybackPayload>];
 
-const currentIndex = (tracks?: Tracks, currentSong?: Song) => {
-  if (currentSong && tracks) {
-    return currentSong && tracks?.indexOf(currentSong);
-  }
-  return -1;
+const findIndexOfItems = <T extends { id: string | number }>(
+  data: T[],
+  itemToCheck: T
+) => data.findIndex((item) => item.id === itemToCheck.id);
+
+const nextTrack = (tracks?: Tracks, nextSong?: Song) => {
+  if (!tracks || !nextSong) return;
+  const index = findIndexOfItems(tracks, nextSong);
+  if (index < 0) return;
+  return tracks[index + 1];
 };
 
-const nextTrack = (tracks?: Tracks, currentSong?: Song) => {
-  if (tracks && currentSong) {
-    const index = currentIndex(tracks, currentSong);
-    if (index >= 0) return tracks[index + 1];
-  }
-
-  return undefined;
-};
-
-const previousTrack = (tracks?: Tracks, currentSong?: Song) => {
-  const index = currentIndex(tracks, currentSong);
-  if (index && tracks) {
-    return tracks[index - 1];
-  }
+const previousTrack = (tracks: Tracks, currentSong: Song) => {
+  const index = findIndexOfItems(tracks, currentSong);
+  if (index < 0) return;
+  return tracks[index - 1];
 };
 
 const handlePlayPrevious = (state: PlaybackType) => {
-  console.group("playing previous...");
   console.log("prev state: ", state);
-  if (!state.previousSong) return state;
+  if (!state.previousSong || !state.currentCollection?.tracks) return state;
   const currentSong = state.previousSong;
   const nextSong = nextTrack(state.currentCollection?.tracks, currentSong);
   const previousSong = previousTrack(
-    state.currentCollection?.tracks,
+    state.currentCollection.tracks,
     currentSong
   );
-  if (currentIndex(state.currentCollection?.tracks, currentSong) === 0) {
+  if (findIndexOfItems(state.currentCollection.tracks, currentSong) === 0) {
     return {
       ...state,
       currentSong,
@@ -59,25 +53,23 @@ const handlePlayPrevious = (state: PlaybackType) => {
     previousSong,
   };
   console.log("new state... : ", newState);
-  console.groupEnd();
   return newState;
 };
 
 const handleSetNext = (state: PlaybackType) => {
-  if (!state.nextSong) {
+  if (
+    state.nextSong == undefined ||
+    state.currentCollection?.tracks == undefined
+  ) {
     return state;
   }
 
   const currentSong = state.nextSong;
-  const nextSong = nextTrack(state.currentCollection?.tracks, currentSong);
+  const nextSong = nextTrack(state.currentCollection.tracks, currentSong);
   const previousSong = previousTrack(
     state.currentCollection?.tracks,
     currentSong
   );
-  const playBackPosition =
-    currentSong.service === "spotify"
-      ? (state.playbackPosition += 1)
-      : state.playbackPosition;
 
   const newState = {
     ...state,
@@ -86,43 +78,28 @@ const handleSetNext = (state: PlaybackType) => {
     nextSong,
     nextService: nextSong?.service,
     previousSong,
-    playBackPosition,
   };
 
+  console.log("old state...: ", state);
   console.log("new state...: ", newState);
-  console.groupEnd();
-
   return newState;
 };
 
-const handlePlay = (state: PlaybackType) => {
-  console.log("playing!");
-  return { ...state, isPlaying: true, isFinished: false };
-};
-
-const handlePlayTrack = (state: PlaybackType, track: Song): PlaybackType => {
-  return {
-    ...state,
-    currentSong: track,
-    isPlaying: true,
-  };
-};
-
 const handleSetTrack = (state: PlaybackType, newTrack: Song): PlaybackType => {
-  console.log("setting track, ", newTrack.name);
+  if (!state.currentCollection?.tracks) return state;
   const nextSong = nextTrack(state.currentCollection?.tracks, newTrack);
-  const previousSong = previousTrack(state.currentCollection?.tracks, newTrack);
-
+  const previousSong = previousTrack(state.currentCollection.tracks, newTrack);
   const newState = {
     ...state,
     currentSong: newTrack,
     nextSong,
     previousSong,
   };
-  if (!state.currentCollection?.tracks?.includes(newTrack)) {
+  if (
+    !state.currentCollection?.tracks?.some((track) => track.id === newTrack.id)
+  ) {
     newState.currentCollection = undefined;
   }
-
   return newState;
 };
 
@@ -131,7 +108,7 @@ const handleAddToNext = (
   currentTracks: Tracks,
   tracks: Tracks
 ) => {
-  const index = currentIndex(currentTracks, currentSong);
+  const index = currentTracks.findIndex((track) => track.id === currentSong.id);
   const newTracks = insertItemsToArray(currentTracks, index, tracks);
   return newTracks;
 };
@@ -145,11 +122,6 @@ export const playbackReducer = (
   switch (action.type) {
     case "PLAY_COLLECTION":
       console.log(action.type);
-      if (
-        !action.payload.collection.tracks ||
-        action.payload?.collection?.tracks?.length < 0
-      )
-        return state;
       newState = {
         ...initial,
         currentCollection: action.payload.collection,
@@ -162,7 +134,11 @@ export const playbackReducer = (
       };
       return newState;
     case "PLAY_TRACK":
-      return handlePlayTrack(state, action.payload.track);
+      return {
+        ...state,
+        currentSong: action.payload.track,
+        isPlaying: true,
+      };
     case "SET_TRACK":
       return handleSetTrack(state, action.payload.track);
     case "SET_NEXT":
@@ -177,7 +153,7 @@ export const playbackReducer = (
       return initial;
     case "PLAY":
       console.log(action.type);
-      return handlePlay(state);
+      return { ...state, isPlaying: true, isFinished: false };
     case "PAUSE_CURRENT":
       console.log(action.type);
       return { ...state, isPlaying: false };
@@ -223,7 +199,6 @@ export const playbackReducer = (
           action.payload.tracks
         ),
       };
-      console.log(action.type, newCollection);
       return {
         ...state,
         nextSong: action.payload.tracks[0],

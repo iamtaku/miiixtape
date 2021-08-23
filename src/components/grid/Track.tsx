@@ -19,7 +19,6 @@ import { ItemContainer } from "./Shared";
 interface TrackProps {
   track: Song;
   index: number;
-  isDragDisabled: boolean;
   isDragging?: boolean;
   isGroupedOver?: boolean;
 }
@@ -30,10 +29,8 @@ const Item = styled.span`
 
 const Container = styled(ItemContainer)<{
   isCurrent?: boolean;
-  isDragDisabled?: boolean;
 }>`
   position: relative;
-  opacity: ${(props) => (props.isDragDisabled ? "0.2" : "1")};
   display: grid;
   grid-column-gap: 8px;
   padding: 0px 12px;
@@ -42,6 +39,7 @@ const Container = styled(ItemContainer)<{
   min-height: 40px;
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
+  cursor: default;
 
   .index {
     display: ${(props) => (props.isCurrent ? "none" : "default")};
@@ -78,11 +76,7 @@ const Container = styled(ItemContainer)<{
 
 const Placeholder = () => <h1>Placeholder</h1>;
 
-export const Track: React.FC<TrackProps> = ({
-  track,
-  index,
-  isDragDisabled,
-}) => {
+export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
@@ -100,11 +94,15 @@ export const Track: React.FC<TrackProps> = ({
     setIsMenuOpen(false);
   };
   return (
-    <LazyLoad placeholder={<Placeholder />} height={40} key={index.toString()}>
+    <LazyLoad
+      placeholder={<Placeholder />}
+      height={40}
+      key={index.toString()}
+      scrollContainer=".main"
+    >
       <Container
         isCurrent={isCurrent}
         onMouseLeave={handleOnMouseLeave}
-        isDragDisabled={isDragDisabled}
         isAlbum={isAlbum}
       >
         <IndexPlayButton

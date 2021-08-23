@@ -10,6 +10,9 @@ import { DragDropContextWrapper as DragDropContext } from "./DragDropContextWrap
 const LayoutWrapper = styled.div`
   position: relative;
   display: grid;
+  /* height: 100vh; */
+  /* width: 100vw; */
+  /* overflow: hidden; */
   grid-template-rows: 1fr;
   grid-template-columns: 0.6fr 3fr;
   grid-template-areas: "sidebar inner";
@@ -19,6 +22,9 @@ const LayoutWrapper = styled.div`
 const InnerLayout = styled.div`
   grid-area: inner;
   padding: 4px 8px;
+  height: 100vh;
+  overflow: hidden;
+  /* overflow: scroll; */
   background-color: var(--primary);
   position: relative;
   @media ${device.laptop} {

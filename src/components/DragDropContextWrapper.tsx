@@ -52,7 +52,6 @@ export const DragDropContextWrapper: React.FC = ({ children }) => {
   const handleOnDragEnd = async (result: DropResult) => {
     const { source, destination, draggableId, combine } = result;
     dispatch({ type: "RESET_DROP", payload: {} });
-
     if (combine) {
       const song = queryClient.getQueryData<Song>([
         "song",
@@ -90,7 +89,6 @@ export const DragDropContextWrapper: React.FC = ({ children }) => {
       patchPlaylistItemsMutation.mutate({
         id: draggableId.split("/")[0],
         position: destination.index,
-        // updatedTracks: items,
       });
     }
 

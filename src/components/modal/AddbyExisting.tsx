@@ -4,7 +4,7 @@ import { Spotify } from "../../queries/api";
 import client from "../../queries/api/spotify/api";
 import { useGetAllSpotifyPlaylist, useGetUser } from "../../queries/hooks";
 import { Collection, PlaylistInfo } from "../../types/types";
-import { List, Item } from "../Shared";
+import { List, Item, Loading } from "../Shared";
 
 const FetchButton = styled.button`
   visibility: hidden;
@@ -50,7 +50,7 @@ export const AddbyExisting: React.FC<{
     handleFetch(playlist);
   };
 
-  if (isLoading) return <h2>Loading...</h2>;
+  if (isLoading) return <Loading />;
 
   return (
     <Wrapper>

@@ -1,3 +1,4 @@
+import React, { useState, useRef } from "react";
 import {
   FaEllipsisV,
   FaPause,
@@ -6,7 +7,7 @@ import {
   FaShare,
   FaTrash,
 } from "react-icons/fa";
-import React, { useState } from "react";
+import { IoCopyOutline } from "react-icons/io5";
 import { useHistory, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { device } from "../../globalStyle";
@@ -16,40 +17,34 @@ import { Collection, PlaylistParam } from "../../types/types";
 import { BasicButton } from "../Buttons";
 import { PlaybackButton } from "../Buttons";
 import { useGlobalContext } from "../../state/context";
-import { useRef } from "react";
 
 const ButtonWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
+  z-index: 10;
 `;
 
 const buttonStyles = css`
-  margin-left: 8px;
   padding: 8px;
   min-width: 60px;
+  max-width: 140px;
+  width: 100%;
   span {
     display: none;
     margin-left: 8px;
   }
 
   @media ${device.laptop} {
-    /* max-width: 60px; */
     span {
       display: initial;
     }
-  }
-  @media ${device.tablet} {
-    /* min-width: 90px; */
-  }
-  @media ${device.laptopL} {
-    min-width: 120px;
   }
 `;
 
 const Btn = styled(BasicButton)`
   ${buttonStyles}
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
 const GridButton = styled(PlaybackButton)`
@@ -62,7 +57,7 @@ const AddButton = styled(Btn)`
 `;
 
 const ShareButton = styled(Btn)`
-  color: var(--secibdart);
+  color: var(--secondary);
 `;
 
 const PlayButton = styled(GridButton)`
@@ -131,8 +126,13 @@ const DisabledWrapper = styled.div<{ isDisabled: boolean }>`
       : null}
 `;
 
-const ImportButton = () => {
-  return <ImportBtn>IMPORT</ImportBtn>;
+const ImportButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  return (
+    <ImportBtn onClick={onClick}>
+      <IoCopyOutline />
+      IMPORT
+    </ImportBtn>
+  );
 };
 
 interface IDisabled {
@@ -192,7 +192,7 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({
           </AddButton>
         )}
       </Disabled>
-      <ImportButton />
+      <ImportButton onClick={handleImportClick} />
       <ShareButton onClick={handleShareClick}>
         <FaShare />
         <span>SHARE</span>
@@ -209,15 +209,14 @@ const OptionsBtn = styled(Btn)`
 `;
 
 const OptionsButton = () => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLButtonElement>(null);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const handleOptionsClick = () => {
-    console.log("open options");
     setIsOptionsOpen(!isOptionsOpen);
   };
   return (
-    <div ref={ref} style={{ position: "relative" }}>
-      <OptionsBtn onClick={handleOptionsClick}>
+    <div style={{ position: "relative" }}>
+      <OptionsBtn onClick={handleOptionsClick} ref={ref}>
         <FaEllipsisV />
         <span>OPTIONS</span>
       </OptionsBtn>
