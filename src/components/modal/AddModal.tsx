@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ModalSection } from "./Shared";
+import { ModalSection } from "../Shared";
 import { Collection } from "../../types/types";
 import { AddbyExisting } from "./AddbyExisting";
 import { AddByUrl } from "./AddByUrl";
@@ -12,6 +12,7 @@ const Wrapper = styled.div`
 
 export const AddModal = (): JSX.Element => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isExistingOpen, setIsExistingOpen] = useState(false);
   const [data, setData] = useState<Collection>();
   const handleFetch = async (collection: Collection) => {
     setData(collection);
@@ -20,6 +21,7 @@ export const AddModal = (): JSX.Element => {
   };
 
   const handleConfirmClose = () => setIsConfirmOpen(false);
+  const handleOpenAddByExisting = () => setIsExistingOpen(!isExistingOpen);
 
   return (
     <>
@@ -29,11 +31,14 @@ export const AddModal = (): JSX.Element => {
         </Wrapper>
       ) : (
         <Wrapper>
-          <ModalSection title={"Add by URL"}>
+          <ModalSection title={<span>Add by URL</span>}>
             <AddByUrl handleFetch={handleFetch} />
           </ModalSection>
-          <ModalSection title={"Add by Importing existing playlists"}>
-            <AddbyExisting handleFetch={handleFetch} />
+          <ModalSection
+            title={"Import existing playlists"}
+            onClick={handleOpenAddByExisting}
+          >
+            {isExistingOpen && <AddbyExisting handleFetch={handleFetch} />}
           </ModalSection>
         </Wrapper>
       )}

@@ -15,10 +15,6 @@ const Btn = styled.button`
   &:hover {
     color: var(--accent);
   }
-
-  svg {
-    display: block;
-  }
 `;
 
 export const Queue = (): JSX.Element => {

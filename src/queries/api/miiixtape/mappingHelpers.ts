@@ -43,8 +43,10 @@ export const mapServerPlaylistMultiple = (
         name: item.attributes.name,
         service: "plaaaylist",
         owner: item.relationships.user.data.id,
+        isEditable: item.attributes.editable,
       },
       tracks: [],
+      position: item.attributes.position,
     };
   });
   return mappedData;
@@ -54,9 +56,11 @@ export const mapTrackToPlaylist = (track: Song): Collection => ({
     name: track.name,
     id: track.id,
     service: track.service,
+    isEditable: false,
     owner: "",
   },
   tracks: [{ ...track }],
+  position: null,
 });
 
 export const generateServices = (tracks: Tracks): Service[] => {
@@ -76,6 +80,7 @@ export const mapPlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
     id: data.data.id,
     name: data.data.attributes.name,
     description: data.data.attributes.description,
+    isEditable: data.data.attributes.editable,
     owner: data.data.relationships.user.data.id,
     type: "playlist",
     service: "plaaaylist",
@@ -84,15 +89,17 @@ export const mapPlaylistInfo = (data: ServerPlaylist): PlaylistInfo => {
 
 export const mapServerPlaylist = (data: ServerPlaylist): Collection => {
   const playlistInfo = mapPlaylistInfo(data);
-  if (data.included.length === 0) {
+  if (!data.included) {
     return {
       playlistInfo,
       tracks: [],
+      position: data.data.attributes.position,
     };
   }
   const tracks = data.included.map(mapPlaylistItemToTrack);
   return {
     playlistInfo,
     tracks,
+    position: data.data.attributes.position,
   };
 };

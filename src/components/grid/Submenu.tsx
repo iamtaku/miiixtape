@@ -1,45 +1,74 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
 import { MdPlaylistAdd } from "react-icons/md";
-import {
-  useDeletePlaylistItem,
-  useFetchSongCache,
-} from "../../../queries/hooks";
-import { useGlobalContext } from "../../../state/context";
-import { Song } from "../../../types/types";
-import { BaseParams } from "../../../queries/types";
+import { useDeletePlaylistItem, useGetTrack } from "../../queries/hooks";
+import { useGlobalContext } from "../../state/context";
+import { Song } from "../../types/types";
+import { BaseParams } from "../../queries/types";
 import { useParams } from "react-router-dom";
-import { useIsOwner } from "../../../helpers/hooks";
+import { useIsOwner } from "../../helpers/hooks";
+
+const slideIn = keyframes`
+  from {
+   transform: translateX(100%);
+   opacity: 0;
+  }
+
+  to {
+   transform: translateX(0%);
+   opacity: 1;
+  } 
+`;
+
+const Wrapper = styled.div`
+  position: relative;
+`;
+
+const SubMenuContainer = styled.div`
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  animation: ${slideIn} 0.2s ease-out;
+
+  button {
+    color: var(--white);
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+
+  a {
+    &:hover {
+      color: var(--accent);
+    }
+  }
+`;
 
 const DeleteButton = styled.button`
   background: none;
   border: none;
   margin-left: 8px;
-  color: var(--secondary);
 `;
 
 const OptionsButton = styled.button`
+  place-self: center;
   background: none;
   border: none;
   visibility: hidden;
-  color: var(--secondary);
+  color: var(--white);
+  &:hover {
+    color: var(--accent);
+  }
 `;
 
 const AddButton = styled.button`
   background: none;
   border: none;
   margin-right: 8px;
-  color: var(--accent);
-`;
-
-const SubMenuContainer = styled.div`
-  background: var(--light-gray);
-  height: 40px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
 `;
 
 const ExternalLink = styled.a`
@@ -59,7 +88,7 @@ export const MenuButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 export const SubMenu: React.FC<{ track: Song }> = ({ track }) => {
   const { dispatch, state } = useGlobalContext();
   const mutation = useDeletePlaylistItem();
-  const songCache = useFetchSongCache(track.id);
+  const { data: song } = useGetTrack(track);
   const { id: playlistId } = useParams<BaseParams>();
   const isOwner = useIsOwner(playlistId);
 
@@ -98,21 +127,31 @@ export const SubMenu: React.FC<{ track: Song }> = ({ track }) => {
   };
 
   return (
-    <SubMenuContainer>
-      <AddButton onClick={handleAddSongToQueue}>
-        <MdPlaylistAdd />
-      </AddButton>
-      <AddButton onClick={handleAddPlaylistItem}>
-        <FaPlus />
-      </AddButton>
-      <ExternalLink href={songCache?.href} target="_blank" rel="noreferrer">
-        <FiExternalLink />
-      </ExternalLink>
-      {isOwner && (
-        <DeleteButton onClick={handleDeletePlaylistItem}>
-          <FaTrash />
-        </DeleteButton>
-      )}
-    </SubMenuContainer>
+    <Wrapper>
+      <SubMenuContainer>
+        <AddButton onClick={handleAddSongToQueue} title={"Add to queue"}>
+          <MdPlaylistAdd />
+        </AddButton>
+        <AddButton onClick={handleAddPlaylistItem} title={"Add to playlist"}>
+          <FaPlus />
+        </AddButton>
+        <ExternalLink
+          href={song?.href}
+          target="_blank"
+          rel="noreferrer"
+          title={`Open Source in ${track.service}`}
+        >
+          <FiExternalLink />
+        </ExternalLink>
+        {isOwner && (
+          <DeleteButton
+            onClick={handleDeletePlaylistItem}
+            title={"Delete Item"}
+          >
+            <FaTrash />
+          </DeleteButton>
+        )}
+      </SubMenuContainer>
+    </Wrapper>
   );
 };

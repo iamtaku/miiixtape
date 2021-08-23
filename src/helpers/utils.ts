@@ -64,3 +64,14 @@ export const insertItemsToArray = <T>(
   index: number,
   newItem: T[]
 ): T[] => [...arr.slice(0, index), ...newItem, ...arr.slice(index)];
+
+export const reorderList = <T>(
+  list: T[],
+  startIndex: number,
+  endIndex: number
+): T[] => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+};

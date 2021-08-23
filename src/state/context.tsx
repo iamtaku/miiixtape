@@ -9,7 +9,7 @@ export const fetchVolume = (): number => {
   return 50;
 };
 
-type InitialStateType = {
+export type InitialStateType = {
   player: PlaybackType;
   ui: UIType;
 };
@@ -31,6 +31,7 @@ export const ui: UIType = {
   modalType: null,
   currentModalId: null,
   currentTrack: null,
+  disabledSection: null,
 };
 
 export const initialState = {

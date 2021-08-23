@@ -8,7 +8,7 @@ import { pluralize } from "../../helpers/utils";
 import { useGlobalContext } from "../../state/context";
 import DefaultMusicImage from "../../assets/music-cover.png";
 import { ProfilePlaceholder } from "../placeholders/Placeholder";
-import { Success, Error, Loading, List } from "./Shared";
+import { Success, Error, Loading, List } from "../Shared";
 
 const AddContainer = styled.div`
   margin-top: 30px;
@@ -44,28 +44,9 @@ const CancelButton = styled(Button)`
 const ExpandButton = styled(Button)`
   display: flex;
   align-items: center;
-  /* border: 1px solid var(--dark-secondary); */
   color: var(--dark-secondary);
   margin-left: 0px;
 `;
-
-// const List = styled.ul`
-//   padding: 4px;
-//   height: 200px;
-//   overflow-y: scroll;
-//   overflow-x: hidden;
-//   ::-webkit-scrollbar-track {
-//     background: var(--lighter-gray);
-//   }
-
-//   ::-webkit-scrollbar-thumb {
-//     background: var(--gray);
-//   }
-
-//   li:last-child {
-//     margin-bottom: 30px;
-//   }
-// `;
 
 const Item = styled.li`
   display: grid;
@@ -83,7 +64,7 @@ const Checkbox = styled.input.attrs({ type: "checkbox" })`
 const ChecklistContainer = styled.div`
   padding: 8px;
   border-radius: 8px;
-  background: var(--light-gray);
+  background: var(--primary);
   overflow: hidden;
 `;
 
@@ -137,8 +118,8 @@ const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--lighter-gray);
-  padding: 4px;
-  margin-bottom: 4px;
+  padding: 12px;
+  margin-bottom: 8px;
 `;
 
 const ExpandCheckList: React.FC<{
@@ -156,7 +137,7 @@ const ExpandCheckList: React.FC<{
           id="select all"
           onChange={handleSelectAll}
         />
-        <label htmlFor="select all" style={{ marginLeft: "8px" }}>
+        <label htmlFor="select all" style={{ marginLeft: "24px" }}>
           Select All{" "}
         </label>
       </CheckboxContainer>
@@ -183,6 +164,25 @@ const ExpandCheckList: React.FC<{
   );
 };
 
+interface IHash {
+  [id: string]: Song;
+}
+
+const updatedTracks = (updateTracks: Tracks, baseTracks?: Tracks): Tracks => {
+  if (!baseTracks) return updateTracks;
+  const trackHash = baseTracks.reduce<IHash>((total, current) => {
+    return { ...total, [current.id]: current };
+  }, {});
+
+  const result = updateTracks.filter(
+    (track) => !Object.keys(trackHash).includes(track.id)
+  );
+  return result;
+};
+
+// take in the updated tracks and filter out the items that already exist from our context
+//
+
 export const Confirm: React.FC<{
   data: Collection;
   handleConfirmClose: () => void;
@@ -200,15 +200,23 @@ export const Confirm: React.FC<{
 
   const handlePostItems = async () => {
     if (!state.ui.currentModalId) return;
-    const payload = {
+    const mutatePayload = {
       id: state.ui.currentModalId,
       tracks: filtered,
     };
     mutation
-      .mutateAsync(payload)
+      .mutateAsync(mutatePayload)
       .then((data) => {
-        console.log("items have been added ", data);
-        dispatch({ type: "ADD_TO_QUEUE", payload: { tracks: filtered } });
+        updatedTracks(data.tracks, state.player.currentCollection?.tracks);
+        dispatch({
+          type: "ADD_TO_CURRENT_COLLECTION",
+          payload: {
+            tracks: updatedTracks(
+              data.tracks,
+              state.player.currentCollection?.tracks
+            ),
+          },
+        });
       })
       .catch((err) => {
         console.error(err);
@@ -247,7 +255,7 @@ export const Confirm: React.FC<{
       <AddContainer>
         <p>
           Add {pluralize("track", filtered)} from {data?.playlistInfo?.service}{" "}
-          {data?.playlistInfo?.type} {data?.playlistInfo?.name}?
+          {data?.playlistInfo?.type} <em>{data?.playlistInfo?.name}?</em>
         </p>
       </AddContainer>
       <OptionsContainer>

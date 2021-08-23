@@ -1,15 +1,16 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Spotify } from "../../queries/api";
 import client from "../../queries/api/spotify/api";
 import { useGetAllSpotifyPlaylist, useGetUser } from "../../queries/hooks";
 import { Collection, PlaylistInfo } from "../../types/types";
-import { List, Item } from "./Shared";
+import { List, Item, Loading } from "../Shared";
 
 const FetchButton = styled.button`
   visibility: hidden;
   background: none;
-  border: none;
+  border: 1px solid var(--accent) !important;
+  border-radius: 8px;
   color: var(--accent) !important;
   opacity: 1 !important;
   width: auto !important;
@@ -18,11 +19,28 @@ const FetchButton = styled.button`
   }
 `;
 
+const slideIn = keyframes`
+  from {
+    height: 0;
+   opacity: 0;
+  }
+
+  to {
+    height: auto;
+    opacity: 1;
+  } 
+`;
+
+const Wrapper = styled.div`
+  animation: ${slideIn} 0.5s both;
+`;
+
 export const AddbyExisting: React.FC<{
   handleFetch: (collection: Collection) => void;
 }> = ({ handleFetch }) => {
   const { data: spotifyPlaylists, isLoading } = useGetAllSpotifyPlaylist();
   const { data: userInfo } = useGetUser();
+
   const handleClick = async (playlistInfo: PlaylistInfo) => {
     if (!userInfo) return;
     const playlist = await Spotify.getPlaylist(
@@ -32,10 +50,10 @@ export const AddbyExisting: React.FC<{
     handleFetch(playlist);
   };
 
-  if (isLoading) return <h2>Loading...</h2>;
+  if (isLoading) return <Loading />;
 
   return (
-    <>
+    <Wrapper>
       {spotifyPlaylists && spotifyPlaylists.length > 0 ? (
         <List>
           {spotifyPlaylists.map((playlist) => {
@@ -54,6 +72,6 @@ export const AddbyExisting: React.FC<{
           You don&apos;t have any spotify playlists to import
         </p>
       )}
-    </>
+    </Wrapper>
   );
 };

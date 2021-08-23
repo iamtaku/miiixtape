@@ -34,12 +34,14 @@ export type Tracks = Song[];
 export type Collection = {
   playlistInfo: PlaylistInfo;
   tracks: Tracks;
+  position: number | null;
 };
 
 export type PlaylistInfo = {
   id: string;
   name: string;
   service: Service;
+  isEditable: boolean;
   owner?: string;
   external_urls?: string;
   img?: string;

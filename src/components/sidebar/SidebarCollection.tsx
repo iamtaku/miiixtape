@@ -1,79 +1,72 @@
 import React from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
+import { useGlobalContext } from "../../state/context";
 import { Collection } from "../../types/types";
 import { SidebarItem } from "./SidebarItem";
 
 interface SidebarCollectionProps {
   data?: Collection[];
-  title: string;
 }
 
-const TitleSection = styled.div`
-  display: flex;
-  justify-content: flex-start;
-`;
-
-const Container = styled.div`
-  display: flex;
-  align-items: flex-start;
-`;
-
-const List = styled.ul<{ isCurrent?: boolean }>`
+const DroppableWrapperList = styled.ul<{ isCurrent?: boolean }>`
   margin-bottom: 8px;
+  overflow: hidden auto;
+  ::-webkit-scrollbar-track {
+    background: var(--lighter-gray);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--light-gray);
+  }
 `;
 
-const Title = styled.span`
-  text-transform: uppercase;
-  font-weight: 700;
-  padding: 0 12px;
-`;
-
-const ItemContainer = styled.div`
+const ItemContainer = styled.li`
   width: 100%;
 `;
 
+const Wrapper = styled.div``;
+
+const ScrollContainer = styled.div``;
+
 export const SidebarCollection: React.FC<SidebarCollectionProps> = ({
   data,
-  title,
 }) => {
+  const { state } = useGlobalContext();
   return (
-    <List>
-      <TitleSection>
-        <Container>
-          <Title>{title}</Title>
-        </Container>
-      </TitleSection>
-      {/* {data?.map((playlist) => (
-        <SidebarItem playlist={playlist} key={playlist.playlistInfo.id} />
-      ))} */}
-      <Droppable droppableId={"sidebar"}>
+    <DroppableWrapperList>
+      <Droppable
+        droppableId={"sidebar"}
+        isCombineEnabled={state.ui.disabledSection !== "TRACKS"}
+      >
         {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
-            {data?.map((playlist, index) => (
-              <Draggable
-                key={playlist.playlistInfo.id}
-                draggableId={playlist.playlistInfo.id}
-                index={index}
-              >
-                {(provided, _snapshot) => (
-                  <ItemContainer
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <SidebarItem
-                      playlist={playlist}
-                      key={playlist.playlistInfo.id}
-                    />
-                  </ItemContainer>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
+          <Wrapper ref={provided.innerRef} {...provided.droppableProps}>
+            <ScrollContainer>
+              {data?.map((playlist, index) => (
+                <Draggable
+                  key={playlist.playlistInfo.id}
+                  draggableId={`${playlist.playlistInfo.id}/sidebar`}
+                  index={index}
+                >
+                  {(provided, _snapshot) => (
+                    <ItemContainer
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <SidebarItem
+                        playlist={playlist}
+                        key={playlist.playlistInfo.id}
+                      />
+                    </ItemContainer>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ScrollContainer>
+          </Wrapper>
         )}
       </Droppable>
-    </List>
+    </DroppableWrapperList>
   );
 };

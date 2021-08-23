@@ -2,9 +2,11 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link as ReactLink } from "react-router-dom";
 import { FaPause, FaPlay } from "react-icons/fa";
-import { Song } from "../../../types/types";
-import { TrackPlaybackButton as PlaybackButton } from "../../Buttons";
-import DefaultMusicImage from "../../..//assets/music-cover.png";
+import { TrackPlaybackButton as PlaybackButton } from "../Buttons";
+import DefaultMusicImage from "../../assets/music-cover.png";
+import { Song } from "../../types/types";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 export const Item = css<{
   isRight?: boolean;
@@ -21,20 +23,33 @@ export const Item = css<{
   }
 `;
 
+const Index = styled.span`
+  margin: 0 auto;
+  font-size: 0.8rem;
+`;
+
 const Link = styled(ReactLink)`
   ${Item}
 `;
 
 const TitleAlbumContainer = styled.div`
-  overflow: "hidden";
-  text-overflow: "ellipsis";
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 100%;
+  overflow: "hidden";
+  text-overflow: "ellipsis";
   &:hover {
     text-decoration: underline;
   }
+`;
+
+const TrackTitle = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: inline-block;
 `;
 
 export const TitleAlbum: React.FC<{ data: Song; isAlbum: boolean }> = ({
@@ -43,17 +58,7 @@ export const TitleAlbum: React.FC<{ data: Song; isAlbum: boolean }> = ({
 }) => {
   return (
     <TitleAlbumContainer>
-      <span
-        style={{
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          flexGrow: 2,
-          fontWeight: 500,
-          fontSize: "0.95rem",
-        }}
-      >
-        {data.name}
-      </span>
+      <TrackTitle>{data.name}</TrackTitle>
       {isAlbum ? null : data.album ? (
         <Link
           to={`/app/album/${data.service}/${data.album.uri}`}
@@ -74,7 +79,7 @@ export const IndexPlayButton: React.FC<{
 }> = ({ index, isCurrent, data, isPlaying }) => {
   return (
     <>
-      <span className="index">{index + 1}</span>
+      <Index className="index">{index + 1}</Index>
       <PlaybackButton className="play" data={data}>
         {isPlaying && isCurrent ? <FaPause /> : <FaPlay />}
       </PlaybackButton>
@@ -89,15 +94,14 @@ export const AlbumImage: React.FC<{ data: Song; isAlbum: boolean }> = ({
   const trackImg = data?.img ? data.img : DefaultMusicImage;
   return (
     <>
-      {isAlbum ? (
-        <span>{` `}</span>
-      ) : (
-        <img
+      {isAlbum ? null : (
+        <LazyLoadImage
           src={trackImg}
           alt={data.album?.name}
           width="30px"
           height="30px"
           style={{ justifySelf: "center" }}
+          effect="blur"
         />
       )}
     </>

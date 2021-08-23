@@ -15,9 +15,9 @@ const ListItem: React.FC<{ className?: string }> = ({
   children,
   ...props
 }) => (
-  <li {...props} className={className}>
+  <div {...props} className={className}>
     {children}
-  </li>
+  </div>
 );
 
 const Item = styled(ListItem)<{ $iscurrent: boolean }>`

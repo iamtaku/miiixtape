@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import LazyLoad from "react-lazyload";
-import { Song } from "../../../types/types";
-import { timeConversion } from "../../../helpers/utils";
-import { useIsCurrentTrack } from "../../../helpers/hooks";
-import { useGetTrack } from "../../../queries/hooks";
-import { BaseParams } from "../../../queries/types";
+import { Song } from "../../types/types";
+import { timeConversion } from "../../helpers/utils";
+import { useIsCurrentTrack } from "../../helpers/hooks";
+import { useGetTrack } from "../../queries/hooks";
 import {
   TitleAlbum,
   IndexPlayButton,
@@ -28,7 +27,10 @@ const Item = styled.span`
   ${ItemStyling}
 `;
 
-const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
+const Container = styled(ItemContainer)<{
+  isCurrent?: boolean;
+}>`
+  position: relative;
   display: grid;
   grid-column-gap: 8px;
   padding: 0px 12px;
@@ -37,6 +39,7 @@ const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
   min-height: 40px;
   background-color: ${(props) =>
     props.isCurrent ? "var(--dark-accent) !important" : "default"};
+  cursor: default;
 
   .index {
     display: ${(props) => (props.isCurrent ? "none" : "default")};
@@ -44,6 +47,7 @@ const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
 
   .play {
     display: ${(props) => (props.isCurrent ? "default" : "none")};
+    color: ${(props) => props.isCurrent && "var(--white)"};
   }
 
   &:hover {
@@ -57,15 +61,16 @@ const Container = styled(ItemContainer)<{ isCurrent?: boolean }>`
     .options {
       visibility: initial;
     }
-  }
 
-  .index {
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  button {
-    ${(props) => (props.isCurrent ? "svg {color: var(--white)}" : null)}
+    ${(props) =>
+      props.isCurrent &&
+      `
+    button {
+      &:hover {
+        color: var(--white);
+      }
+    }
+`}
   }
 `;
 
@@ -75,8 +80,7 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
   const location = useLocation();
   const isAlbum = location.pathname.includes("album");
   const { isPlaying, isCurrent } = useIsCurrentTrack(track);
-  const params = useParams<BaseParams>();
-  const { data } = useGetTrack(track, params.id);
+  const { data } = useGetTrack(track);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuOpen = () => {
@@ -93,10 +97,14 @@ export const Track: React.FC<TrackProps> = ({ track, index }) => {
     <LazyLoad
       placeholder={<Placeholder />}
       height={40}
-      scrollContainer={".main"}
       key={index.toString()}
+      scrollContainer=".main"
     >
-      <Container isCurrent={isCurrent} onMouseLeave={handleOnMouseLeave}>
+      <Container
+        isCurrent={isCurrent}
+        onMouseLeave={handleOnMouseLeave}
+        isAlbum={isAlbum}
+      >
         <IndexPlayButton
           index={index}
           isPlaying={isPlaying}

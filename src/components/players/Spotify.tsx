@@ -1,4 +1,5 @@
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import SpotifyPlayer, { CallbackState } from "react-spotify-web-playback";
 import styled from "styled-components";
@@ -17,31 +18,52 @@ interface SpotifyProps {
 export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
   const { data: userInfo } = useGetUser();
   const { dispatch, state } = useGlobalContext();
+  const [isPlaying, setIsPlaying] = useState(false);
   const ref = useRef<SpotifyPlayer>(null);
   const queryClient = useQueryClient();
 
   if (!userInfo) return null;
 
-  const handleCallback = (state: CallbackState) => {
+  useEffect(() => {
+    if (!ref.current) return;
+    if (state.player.isPlaying) {
+      setIsPlaying(true);
+    }
+
+    if (!state.player.isPlaying) {
+      setIsPlaying(false);
+    }
+  }, [state.player.currentSong, state.player.isPlaying]);
+
+  const handleCallback = (callbackState: CallbackState) => {
+    console.log(callbackState);
     ref.current && setSpotify(ref.current);
-    if (state.isInitializing) {
+    if (callbackState.isInitializing) {
       dispatch({ type: "IS_LOADING", payload: {} });
     }
 
-    if (state.isPlaying && !state.isInitializing && state.status === "READY") {
+    if (
+      callbackState.isPlaying &&
+      !callbackState.isInitializing &&
+      callbackState.status === "READY"
+    ) {
       dispatch({ type: "LOADING_FINISH", payload: {} });
       client(userInfo?.access_token).setVolume(fetchVolume());
       dispatch({ type: "PLAY", payload: {} });
     }
+
+    // when current playback finishes
     if (
-      state.type === "player_update" &&
-      state.isPlaying === false &&
-      state.position === 0
+      callbackState.type === "player_update" &&
+      !callbackState.isPlaying &&
+      callbackState.progressMs === 0 &&
+      state.player.nextSong
     ) {
       dispatch({
         type: "SONG_END",
         payload: {},
       });
+      setIsPlaying(false);
       dispatch({
         type: "SET_NEXT",
         payload: {},
@@ -50,13 +72,14 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
         type: "PLAY",
         payload: {},
       });
+      setIsPlaying(true);
     }
 
-    if (state.error) {
+    if (callbackState.error) {
       console.error(state);
       console.log("refetching token");
       queryClient.invalidateQueries(["user"]);
-      state.needsUpdate = true;
+      callbackState.needsUpdate = true;
     }
   };
 
@@ -67,10 +90,7 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
         name="plaaaylist player"
         uris={state.player.currentSong?.uri}
         callback={handleCallback}
-        play={
-          state.player.isPlaying &&
-          state.player.currentSong?.service === "spotify"
-        }
+        play={isPlaying}
         ref={ref}
         initialVolume={0}
       />

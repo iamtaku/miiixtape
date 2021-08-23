@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import { ProfilePlaceholder } from "../../placeholders/Placeholder";
 import { useGetSpotifyUser } from "../../../queries/hooks";
@@ -77,7 +76,7 @@ export const Profile = (): JSX.Element => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  SPOTIFY <FontAwesomeIcon icon={faExternalLinkAlt} />
+                  SPOTIFY <FaExternalLinkAlt />
                 </a>
               </li>
             ) : null}

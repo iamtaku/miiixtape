@@ -33,9 +33,10 @@ const mapYoutubePlaylisttoPlaylistInfo = (
   return {
     id: data.items[0].id,
     name: data.items[0].snippet.title,
+    isEditable: false,
     service: "youtube",
     type: "playlist",
-    img: data.items[0].snippet.thumbnails.default.url,
+    img: data.items[0].snippet.thumbnails.default?.url,
   };
 };
 
@@ -63,5 +64,6 @@ export const mapYoutubePlaylistToPlaylist = ({
   return {
     playlistInfo,
     tracks,
+    position: null,
   };
 };

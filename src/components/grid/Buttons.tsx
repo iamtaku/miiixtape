@@ -1,3 +1,4 @@
+import React, { useState, useRef } from "react";
 import {
   FaEllipsisV,
   FaPause,
@@ -6,50 +7,44 @@ import {
   FaShare,
   FaTrash,
 } from "react-icons/fa";
-import React, { useState } from "react";
+import { IoCopyOutline } from "react-icons/io5";
 import { useHistory, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { device } from "../../../globalStyle";
-import { useIsCurrentPlaylist, useIsOwner } from "../../../helpers/hooks";
-import { useDeletePlaylist } from "../../../queries/hooks";
-import { Collection, PlaylistParam } from "../../../types/types";
-import { BasicButton } from "../../Buttons";
-import { PlaybackButton } from "../../Buttons";
-import { useGlobalContext } from "../../../state/context";
-import { useRef } from "react";
+import { device } from "../../globalStyle";
+import { useIsCurrentPlaylist, useIsOwner } from "../../helpers/hooks";
+import { useDeletePlaylist } from "../../queries/hooks";
+import { Collection, PlaylistParam } from "../../types/types";
+import { BasicButton } from "../Buttons";
+import { PlaybackButton } from "../Buttons";
+import { useGlobalContext } from "../../state/context";
 
 const ButtonWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
+  z-index: 10;
 `;
 
 const buttonStyles = css`
-  margin-left: 8px;
   padding: 8px;
   min-width: 60px;
+  max-width: 140px;
+  width: 100%;
   span {
     display: none;
     margin-left: 8px;
   }
 
   @media ${device.laptop} {
-    /* max-width: 60px; */
     span {
       display: initial;
     }
-  }
-  @media ${device.tablet} {
-    /* min-width: 90px; */
-  }
-  @media ${device.laptopL} {
-    min-width: 120px;
   }
 `;
 
 const Btn = styled(BasicButton)`
   ${buttonStyles}
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
 const GridButton = styled(PlaybackButton)`
@@ -62,7 +57,7 @@ const AddButton = styled(Btn)`
 `;
 
 const ShareButton = styled(Btn)`
-  color: var(--secibdart);
+  color: var(--secondary);
 `;
 
 const PlayButton = styled(GridButton)`
@@ -131,8 +126,13 @@ const DisabledWrapper = styled.div<{ isDisabled: boolean }>`
       : null}
 `;
 
-const ImportButton = () => {
-  return <ImportBtn>IMPORT</ImportBtn>;
+const ImportButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  return (
+    <ImportBtn onClick={onClick}>
+      <IoCopyOutline />
+      IMPORT
+    </ImportBtn>
+  );
 };
 
 interface IDisabled {
@@ -146,18 +146,24 @@ const Disabled: React.FC<IDisabled> = ({ children, isDisabled }) => {
 interface IDropdownContainer {
   top?: number;
   width?: number;
+  handleOptionsClick?: () => void;
 }
 
-const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
+const OptionsDropdown: React.FC<IDropdownContainer> = ({
+  top,
+  width,
+  handleOptionsClick,
+}) => {
   const { dispatch } = useGlobalContext();
   const { id } = useParams<PlaylistParam>();
-  const isOwner = useIsOwner(id);
+  const { isOwner, isEditable } = useIsOwner(id);
 
   const handleAddClick = () => {
     dispatch({
       type: "OPEN_MODAL",
       payload: { modalType: "ADD_MODAL", currentModalId: id },
     });
+    handleOptionsClick && handleOptionsClick();
   };
 
   const handleShareClick = () => {
@@ -165,16 +171,28 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({ top, width }) => {
       type: "OPEN_MODAL",
       payload: { modalType: "SHARE_MODAL", currentModalId: id },
     });
+    handleOptionsClick && handleOptionsClick();
   };
+
+  const handleImportClick = () => {
+    dispatch({
+      type: "OPEN_MODAL",
+      payload: { modalType: "SHARE_MODAL", currentModalId: id },
+    });
+    handleOptionsClick && handleOptionsClick();
+  };
+
   return (
     <Wrapper top={top} width={width}>
       <Disabled isDisabled={isOwner}>
-        <AddButton onClick={handleAddClick}>
-          <FaPlus />
-          <span>ADD</span>
-        </AddButton>
+        {(isEditable || isOwner) && (
+          <AddButton onClick={handleAddClick}>
+            <FaPlus />
+            <span>ADD</span>
+          </AddButton>
+        )}
       </Disabled>
-      {isOwner && <ImportButton />}
+      <ImportButton onClick={handleImportClick} />
       <ShareButton onClick={handleShareClick}>
         <FaShare />
         <span>SHARE</span>
@@ -191,15 +209,14 @@ const OptionsBtn = styled(Btn)`
 `;
 
 const OptionsButton = () => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLButtonElement>(null);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const handleOptionsClick = () => {
-    console.log("open options");
     setIsOptionsOpen(!isOptionsOpen);
   };
   return (
-    <div ref={ref} style={{ position: "relative" }}>
-      <OptionsBtn onClick={handleOptionsClick}>
+    <div style={{ position: "relative" }}>
+      <OptionsBtn onClick={handleOptionsClick} ref={ref}>
         <FaEllipsisV />
         <span>OPTIONS</span>
       </OptionsBtn>
@@ -207,6 +224,7 @@ const OptionsButton = () => {
         <OptionsDropdown
           top={ref.current?.clientHeight}
           width={ref.current?.clientWidth}
+          handleOptionsClick={handleOptionsClick}
         />
       )}
     </div>
@@ -232,7 +250,6 @@ interface ButtonsProps {
 }
 export const Buttons: React.FC<ButtonsProps> = ({ data }) => {
   const { isCurrent, isPlaying } = useIsCurrentPlaylist(data);
-
   const isCurrentAndIsPlaying = isCurrent && isPlaying;
 
   return (

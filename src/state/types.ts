@@ -31,7 +31,7 @@ export type PlaybackPayload = {
   LOADING_FINISH: Record<string, never>;
   INITIALIZE: Record<string, never>;
   DELETE_COLLECTION: { id: string };
-  ADD_TO_QUEUE: {
+  ADD_TO_CURRENT_COLLECTION: {
     tracks: Tracks;
   };
   ADD_TO_NEXT: {
@@ -57,6 +57,8 @@ export type PlaybackType = {
 
 type ModalType = "ADD_MODAL" | "SHARE_MODAL" | "ADD_ITEM_MODAL" | null;
 
+type Section = "SIDEBAR" | "TRACKS" | null;
+
 export type UIPayload = {
   OPEN_MODAL: {
     modalType: ModalType;
@@ -64,6 +66,10 @@ export type UIPayload = {
     track?: Song;
   };
   CLOSE_MODAL: Record<string, never>;
+  DISABLE_DROP: {
+    section: Section;
+  };
+  RESET_DROP: Record<string, never>;
 };
 
 export type UIType = {
@@ -71,4 +77,5 @@ export type UIType = {
   modalType: ModalType;
   currentModalId: string | null;
   currentTrack: Song | null;
+  disabledSection: Section;
 };

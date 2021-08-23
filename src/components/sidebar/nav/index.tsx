@@ -9,6 +9,7 @@ const NavBar = styled.nav`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 12px;
 `;
 
 const List = styled.ul`

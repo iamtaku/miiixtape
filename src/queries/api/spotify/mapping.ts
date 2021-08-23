@@ -18,6 +18,7 @@ export const mapSpotifyArtistToArtist = (
         id: data.id,
         name: data.name,
         service: "spotify",
+        isEditable: false,
         img: data.images[0].url,
         type: "artist",
       },
@@ -37,8 +38,10 @@ export const mapSpotifyToPlaylist = (
         id: item.id,
         name: item.name,
         service: "spotify",
+        isEditable: false,
       },
       tracks: [],
+      position: null,
     };
   });
   return mappedData;
@@ -61,6 +64,7 @@ export const mapSpotifyAlbumtoPlaylist = (
   const playlistInfo: PlaylistInfo = {
     id: album.id,
     name: album.name,
+    isEditable: false,
     external_urls: album.external_urls.spotify,
     img: album.images[0].url,
     service: "spotify",
@@ -74,6 +78,7 @@ export const mapSpotifyAlbumtoPlaylist = (
   return {
     playlistInfo,
     tracks,
+    position: null,
   };
 };
 
@@ -117,6 +122,7 @@ export const mapSpotifyPlaylistToPlaylist = (
   const playlistInfo: PlaylistInfo = {
     id: data.id,
     name: data.name,
+    isEditable: false,
     description: data.description ? data.description : "",
     external_urls: data.external_urls.spotify || "",
     img: data.images[0] ? data.images[0].url : "",
@@ -131,6 +137,7 @@ export const mapSpotifyPlaylistToPlaylist = (
   return {
     playlistInfo,
     tracks,
+    position: null,
   };
 };
 

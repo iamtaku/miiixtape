@@ -7,10 +7,24 @@ import {
   Success,
   List,
   Item as ItemStyles,
-} from "./Shared";
+} from "../Shared";
 import { useGetAllPlaylists, usePostPlaylistItems } from "../../queries/hooks";
 import { useGlobalContext } from "../../state/context";
 import { Collection } from "../../types/types";
+import { AddPlaylistForm } from "../AddPlaylistForm";
+
+const Wrapper = styled.div`
+  div.create-new {
+    border-radius: none;
+    box-shadow: none;
+    padding: 2px 32px;
+  }
+
+  .create-new button {
+    width: initial;
+    height: initial;
+  }
+`;
 
 const Item: React.FC<{ data: Collection }> = ({ data }) => {
   const { state } = useGlobalContext();
@@ -64,20 +78,28 @@ export const AddItemModal = (): JSX.Element => {
 
   return (
     <ModalSection
-      title={`Select a playlist to add  ${state.ui.currentTrack?.name} `}
+      title={
+        <span>
+          Select a playlist to add <em>{state.ui.currentTrack?.name}</em>
+        </span>
+      }
     >
       {data && data.length > 0 ? (
-        <List>
-          {data.map((playlist, index) => {
-            return <Item data={playlist} key={index} />;
-          })}
-        </List>
+        <Wrapper>
+          <List>
+            <AddPlaylistForm className={"create-new"}>
+              <span style={{ marginRight: "8px" }}>Create new </span>
+            </AddPlaylistForm>
+            {data.map((playlist, index) => (
+              <Item data={playlist} key={index} />
+            ))}
+          </List>
+        </Wrapper>
       ) : (
         <p style={{ padding: "2px 24px" }}>
           You don&apos;t have any spotify playlists to import
         </p>
       )}
-      <button>Close</button>
     </ModalSection>
   );
 };

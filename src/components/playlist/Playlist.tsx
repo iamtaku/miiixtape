@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetSinglePlaylist } from "../../queries/hooks";
-import { InnerGridBottom } from "../grid/bottom";
+import { Bottom } from "../grid/Bottom";
 
 export const Playlist: React.FC = () => {
   const { data, isLoading, error, isError } = useGetSinglePlaylist();
@@ -10,9 +10,5 @@ export const Playlist: React.FC = () => {
     return <p>error</p>;
   }
 
-  return (
-    <>
-      <InnerGridBottom data={data} isLoading={isLoading} isError={isError} />
-    </>
-  );
+  return <Bottom data={data} isLoading={isLoading} isError={isError} />;
 };

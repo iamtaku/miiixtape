@@ -1,6 +1,6 @@
 import React from "react";
 import { IoClose } from "react-icons/io5";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useGlobalContext } from "../../state/context";
 import { AddModal } from "./AddModal";
 import { ShareModal } from "./ShareModal";
@@ -8,7 +8,7 @@ import { AddItemModal } from "./AddItemModal";
 
 const BackDrop = styled.div`
   z-index: 1;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -17,6 +17,16 @@ const BackDrop = styled.div`
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(15, 11, 11, 0.2);
   backdrop-filter: blur(4px) contrast(0.8);
+`;
+
+const slideIn = keyframes`
+  from {
+   opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  } 
 `;
 
 const ModalContainer = styled.div`
@@ -37,6 +47,7 @@ const ModalContainer = styled.div`
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
   padding: 34px;
   background-color: var(--lighter-gray);
+  animation: ${slideIn} 0.61s forwards;
 `;
 
 const Title = styled.h2`
@@ -44,9 +55,10 @@ const Title = styled.h2`
 `;
 
 const CloseBtn = styled.button`
+  margin-left: 16px;
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 1.5rem;
   &:hover {
     cursor: pointer;
     color: var(--accent);

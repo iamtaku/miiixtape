@@ -75,6 +75,7 @@ export const postPlaylist = async (name: string): Promise<Collection> => {
   const payload = {
     playlist: {
       name,
+      position: 0,
     },
   };
   return await Playlist.createPlaylist(payload);
@@ -88,12 +89,35 @@ export const deletePlaylist = async (id: string): Promise<void> => {
   return await Playlist.deletePlaylist(id);
 };
 
+export const patchPlaylist = async ({
+  id,
+  name,
+  position,
+  isEditable,
+}: {
+  id: string;
+  name?: string;
+  position?: number;
+  isEditable?: boolean;
+}): Promise<Collection> => {
+  const payload = {
+    playlist: {
+      id,
+      name,
+      position,
+      isEditable,
+    },
+  };
+  return await Playlist.patchPlaylist(id, payload);
+};
+
 export const patchPlaylistItem = async ({
   id,
   position,
 }: {
   id: string;
   position: number;
+  updatedTracks?: Tracks;
 }): Promise<Collection> => {
   const payload = {
     playlist_items: {

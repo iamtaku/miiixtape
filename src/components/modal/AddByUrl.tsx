@@ -13,7 +13,7 @@ import client from "../../queries/api/spotify/api";
 import { useGetUser } from "../../queries/hooks";
 import { SearchBarWrapper } from "../sidebar/nav/SearchBar";
 import { Collection, PlaylistInfo, Service } from "../../types/types";
-import { Loading, Error } from "./Shared";
+import { Loading, Error } from "../Shared";
 import { SoundcloudPlaylist } from "soundcloud.ts";
 
 interface IAddByUrl {
@@ -37,7 +37,8 @@ const Input = styled.input`
 
 const EnterBtn = styled.input`
   background: none;
-  border: none;
+  border: 1px solid var(--accent) !important;
+  border-radius: 8px;
   color: var(--accent) !important;
   opacity: 1 !important;
   width: auto !important;
@@ -77,10 +78,12 @@ const fetchYoutube = async (uri: string): Promise<Collection> => {
     name: "",
     owner: "",
     service: "youtube",
+    isEditable: false,
   };
   return {
     playlistInfo,
     tracks: data,
+    position: null,
   };
 };
 
@@ -103,8 +106,15 @@ const fetchSpotify = async (
   const strippedURI = stripSpotifyTrackURI(uri);
   const data = await Spotify.getTracks([strippedURI], client(token));
   return {
-    playlistInfo: { id: "", name: "", owner: "", service: "spotify" },
+    playlistInfo: {
+      id: "",
+      name: "",
+      owner: "",
+      service: "spotify",
+      isEditable: false,
+    },
     tracks: data,
+    position: null,
   };
 };
 
@@ -113,6 +123,7 @@ const mapSoundCloudPlaylistInfo = (data: SoundcloudPlaylist): PlaylistInfo => {
     id: data.id.toString(),
     name: data.title,
     service: "soundcloud",
+    isEditable: false,
     external_urls: data.permalink_url,
     type: "playlist",
   };
@@ -125,6 +136,7 @@ const fetchSC = async (uri: string): Promise<Collection> => {
   return {
     playlistInfo,
     tracks: data,
+    position: null,
   };
 };
 

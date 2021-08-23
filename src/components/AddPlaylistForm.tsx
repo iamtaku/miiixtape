@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaPlus } from "react-icons/fa";
-import { usePostPlaylist } from "../../queries/hooks";
+import { usePostPlaylist } from "../queries/hooks";
 
 const Container = styled.div`
-  padding: 4px 24px;
+  padding: 4px 10px;
   background: var(--gray);
   border-radius: 8px;
   border: 1px solid transparent;
@@ -43,21 +42,26 @@ const Input = styled.input`
   }
 `;
 
-export const AddPlaylistForm = (): JSX.Element => {
+interface IAddPlaylistFormProps {
+  styles?: React.CSSProperties;
+  className?: string;
+}
+
+export const AddPlaylistForm: React.FC<IAddPlaylistFormProps> = ({
+  children,
+  styles,
+  className,
+}) => {
   const mutation = usePostPlaylist();
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [input, setInput] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      mutation.mutateAsync(input).then((_data) => {
-        setInput("");
-        setIsInputOpen(false);
-      });
-    } catch {
-      console.error("something went wrong");
-    }
+    mutation.mutateAsync(input).then((_data) => {
+      setInput("");
+      setIsInputOpen(false);
+    });
   };
 
   const handleBlur = () => {
@@ -66,7 +70,7 @@ export const AddPlaylistForm = (): JSX.Element => {
   };
 
   return (
-    <Container>
+    <Container style={styles} className={className}>
       {isInputOpen ? (
         <form onSubmit={handleSubmit}>
           <Input
@@ -80,7 +84,7 @@ export const AddPlaylistForm = (): JSX.Element => {
         </form>
       ) : (
         <AddPlaylistButton onClick={() => setIsInputOpen(true)}>
-          <FaPlus />
+          {children}
         </AddPlaylistButton>
       )}
     </Container>

@@ -1,33 +1,31 @@
 import React from "react";
 import styled from "styled-components";
+import { FaPlus } from "react-icons/fa";
 import { SidebarCollection } from "./SidebarCollection";
-import { AddPlaylistForm } from "./AddPlaylistForm";
+import { AddPlaylistForm } from "../AddPlaylistForm";
 import { useGetAllPlaylists } from "../../queries/hooks";
 import { Navbar as Nav } from "./nav";
 import { isAuthenticated } from "../../helpers/utils";
 
-const Wrapper = styled.div`
+const Container = styled.div`
   grid-area: sidebar;
-  max-width: 100%;
+  position: fixed;
+  top: 0;
+  min-height: 100vh;
+  z-index: 10;
   padding: 8px;
   display: flex;
   flex-direction: column;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
   background: var(--lighter-gray);
 `;
 
-const CollectionWrapper = styled.div`
-  overflow-y: scroll;
-  overflow-x: hidden;
-  ::-webkit-scrollbar-track {
-    background: var(--lighter-gray);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--light-gray);
-  }
+const Title = styled.span`
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0 12px;
+  margin-top: 8px;
 `;
 
 export const Sidebar = (): JSX.Element => {
@@ -42,18 +40,19 @@ export const Sidebar = (): JSX.Element => {
   }
   if (isLoading)
     return (
-      <Wrapper>
+      <Container>
         <h2>Loading...</h2>
-      </Wrapper>
+      </Container>
     );
 
   return (
-    <Wrapper>
+    <Container>
       <Nav />
-      <CollectionWrapper>
-        <SidebarCollection data={playlists} title={"playlists"} />
-        <AddPlaylistForm />
-      </CollectionWrapper>
-    </Wrapper>
+      <AddPlaylistForm>
+        <FaPlus />
+      </AddPlaylistForm>
+      <Title>playlists</Title>
+      <SidebarCollection data={playlists} />
+    </Container>
   );
 };

@@ -2,18 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { useQueryClient } from "react-query";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { Collection, Song } from "../types/types";
 import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/api";
 import { useGetUser } from "../queries/hooks";
 import { useIsCurrentPlaylist, useIsCurrentTrack } from "../helpers/hooks";
+import { FaSpotify } from "react-icons/fa";
 
 const Button = styled.button`
+  margin: 0 auto;
   border: none;
   background: transparent;
   color: var(--accent);
+  font-size: 0.9rem;
   &:hover {
     cursor: pointer;
   }
@@ -35,7 +36,7 @@ export const LoginButton: React.FC = () => {
 
   return (
     <LoginBtn href={URL}>
-      Login with Spotify <FontAwesomeIcon icon={faSpotify} />
+      Login with Spotify <FaSpotify />
     </LoginBtn>
   );
 };
@@ -120,19 +121,21 @@ export const PlaybackButton: React.FC<IProps> = ({
           service: data.playlistInfo.service,
         };
         const playlist = await getPlaylist(params, user);
+        if (playlist.tracks.length === 0) return;
+        dispatch({ type: "IS_LOADING", payload: {} });
         dispatch({
           type: "PLAY_COLLECTION",
           payload: {
             collection: playlist,
           },
         });
-        return;
       } catch (err) {
         throw new Error(err);
       }
     }
 
     if (cache) {
+      dispatch({ type: "IS_LOADING", payload: {} });
       dispatch({
         type: "PLAY_COLLECTION",
         payload: {
@@ -143,7 +146,6 @@ export const PlaybackButton: React.FC<IProps> = ({
   };
 
   const handleClick = async (data: Collection) => {
-    // debugger;
     try {
       await handlePlayback(data);
     } catch (err) {
@@ -165,10 +167,11 @@ interface ITrackButtonProps {
 export const TrackPlaybackButton: React.FC<
   ITrackButtonProps & { className?: string }
 > = ({ data, children, className }) => {
-  const { dispatch } = useGlobalContext();
+  const { dispatch, state } = useGlobalContext();
   const { isPlaying } = useIsCurrentTrack(data);
 
   const handleClick = (track: Song) => {
+    console.log(track, state.player.currentCollection);
     if (isPlaying) {
       dispatch({
         type: "PAUSE_CURRENT",
@@ -177,20 +180,24 @@ export const TrackPlaybackButton: React.FC<
       return;
     }
 
-    if (!data) {
-      dispatch({
-        type: "PLAY_TRACK",
-        payload: { track },
-      });
-      return;
-    }
-
-    if (data) {
+    if (
+      state.player.currentCollection?.tracks.some(
+        (track) => track.id === data.id
+      )
+    ) {
       dispatch({
         type: "SET_TRACK",
         payload: { track },
       });
     }
+
+    // if (!data) {
+    dispatch({
+      type: "PLAY_TRACK",
+      payload: { track },
+    });
+    return;
+    // }
 
     if (!isPlaying) {
       dispatch({
