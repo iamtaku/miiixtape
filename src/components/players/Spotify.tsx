@@ -75,6 +75,18 @@ export const Spotify: React.FC<SpotifyProps> = ({ setSpotify }) => {
       setIsPlaying(true);
     }
 
+    if (
+      callbackState.type === "player_update" &&
+      !callbackState.isPlaying &&
+      callbackState.progressMs === 0 &&
+      !state.player.nextSong
+    ) {
+      dispatch({
+        type: "PLAYBACK_FINISH",
+        payload: {},
+      });
+    }
+
     if (callbackState.error) {
       console.error(state);
       console.log("refetching token");

@@ -5,11 +5,7 @@ import styled from "styled-components";
 import { YouTubePlayer } from "youtube-player/dist/types";
 import ReactHowler from "react-howler";
 import { fetchVolume, useGlobalContext } from "../../state/context";
-import {
-  useFetchSongCache,
-  useGetTrack,
-  useGetUser,
-} from "../../queries/hooks";
+import { useFetchCache, useGetTrack, useGetUser } from "../../queries/hooks";
 import client from "../../queries/api/spotify/api";
 import { convertMilliSecondstoSeconds } from "../../helpers/utils";
 import { Seeker } from "./Seeker";
@@ -165,7 +161,10 @@ export const Controls: React.FC<IControlsProps> = ({
   soundcloud,
 }) => {
   const { state, dispatch } = useGlobalContext();
-  const songCache = useFetchSongCache(state.player?.currentSong?.uri);
+  const songCache = useFetchCache<Song>([
+    "song",
+    state.player?.currentSong?.uri,
+  ]);
   const { data: user } = useGetUser();
   const [duration, setDuration] = useState(0);
   const [value, setValue] = useState(0);
@@ -280,16 +279,19 @@ export const Controls: React.FC<IControlsProps> = ({
 
   return (
     <>
-      <Test>
-        <p>
-          {!state.player.isLoading && state.player.isPlaying
-            ? "done Loading"
-            : null}
-        </p>
-        <p>{state.player.isPlaying ? "playing" : "pausing"}</p>
-        <p>{state.player.isFinished ? "finished" : "not finished"}</p>
-        <p>{state.player.currentSong.id}</p>
-      </Test>
+      {!process.env.NODE_ENV ||
+        (process.env.NODE_ENV === "development" && (
+          <Test>
+            <p>
+              {!state.player.isLoading && state.player.isPlaying
+                ? "done Loading"
+                : null}
+            </p>
+            <p>{state.player.isPlaying ? "playing" : "pausing"}</p>
+            <p>{state.player.isFinished ? "finished" : "not finished"}</p>
+            <p>{state.player.currentSong.id}</p>
+          </Test>
+        ))}
       <AlbumCover song={state.player.currentSong} />
       <Middle>
         <SongInfo>

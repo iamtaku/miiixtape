@@ -11,6 +11,8 @@ import { NotFound } from "./pages/NotFound";
 import { Artist } from "./components/artist";
 import { Login } from "./pages/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { isAuthenticated } from "./helpers/utils";
+import { PlaylistShare } from "./components/playlist/PlaylistShare";
 
 export const Routes = (): JSX.Element => (
   <BrowserRouter>
@@ -49,7 +51,7 @@ const AppRoutes = () => {
           <Search />
         </ProtectedRoute>
         <Route path={`${path}/playlist/:service/:id`}>
-          <Playlist />
+          {isAuthenticated() ? <Playlist /> : <PlaylistShare />}
         </Route>
         <ProtectedRoute path={`${path}/album/:service/:id`}>
           <Album />

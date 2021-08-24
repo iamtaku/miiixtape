@@ -3,12 +3,7 @@ import { useGetSinglePlaylist } from "../../queries/hooks";
 import { Bottom } from "../grid/Bottom";
 
 export const Playlist: React.FC = () => {
-  const { data, isLoading, error, isError } = useGetSinglePlaylist();
+  const { data, isLoading, error } = useGetSinglePlaylist();
 
-  if (isError) {
-    console.log(error);
-    return <p>error</p>;
-  }
-
-  return <Bottom data={data} isLoading={isLoading} isError={isError} />;
+  return <Bottom data={data} isLoading={isLoading} error={error} />;
 };

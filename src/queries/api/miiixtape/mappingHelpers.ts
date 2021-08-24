@@ -44,6 +44,7 @@ export const mapServerPlaylistMultiple = (
         service: "plaaaylist",
         owner: item.relationships.user.data.id,
         isEditable: item.attributes.editable,
+        // img:/de
       },
       tracks: [],
       position: item.attributes.position,

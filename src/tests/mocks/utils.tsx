@@ -30,13 +30,11 @@ export const renderWithClient = (ui: React.ReactElement) => {
 
 export const createWrapper = () => {
   const testQueryClient = createTestQueryClient();
-  return ({ children }: { children: React.ReactNode }) => (
-    <MemoryRouter initialEntries={["plaaaylist/mockplaylist1"]}>
-      <Route path="plaaaylist/:playlistId">
-        <QueryClientProvider client={testQueryClient}>
-          {children}
-        </QueryClientProvider>
-      </Route>
-    </MemoryRouter>
+  return ({ children }: { children: React.ReactChildren }) => (
+    <QueryClientProvider client={testQueryClient}>
+      <MemoryRouter initialEntries={["plaaaylist/mockplaylist1"]}>
+        <Route path="plaaaylist/:playlistId">{children}</Route>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 };

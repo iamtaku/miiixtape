@@ -29,14 +29,6 @@ export const handlers = [
   rest.get("*/playlists", (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(serverResponse));
   }),
-  rest.get("*/test", (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        working: "yes",
-      })
-    );
-  }),
   rest.post("*/playlists", (req, res, ctx) => {
     return res(
       ctx.status(201),

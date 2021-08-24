@@ -6,16 +6,18 @@ import {
   DroppableStateSnapshot,
 } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { Collection } from "../../types/types";
+import { Collection, PlaylistParam } from "../../types/types";
 import { Track } from "./Track";
 import { ItemContainer as ItemC } from "./Shared";
 import { useGlobalContext, InitialStateType } from "../../state/context";
 import { Top } from "./Top";
+import { AxiosError } from "axios";
+import { useParams } from "react-router-dom";
 
 interface IGridProps {
   data?: Collection;
   isLoading: boolean;
-  isError: boolean;
+  error: AxiosError<unknown> | null;
 }
 
 const Container = styled.div`
@@ -45,6 +47,20 @@ const Item = styled.span<{ isRight?: boolean }>`
     text-decoration: underline;
   }
 `;
+const TopWrapper = styled.div<{ isCollapsed: boolean }>`
+  box-shadow: ${({ isCollapsed }) =>
+    !isCollapsed
+      ? "none"
+      : "20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;"};
+`;
+
+const Span = styled.span`
+  margin: "8px";
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
 
 const getListStyle = (
   provided: DroppableProvided,
@@ -59,13 +75,6 @@ const getListStyle = (
   }
   return styles;
 };
-
-const TopWrapper = styled.div<{ isCollapsed: boolean }>`
-  box-shadow: ${({ isCollapsed }) =>
-    !isCollapsed
-      ? "none"
-      : "20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;"};
-`;
 
 const TitleArtistLength: React.FC<{ isAlbum: boolean }> = ({ isAlbum }) => {
   return (
@@ -90,10 +99,11 @@ const TitleArtistLength: React.FC<{ isAlbum: boolean }> = ({ isAlbum }) => {
   );
 };
 
-export const Bottom: React.FC<IGridProps> = ({ data, isLoading, isError }) => {
+export const Bottom: React.FC<IGridProps> = ({ data, isLoading }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { state } = useGlobalContext();
+  const { state, dispatch } = useGlobalContext();
+  const { id, service } = useParams<PlaylistParam>();
 
   const handleOnScroll = (e: React.UIEvent<React.ReactNode>) => {
     const target = e.target as HTMLDivElement;
@@ -105,10 +115,10 @@ export const Bottom: React.FC<IGridProps> = ({ data, isLoading, isError }) => {
     }
   };
 
-  if (isError) {
-    return <p>error</p>;
-  }
-  if (isLoading || !data) {
+  // if (error && error?.message !== "something gone wrong") {
+  //   return <p>error</p>;
+  // }
+  if (isLoading || !data || !id) {
     return (
       <Container className="main">
         <Top data={data} isLoading={isLoading} />
@@ -127,39 +137,55 @@ export const Bottom: React.FC<IGridProps> = ({ data, isLoading, isError }) => {
         />
         <TitleArtistLength isAlbum={data.playlistInfo.type === "album"} />
       </TopWrapper>
-      <Droppable
-        droppableId={`${data.playlistInfo.id}-tracks`}
-        isDropDisabled={state.ui.disabledSection === "TRACKS"}
-      >
-        {(provided, snapshot) => (
-          <Wrapper
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            style={getListStyle(provided, snapshot, state)}
-            onScroll={handleOnScroll}
-            className="main"
-          >
-            {data?.tracks?.map((track, index) => (
-              <Draggable
-                key={track.id}
-                draggableId={`${track.id}/${track.uri}`}
-                index={index}
-              >
-                {(provided, _snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <Track track={track} index={index} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </Wrapper>
-        )}
-      </Droppable>
+      {data.tracks.length > 0 ? (
+        <Droppable
+          droppableId={`${data.playlistInfo.id}-tracks`}
+          isDropDisabled={
+            state.ui.disabledSection === "TRACKS" || service !== "plaaaylist"
+          }
+        >
+          {(provided, snapshot) => (
+            <Wrapper
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={getListStyle(provided, snapshot, state)}
+              onScroll={handleOnScroll}
+              className="main"
+            >
+              {data?.tracks?.map((track, index) => (
+                <Draggable
+                  key={track.id}
+                  draggableId={`${track.id}/${track.uri}`}
+                  index={index}
+                  isDragDisabled={service !== "plaaaylist"}
+                >
+                  {(provided, _snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Track track={track} index={index} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </Wrapper>
+          )}
+        </Droppable>
+      ) : (
+        <Span
+          onClick={() => {
+            dispatch({
+              type: "OPEN_MODAL",
+              payload: { modalType: "ADD_MODAL", currentModalId: id },
+            });
+          }}
+        >
+          There are no tracks yet, add some.
+        </Span>
+      )}
     </Container>
   );
 };

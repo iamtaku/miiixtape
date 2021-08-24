@@ -27,7 +27,7 @@ const Container = styled.div`
   left: 50%;
   transform: translateX(-50%);
   border-radius: 50px;
-  background-color: rgba(15, 11, 11, 0);
+  background-color: rgba(15, 11, 11, 0.5);
   background-color: linear-gradient(
     270deg,
     rgba(142, 142, 142, 1) 0%,

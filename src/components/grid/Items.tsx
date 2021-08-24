@@ -39,7 +39,7 @@ const TitleAlbumContainer = styled.div`
   width: 100%;
   overflow: "hidden";
   text-overflow: "ellipsis";
-  &:hover {
+  &:hover a {
     text-decoration: underline;
   }
 `;

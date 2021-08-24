@@ -24,11 +24,11 @@ import {
   getAlbum,
   getSpotifyInfo,
   getSpotifyPlaylists,
-  Playlist,
   deletePlaylist,
   deletePlaylistItem,
   patchPlaylistItem,
   patchPlaylist,
+  getAllPlaylists,
 } from "./api/";
 import { AxiosError } from "axios";
 import { generatePlaylistTracks } from "./api/miiixtape/generatePlaylistData";
@@ -55,7 +55,7 @@ export const useGetAlbum = (): UseQueryResult<CollectionType, AxiosError> => {
   const { data: userInfo } = useGetUser();
 
   return useQuery<CollectionType, AxiosError>(
-    ["collection", { id: params.id, service: params.service }],
+    ["collection", params.id],
     () => getAlbum(params, userInfo),
     {
       enabled: !!userInfo && !!params.id,
@@ -88,7 +88,6 @@ export const useGetTrack = (
   // collectionId: string
 ): UseQueryResult<Song, AxiosError> => {
   const { data: userInfo } = useGetUser();
-  const queryClient = useQueryClient();
   return useQuery<Song, AxiosError>(
     ["song", song.uri],
     () => generatePlaylistTracks(song, userInfo?.access_token),
@@ -106,8 +105,7 @@ export const useGetTrack = (
 export const useGetAllPlaylists = (): UseQueryResult<
   CollectionType[],
   AxiosError
-> =>
-  useQuery<CollectionType[], AxiosError>("playlistAll", Playlist.getPlaylists);
+> => useQuery<CollectionType[], AxiosError>("playlistAll", getAllPlaylists);
 
 export const usePostPlaylistItems = (): UseMutationResult<
   CollectionType,
@@ -180,9 +178,12 @@ export const usePatchPlaylist = (): UseMutationResult<
   },
   unknown
 > => {
+  const queryClient = useQueryClient();
   return useMutation(patchPlaylist, {
-    onSuccess: (_data) => {
-      // queryClient.invalidateQueries("playlistAll"); //change so we don't refetch data
+    onSuccess: (data) => {
+      queryClient.setQueryData(["collection", data.playlistInfo.id], {
+        ...data,
+      });
     },
   });
 };
@@ -210,15 +211,14 @@ export const useDeletePlaylist = (): UseMutationResult<
   });
 };
 
-export const useGetSinglePlaylist = (): UseQueryResult<
-  CollectionType,
-  AxiosError
-> => {
+export const useGetSinglePlaylist = (
+  id?: string | null
+): UseQueryResult<CollectionType, AxiosError> => {
   const params = useParams<PlaylistParam>();
   const { data: userInfo } = useGetUser();
   const queryClient = useQueryClient();
   return useQuery<CollectionType, AxiosError>(
-    ["collection", params.id],
+    ["collection", id ? id : params.id],
     () => getPlaylist({ id: params.id, service: params.service }, userInfo),
     {
       enabled: !!userInfo,
@@ -249,9 +249,13 @@ export const useDeletePlaylistItem = (): UseMutationResult<
   });
 };
 
-export const useFetchSongCache = (id?: string): Song | undefined => {
+type stringOrNull = string | null;
+
+export const useFetchCache = <T>(
+  queryKey: [string, stringOrNull?]
+): T | undefined => {
   const queryClient = useQueryClient();
-  if (!id) return undefined;
-  const songCache = queryClient.getQueryData<Song>(["song", id]);
-  return songCache;
+  if (!queryKey) return undefined;
+  const cache = queryClient.getQueryData<T>(queryKey);
+  return cache;
 };

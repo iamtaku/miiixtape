@@ -5,6 +5,7 @@ import { useGlobalContext } from "../../state/context";
 import { AddModal } from "./AddModal";
 import { ShareModal } from "./ShareModal";
 import { AddItemModal } from "./AddItemModal";
+import { ImportModal } from "./ImportModal";
 
 const BackDrop = styled.div`
   z-index: 1;
@@ -111,6 +112,7 @@ export const Modal = (): JSX.Element | null => {
         {state.ui.modalType === "ADD_MODAL" && <AddModal />}
         {state.ui.modalType === "SHARE_MODAL" && <ShareModal />}
         {state.ui.modalType === "ADD_ITEM_MODAL" && <AddItemModal />}
+        {state.ui.modalType === "IMPORT_MODAL" && <ImportModal />}
       </ModalContainer>
     </>
   );

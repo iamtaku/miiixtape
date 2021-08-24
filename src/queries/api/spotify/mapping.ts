@@ -39,6 +39,7 @@ export const mapSpotifyToPlaylist = (
         name: item.name,
         service: "spotify",
         isEditable: false,
+        img: item.images[0] ? item.images[0].url : undefined,
       },
       tracks: [],
       position: null,

@@ -31,6 +31,7 @@ const Item = styled(ListItem)<{ $iscurrent: boolean }>`
     props.$iscurrent ? "var(--light-gray) !important" : "default"};
   border-radius: 8px;
   opacity: 0.9;
+  cursor: default;
   &:hover {
     .playButton {
       display: initial;
@@ -45,6 +46,7 @@ const StyledLink = styled(Link)<{ $iscurrent: boolean }>`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  cursor: default;
 
   /* &:hover {
     cursor: default;
@@ -65,6 +67,7 @@ const PlayButton = styled(PlaybackButton)<{
   border-radius: 0;
   color: var(--accent);
   z-index: 100;
+
   &:hover {
     cursor: pointer;
     background: none;
