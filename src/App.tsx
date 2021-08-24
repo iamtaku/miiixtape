@@ -1,5 +1,6 @@
 import React from "react";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { ReactQueryDevtoolsPanel } from "react-query/devtools";
 import { AppProvider } from "./state/context";
 import { Routes } from "./Routes";
 
@@ -20,6 +21,10 @@ function App(): JSX.Element {
         <AppProvider>
           <Routes />
         </AppProvider>
+        {!process.env.NODE_ENV ||
+          (process.env.NODE_ENV === "development" && (
+            <ReactQueryDevtoolsPanel />
+          ))}
       </QueryClientProvider>
     </div>
   );

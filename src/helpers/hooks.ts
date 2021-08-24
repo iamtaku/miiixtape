@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
-import { useGetUser } from "../queries/hooks";
+import { useFetchCache, useGetUser } from "../queries/hooks";
 import { useGlobalContext } from "../state/context";
 import { Collection, Song } from "../types/types";
 
@@ -76,13 +75,9 @@ interface IEditable {
   isEditable: boolean;
 }
 
-export const useIsOwner = (playlistId: string): IEditable => {
+export const useIsOwner = (playlistId: string | null): IEditable => {
   const { data: userInfo } = useGetUser();
-  const queryClient = useQueryClient();
-  const currentPlaylist = queryClient.getQueryData<Collection>([
-    "collection",
-    playlistId,
-  ]);
+  const currentPlaylist = useFetchCache<Collection>(["collection", playlistId]);
   if (!currentPlaylist) return { isOwner: false, isEditable: false };
   return {
     isOwner: currentPlaylist?.playlistInfo.owner === userInfo?.user_id,

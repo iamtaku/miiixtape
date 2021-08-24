@@ -55,7 +55,12 @@ export type PlaybackType = {
   isLoading: boolean;
 };
 
-type ModalType = "ADD_MODAL" | "SHARE_MODAL" | "ADD_ITEM_MODAL" | null;
+type ModalType =
+  | "ADD_MODAL"
+  | "SHARE_MODAL"
+  | "ADD_ITEM_MODAL"
+  | "IMPORT_MODAL"
+  | null;
 
 type Section = "SIDEBAR" | "TRACKS" | null;
 

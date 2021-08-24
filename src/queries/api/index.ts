@@ -1,5 +1,4 @@
 import axios from "axios";
-import SpotifyWebApi from "spotify-web-api-js";
 import {
   mapServerPlaylist,
   mapServerPlaylistMultiple,
@@ -45,13 +44,10 @@ const requests = {
 
 export const Playlist = {
   getUser: (): Promise<UserAttributes> =>
-    requests.get("/users").then((data) => mapUserAttributes(data)),
+    requests.get("/users").then(mapUserAttributes),
   getPlaylists: (): Promise<Collection[]> =>
-    requests.get("/playlists").then((data) => mapServerPlaylistMultiple(data)),
-  getPlaylist: (
-    id: string,
-    _client: SpotifyWebApi.SpotifyWebApiJs
-  ): Promise<Collection> =>
+    requests.get("/playlists").then(mapServerPlaylistMultiple),
+  getPlaylist: (id: string): Promise<Collection> =>
     requests.get(`/playlists/${id}`).then(mapServerPlaylist),
   createPlaylist: (playlist: {
     playlist: { name: string };

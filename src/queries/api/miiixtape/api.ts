@@ -14,17 +14,13 @@ export const getArtist = async (
   const client = new SpotifyWebApi();
   userInfo && client.setAccessToken(userInfo.access_token);
 
-  try {
-    switch (params.service) {
-      case "spotify":
-        return await Spotify.getArtist(params.artistId, client);
-      case "soundcloud":
-        return await SoundCloud.getArtist(params.artistId);
-      default:
-        throw new Error("something gone wrong");
-    }
-  } catch {
-    throw new Error("something gone wrong");
+  switch (params.service) {
+    case "spotify":
+      return await Spotify.getArtist(params.artistId, client);
+    case "soundcloud":
+      return await SoundCloud.getArtist(params.artistId);
+    default:
+      throw new Error("something gone wrong");
   }
 };
 
@@ -41,10 +37,9 @@ export const getPlaylist = async (
   }
   const client = new SpotifyWebApi();
   client.setAccessToken(userInfo?.access_token);
-
   switch (params.service) {
     case "plaaaylist":
-      return await Playlist.getPlaylist(params.id, client);
+      return await Playlist.getPlaylist(params.id);
     case "spotify":
       return await Spotify.getPlaylist(params.id, client);
     default:
@@ -70,6 +65,9 @@ export const postPlaylistItems = async ({
   };
   return await Playlist.createPlaylistItems(id, body);
 };
+
+export const getAllPlaylists = async (): Promise<Collection[]> =>
+  await Playlist.getPlaylists();
 
 export const postPlaylist = async (name: string): Promise<Collection> => {
   const payload = {

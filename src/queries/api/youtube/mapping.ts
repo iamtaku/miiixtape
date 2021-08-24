@@ -13,7 +13,7 @@ export const mapYoutubeToTrack = (data: YoutubeVideoSearchItemFull): Song => {
     service: "youtube",
     uri: data.id.toString(),
     time: parseYoutubeTime(data.contentDetails.duration),
-    img: data.snippet.thumbnails.default.url,
+    img: data.snippet.thumbnails.default?.url,
   };
 };
 
@@ -23,7 +23,9 @@ const mapYoutubePlaylistItemToTrack = (data: YoutubePlaylistItem): Song => {
     name: data.snippet.title,
     service: "youtube",
     uri: data.contentDetails.videoId,
-    img: data.snippet.thumbnails.default.url,
+    img:
+      data.snippet.thumbnails.default?.url ||
+      data.snippet.thumbnails.standard?.url,
   };
 };
 

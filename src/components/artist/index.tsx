@@ -6,10 +6,10 @@ import { ArtistGridBottom } from "./ArtistGridBottom";
 
 export const Artist = (): JSX.Element => {
   const params = useParams<ArtistParams>();
-  const { data, isLoading, isError } = useGetArtist(params);
-  console.log(data, isError);
+  const { data, isLoading, error } = useGetArtist(params);
 
-  if (isError) return <p>something gone wrong</p>;
+  if (error?.message !== "something gone wrong")
+    return <p>something gone wrong</p>;
   if (!data || isLoading) return <h2>loading...</h2>;
   return (
     <ArtistGridBottom

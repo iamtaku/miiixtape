@@ -37,6 +37,17 @@ export const uiReducer = (state: UIType, action: UIActions): UIType => {
           currentTrack: action.payload.track,
         };
       }
+      if (
+        action.payload.modalType === "IMPORT_MODAL" &&
+        action.payload.currentModalId
+      ) {
+        return {
+          ...state,
+          isModalOpen: true,
+          modalType: "IMPORT_MODAL",
+          currentModalId: action.payload.currentModalId,
+        };
+      }
       return state;
     case "CLOSE_MODAL":
       console.log(action.type);

@@ -4,15 +4,16 @@ import { Description } from "./Description";
 import DefaultMusicImage from "../../assets/music-cover.png";
 import { Buttons } from "./Buttons";
 import { useHistory } from "react-router-dom";
-import { Collection } from "../../types/types";
+import { Collection, Song } from "../../types/types";
 import { generateServices } from "../../queries/api/miiixtape/mappingHelpers";
+import { useFetchCache } from "../../queries/hooks";
 
 const Container = styled.div<{ isCollapsed: boolean }>`
   top: 0px;
   height: ${({ isCollapsed }) => (isCollapsed ? "5vh" : "20vh")};
   display: grid;
   max-width: 1440px;
-  grid-template-columns: 30% 30% 40%;
+  grid-template-columns: 30% 40% 30%;
   grid-template-rows: 100%;
   grid-column-gap: 8px;
   padding: ${({ isCollapsed }) =>
@@ -26,12 +27,17 @@ const Container = styled.div<{ isCollapsed: boolean }>`
   .description-hideable {
     display: ${({ isCollapsed }) => (isCollapsed ? "none" : "flex")};
   }
+
+  .title-shrinkable {
+    font-size: ${({ isCollapsed }) => isCollapsed && "1.5rem"};
+    transition: 0.5s ease;
+  }
 `;
 
 const CoverImg = styled.img<{ isArtist: boolean }>`
   justify-self: center;
   max-height: 100%;
-  border-radius: 50px;
+  border-radius: 8px;
   background-position: center center;
   background-size: cover;
   object-fit: cover;
@@ -54,6 +60,8 @@ const Top = React.forwardRef<HTMLDivElement, TopProps>(
     //add loading placeholder...
     const history = useHistory();
     const isArtist = history.location.pathname.includes("artist");
+    const trackCache = useFetchCache<Song>(["song", data?.tracks[0]?.uri]);
+
     if (!data || isLoading) return <h1>loading...</h1>;
 
     const services = generateServices(data.tracks);
@@ -64,7 +72,7 @@ const Top = React.forwardRef<HTMLDivElement, TopProps>(
         isCollapsed={isCollapsed !== undefined ? isCollapsed : false}
       >
         <CoverImg
-          src={data.playlistInfo.img || DefaultMusicImage}
+          src={data.playlistInfo.img || trackCache?.img || DefaultMusicImage}
           alt={data.playlistInfo.description}
           isArtist={isArtist}
         />

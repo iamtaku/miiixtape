@@ -1,11 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { useQueryClient } from "react-query";
 import { Collection, Song } from "../types/types";
 import { useGlobalContext } from "../state/context";
 import { getPlaylist } from "../queries/api";
-import { useGetUser } from "../queries/hooks";
+import { useFetchCache, useGetUser } from "../queries/hooks";
 import { useIsCurrentPlaylist, useIsCurrentTrack } from "../helpers/hooks";
 import { FaSpotify } from "react-icons/fa";
 
@@ -29,6 +28,7 @@ const LoginBtn = styled.a`
   width: auto;
   max-width: 200px;
   align-self: center;
+  display: flex;
 `;
 
 export const LoginButton: React.FC = () => {
@@ -36,7 +36,7 @@ export const LoginButton: React.FC = () => {
 
   return (
     <LoginBtn href={URL}>
-      Login with Spotify <FaSpotify />
+      Login with Spotify <FaSpotify style={{ marginLeft: "8px" }} />
     </LoginBtn>
   );
 };
@@ -87,17 +87,9 @@ export const PlaybackButton: React.FC<IProps> = ({
   const { data: user } = useGetUser();
   const { dispatch } = useGlobalContext();
   const { isPlaying, isCurrent } = useIsCurrentPlaylist(data);
-  const queryClient = useQueryClient();
+  const cache = useFetchCache<Collection>(["collection", data.playlistInfo.id]);
 
   const handlePlayback = async (data: Collection) => {
-    const cache = queryClient.getQueryData<Collection>([
-      "collection",
-      {
-        id: data.playlistInfo.id,
-        service: data.playlistInfo.service,
-      },
-    ]);
-
     if (isCurrent && isPlaying) {
       dispatch({
         type: "PAUSE_CURRENT",

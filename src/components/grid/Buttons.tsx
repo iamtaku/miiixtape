@@ -22,7 +22,6 @@ const ButtonWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  z-index: 10;
 `;
 
 const buttonStyles = css`
@@ -30,6 +29,7 @@ const buttonStyles = css`
   min-width: 60px;
   max-width: 140px;
   width: 100%;
+  border-radius: 8px;
   span {
     display: none;
     margin-left: 8px;
@@ -82,6 +82,7 @@ const Wrapper = styled(DropdownContainer)`
   padding: 8px;
   border: 1px solid var(--light-gray);
   border-radius: 4px;
+  z-index: 10;
 
   button {
     border-radius: 0px;
@@ -135,11 +136,10 @@ const ImportButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   );
 };
 
-interface IDisabled {
-  isDisabled: boolean;
-}
-
-const Disabled: React.FC<IDisabled> = ({ children, isDisabled }) => {
+const Disabled: React.FC<{ isDisabled: boolean }> = ({
+  children,
+  isDisabled,
+}) => {
   return <DisabledWrapper isDisabled={isDisabled}>{children}</DisabledWrapper>;
 };
 
@@ -177,7 +177,7 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({
   const handleImportClick = () => {
     dispatch({
       type: "OPEN_MODAL",
-      payload: { modalType: "SHARE_MODAL", currentModalId: id },
+      payload: { modalType: "IMPORT_MODAL", currentModalId: id },
     });
     handleOptionsClick && handleOptionsClick();
   };
@@ -197,9 +197,7 @@ const OptionsDropdown: React.FC<IDropdownContainer> = ({
         <FaShare />
         <span>SHARE</span>
       </ShareButton>
-      <Disabled isDisabled={isOwner}>
-        <DeleteButton />
-      </Disabled>
+      {isOwner && <DeleteButton />}
     </Wrapper>
   );
 };

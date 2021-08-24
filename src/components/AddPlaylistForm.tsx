@@ -7,7 +7,7 @@ const Container = styled.div`
   background: var(--gray);
   border-radius: 8px;
   border: 1px solid transparent;
-  width: 100%auto;
+  width: 100%;
   box-shadow: 20px 20px 60px #383838, -20px -20px 60px #4c4c4c;
 `;
 
