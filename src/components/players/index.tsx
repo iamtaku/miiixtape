@@ -8,7 +8,16 @@ import { useGlobalContext } from "../../state/context";
 import { Youtube } from "./Youtube";
 import { Controls } from "./Controls";
 import { Soundcloud } from "./Soundcloud";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const slideIn = keyframes`
+  from {
+   opacity: 0;
+  }
+  to {
+   opacity: 1;
+  } 
+`;
 
 const Container = styled.div`
   position: absolute;
@@ -35,14 +44,17 @@ const Container = styled.div`
   );
   backdrop-filter: blur(10px) contrast(0.8);
   box-shadow: 20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;
+  animation: ${slideIn} 0.4s ease-out;
 `;
 
-const Player = (): JSX.Element => {
+const Player = (): JSX.Element | null => {
   const { state } = useGlobalContext();
   const [youtube, setYoutube] = useState<YouTubePlayer>();
   const [spotify, setSpotify] = useState<SpotifyWebPlayer>();
   const [soundcloud, setSoundCloud] = useState<ReactHowler>();
   const uri = state.player?.currentSong?.uri;
+
+  if (!state.player.currentSong) return null;
 
   return (
     <Container>

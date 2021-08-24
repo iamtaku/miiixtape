@@ -86,7 +86,6 @@ const Card: React.FC<{ playlist: Collection }> = ({ playlist }) => {
   const styles = {
     borderRadius: "50%",
     minHeight: "185px",
-    // marginBottom: "8px",
   };
 
   return (
@@ -119,6 +118,18 @@ const PlaylistSection: React.FC<{
   title: string;
   style?: CSSProperties;
 }> = ({ data, title, style }) => {
+  if (!data || data.length === 0) {
+    return (
+      <Wrapper style={style}>
+        <Title>{title}</Title>
+        <Cards>
+          <span style={{ fontSize: "0.9rem", opacity: 0.8 }}>
+            You don&apos;t have any playlists yet!
+          </span>
+        </Cards>
+      </Wrapper>
+    );
+  }
   return (
     <Wrapper style={style}>
       <Title>{title}</Title>

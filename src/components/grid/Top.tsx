@@ -22,7 +22,7 @@ const Container = styled.div<{ isCollapsed: boolean }>`
   box-shadow: ${({ isCollapsed }) =>
     isCollapsed ? "none" : "20px 20px 60px #2d2d2d, -20px -20px 60px #3d3d3d;"};
   z-index: 1000;
-  transition: 0.5s ease;
+  transition: height 0.5s ease;
 
   .description-hideable {
     display: ${({ isCollapsed }) => (isCollapsed ? "none" : "flex")};

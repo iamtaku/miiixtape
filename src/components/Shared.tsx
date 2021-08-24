@@ -1,12 +1,13 @@
 import React from "react";
 import { FaSpotify, FaYoutube, FaSoundcloud } from "react-icons/fa";
 import { IoIosWarning, IoMdCheckmark } from "react-icons/io";
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 import { Service } from "../types/types";
 
 const Container = styled.div`
   padding: 4px;
   margin: 8px 0 0 0;
+  min-width: 500px;
 `;
 
 const SubHeader = styled.div`
@@ -14,10 +15,77 @@ const SubHeader = styled.div`
   margin-bottom: 8px;
 `;
 
+const Loader2 = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(24px, 0);
+    }
+  }
+`;
+
+export const Loading2 = (): JSX.Element => (
+  <Loader2 className="lds-ellipsis">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </Loader2>
+);
+
 const Loader = styled.div`
   position: relative;
-  width: 100%;
-  height: 100%;
+  /* width: 100%; */
+  /* height: 100%; */
+  width: 20px;
+  height: 10px;
 
   div {
     position: absolute;
@@ -134,18 +202,30 @@ const Wrapper = styled.div`
   ::-webkit-scrollbar-thumb {
     background: var(--gray);
   }
+
+  .create-new {
+    border-radius: 0;
+    text-align: left;
+    box-shadow: none;
+    padding: 2px 32px;
+    button {
+      width: auto;
+      font-size: 1rem;
+    }
+  }
 `;
 
 const ListContainer = styled.ul`
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 300px;
-  /* background: var(--light-gray); */
 `;
 
-export const List: React.FC = ({ children }) => (
-  <Wrapper>
-    <ListContainer>{children}</ListContainer>
+export const List: React.FC<{
+  style?: CSSProperties;
+  listStyle?: CSSProperties;
+}> = ({ children, style, listStyle }) => (
+  <Wrapper style={style}>
+    <ListContainer style={listStyle}>{children}</ListContainer>
   </Wrapper>
 );
 

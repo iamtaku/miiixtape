@@ -180,13 +180,11 @@ const updatedTracks = (updateTracks: Tracks, baseTracks?: Tracks): Tracks => {
   return result;
 };
 
-// take in the updated tracks and filter out the items that already exist from our context
-//
-
 export const Confirm: React.FC<{
   data: Collection;
   handleConfirmClose: () => void;
-}> = ({ data, handleConfirmClose }) => {
+  to?: Collection;
+}> = ({ data, handleConfirmClose, to }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filtered, setFiltered] = useState<Tracks>(data.tracks);
   const [checked, setChecked] = useState<boolean[]>(
@@ -201,7 +199,7 @@ export const Confirm: React.FC<{
   const handlePostItems = async () => {
     if (!state.ui.currentModalId) return;
     const mutatePayload = {
-      id: state.ui.currentModalId,
+      id: to ? to.playlistInfo.id : state.ui.currentModalId,
       tracks: filtered,
     };
     mutation
@@ -254,8 +252,9 @@ export const Confirm: React.FC<{
     <>
       <AddContainer>
         <p>
-          Add {pluralize("track", filtered)} from {data?.playlistInfo?.service}{" "}
-          {data?.playlistInfo?.type} <em>{data?.playlistInfo?.name}?</em>
+          Add {pluralize("track", filtered)} {to ? "to" : "from"}{" "}
+          {/* {data?.playlistInfo?.service} {data?.playlistInfo?.type}{" "} */}
+          <em>{to ? to.playlistInfo.name : data?.playlistInfo?.name}?</em>
         </p>
       </AddContainer>
       <OptionsContainer>

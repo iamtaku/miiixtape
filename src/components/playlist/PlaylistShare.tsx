@@ -8,8 +8,7 @@ import { setIcon } from "../Shared";
 
 const Container = styled.div`
   display: grid;
-  overflow: hidden;
-  height: 100vh;
+  height: 100%;
 `;
 
 const List = styled.ul`
@@ -21,16 +20,18 @@ const List = styled.ul`
 
 const ItemContainer = styled.li`
   display: grid;
-  grid-template-columns: 0.1fr 0.6fr 0.3fr;
+  grid-template-columns: 0.1fr 0.8fr 0.1fr;
   grid-gap: 18px;
   overflow-x: hidden;
   width: 506px;
   height: 80;
+  margin: 4px 0px;
 `;
 
 const Span = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
+  display: inline-flex;
 `;
 
 const Button = styled(Link)`
@@ -76,18 +77,17 @@ export const PlaylistShare = (): JSX.Element | null => {
 
   return (
     <Container>
+      <Heading>
+        <h3>{data?.playlistInfo.name}</h3>
+        <Button
+          to={"/login"}
+          style={{ border: "1px solid var(--accent", color: "var(--accent)" }}
+          onClick={handleClick}
+        >
+          Play
+        </Button>
+      </Heading>
       <List>
-        <Heading>
-          <h3>{data?.playlistInfo.name}</h3>
-          <Button
-            to={"/login"}
-            style={{ border: "1px solid var(--accent", color: "var(--accent)" }}
-            onClick={handleClick}
-          >
-            Play
-          </Button>
-        </Heading>
-
         {data?.tracks.map((track, index) => (
           <Item track={track} index={index} key={track.id} />
         ))}
