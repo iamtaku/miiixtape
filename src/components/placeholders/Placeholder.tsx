@@ -6,10 +6,10 @@ export const ProfilePlaceholder = (props: IContentLoaderProps): JSX.Element => (
     speed={2}
     foregroundColor="#f93801"
     backgroundColor="#f9b401"
-    style={{ width: "100%" }}
+    style={{ width: "50px", height: "50px" }}
     {...props}
   >
-    <circle cx="30" cy="30" r="30" />
+    <circle cx="25" cy="25" r="25" />
   </ContentLoader>
 );
 

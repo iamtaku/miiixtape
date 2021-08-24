@@ -82,8 +82,10 @@ export const Loading2 = (): JSX.Element => (
 
 const Loader = styled.div`
   position: relative;
-  width: 100%;
-  height: 100%;
+  /* width: 100%; */
+  /* height: 100%; */
+  width: 20px;
+  height: 10px;
 
   div {
     position: absolute;
