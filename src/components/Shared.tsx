@@ -1,12 +1,13 @@
 import React from "react";
 import { FaSpotify, FaYoutube, FaSoundcloud } from "react-icons/fa";
 import { IoIosWarning, IoMdCheckmark } from "react-icons/io";
-import styled from "styled-components";
+import styled, { CSSProperties } from "styled-components";
 import { Service } from "../types/types";
 
 const Container = styled.div`
   padding: 4px;
   margin: 8px 0 0 0;
+  min-width: 500px;
 `;
 
 const SubHeader = styled.div`
@@ -134,18 +135,30 @@ const Wrapper = styled.div`
   ::-webkit-scrollbar-thumb {
     background: var(--gray);
   }
+
+  .create-new {
+    border-radius: 0;
+    text-align: left;
+    box-shadow: none;
+    padding: 2px 32px;
+    button {
+      width: auto;
+      font-size: 1rem;
+    }
+  }
 `;
 
 const ListContainer = styled.ul`
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 300px;
-  /* background: var(--light-gray); */
 `;
 
-export const List: React.FC = ({ children }) => (
-  <Wrapper>
-    <ListContainer>{children}</ListContainer>
+export const List: React.FC<{
+  style?: CSSProperties;
+  listStyle?: CSSProperties;
+}> = ({ children, style, listStyle }) => (
+  <Wrapper style={style}>
+    <ListContainer style={listStyle}>{children}</ListContainer>
   </Wrapper>
 );
 

@@ -105,7 +105,23 @@ export const useGetTrack = (
 export const useGetAllPlaylists = (): UseQueryResult<
   CollectionType[],
   AxiosError
-> => useQuery<CollectionType[], AxiosError>("playlistAll", getAllPlaylists);
+> => {
+  const queryClient = useQueryClient();
+  return useQuery<CollectionType[], AxiosError>(
+    "playlistAll",
+    getAllPlaylists
+    // {
+    //   onSuccess: (data) => {
+    //     data.forEach((collection) => {
+    //       queryClient.setQueryData<Collection>(
+    //         ["collection", collection.playlistInfo.id],
+    //         collection
+    //       );
+    //     });
+    //   },
+    // }
+  );
+};
 
 export const usePostPlaylistItems = (): UseMutationResult<
   CollectionType,
@@ -184,6 +200,7 @@ export const usePatchPlaylist = (): UseMutationResult<
       queryClient.setQueryData(["collection", data.playlistInfo.id], {
         ...data,
       });
+      queryClient.invalidateQueries("playlistAll");
     },
   });
 };

@@ -95,6 +95,8 @@ export const Modal = (): JSX.Element | null => {
         return "Share";
       case "ADD_ITEM_MODAL":
         return `Add Track to Playlist`;
+      case "IMPORT_MODAL":
+        return "Import to Playlist";
       default:
         return;
     }

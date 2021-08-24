@@ -7,14 +7,15 @@ import { AddByUrl } from "./AddByUrl";
 import { Confirm } from "./Confirm";
 
 const Wrapper = styled.div`
-  width: 500px;
+  /* width: 500px; */
+  overflow: hidden;
 `;
 
 export const AddModal = (): JSX.Element => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isExistingOpen, setIsExistingOpen] = useState(false);
   const [data, setData] = useState<Collection>();
-  const handleFetch = async (collection: Collection) => {
+  const handleFetch = (collection: Collection) => {
     setData(collection);
     setIsConfirmOpen(true);
     console.log(collection);

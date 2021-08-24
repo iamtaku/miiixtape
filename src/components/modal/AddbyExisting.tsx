@@ -1,19 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
-import { Spotify } from "../../queries/api";
-import client from "../../queries/api/spotify/api";
-import { useGetAllSpotifyPlaylist, useGetUser } from "../../queries/hooks";
-import { Collection, PlaylistInfo } from "../../types/types";
-import { List, Item, Loading } from "../Shared";
+import client, { Spotify } from "../../queries/api/spotify/api";
+import {
+  useGetAllPlaylists,
+  useGetAllSpotifyPlaylist,
+  useGetUser,
+} from "../../queries/hooks";
+import { Collection } from "../../types/types";
+import { List, Item as ItemStyles, Loading } from "../Shared";
+import { AddPlaylistForm } from "../AddPlaylistForm";
 
-const FetchButton = styled.button`
-  visibility: hidden;
-  background: none;
-  border: 1px solid var(--accent) !important;
-  border-radius: 8px;
-  color: var(--accent) !important;
-  opacity: 1 !important;
-  width: auto !important;
+const Item = styled(ItemStyles)`
   &:hover {
     cursor: pointer;
   }
@@ -33,20 +31,36 @@ const slideIn = keyframes`
 
 const Wrapper = styled.div`
   animation: ${slideIn} 0.5s both;
+  height: 100%;
 `;
 
 export const AddbyExisting: React.FC<{
   handleFetch: (collection: Collection) => void;
-}> = ({ handleFetch }) => {
+  noSpotify?: boolean;
+}> = ({ handleFetch, noSpotify }) => {
   const { data: spotifyPlaylists, isLoading } = useGetAllSpotifyPlaylist();
+  const { data: miiixtapPlaylists } = useGetAllPlaylists();
   const { data: userInfo } = useGetUser();
+  const [playlists, setPlaylists] = useState<Collection[]>([]);
 
-  const handleClick = async (playlistInfo: PlaylistInfo) => {
+  useEffect(() => {
+    if (!spotifyPlaylists || !miiixtapPlaylists) return;
+    if (noSpotify) {
+      setPlaylists(miiixtapPlaylists);
+      return;
+    }
+    setPlaylists(spotifyPlaylists);
+  }, [noSpotify, spotifyPlaylists, miiixtapPlaylists]);
+
+  const handleClick = async (playlistInfo: Collection) => {
     if (!userInfo) return;
-    const playlist = await Spotify.getPlaylist(
-      playlistInfo?.id,
-      client(userInfo?.access_token)
-    );
+    let playlist = playlistInfo;
+    if (!noSpotify) {
+      playlist = await Spotify.getPlaylist(
+        playlistInfo?.playlistInfo.id,
+        client(userInfo?.access_token)
+      );
+    }
     handleFetch(playlist);
   };
 
@@ -54,15 +68,19 @@ export const AddbyExisting: React.FC<{
 
   return (
     <Wrapper>
-      {spotifyPlaylists && spotifyPlaylists.length > 0 ? (
+      {playlists && playlists.length > 0 ? (
         <List>
-          {spotifyPlaylists.map((playlist) => {
+          <AddPlaylistForm className={"create-new"}>
+            <span style={{ marginRight: "8px" }}>Create new </span>
+          </AddPlaylistForm>
+
+          {playlists.map((playlist) => {
             return (
-              <Item key={playlist.playlistInfo.id}>
+              <Item
+                key={playlist.playlistInfo.id}
+                onClick={() => handleClick(playlist)}
+              >
                 <p>{playlist.playlistInfo.name}</p>
-                <FetchButton onClick={() => handleClick(playlist.playlistInfo)}>
-                  FETCH
-                </FetchButton>
               </Item>
             );
           })}
