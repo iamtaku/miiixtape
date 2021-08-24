@@ -7,6 +7,7 @@ import {
   Success,
   List,
   Item as ItemStyles,
+  Loading2,
 } from "../Shared";
 import { useGetAllPlaylists, usePostPlaylistItems } from "../../queries/hooks";
 import { useGlobalContext } from "../../state/context";
@@ -46,7 +47,7 @@ const Item: React.FC<{ data: Collection }> = ({ data }) => {
   return (
     <ItemStyles>
       {data.playlistInfo.name}
-      {mutation.isLoading && <Loading style={{ width: "40px" }} />}
+      {mutation.isLoading && <Loading2 />}
       {mutation.isError && <Error />}
       {!mutation.isLoading && !mutation.isError && !mutation.isSuccess && (
         <FetchButton onClick={() => handleAddPlaylistItem(data)}>

@@ -10,7 +10,11 @@ const ProfileActionsWrapper = styled.div`
   position: absolute;
   left: -50px;
   z-index: 20;
-  width: 100%;
+  border-radius: 8px;
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(83, 83, 83, 0.2);
+  backdrop-filter: blur(4px) contrast(0.8);
+  padding: 12px;
   ul {
     flex-direction: column;
   }
@@ -34,6 +38,13 @@ const ProfileImage = styled.img`
 
 const Wrapper = styled.div`
   position: relative;
+`;
+
+const Item = styled.li`
+  margin: 8px 0;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Profile = (): JSX.Element => {
@@ -70,18 +81,19 @@ export const Profile = (): JSX.Element => {
         <ProfileActionsWrapper>
           <ul>
             {data.href ? (
-              <li>
+              <Item>
                 <a
                   href={data.external_urls.spotify}
                   target="_blank"
                   rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center" }}
                 >
                   SPOTIFY <FaExternalLinkAlt />
                 </a>
-              </li>
+              </Item>
             ) : null}
-            <li>SETTINGS</li>
-            <li onClick={logOut}>LOGOUT</li>
+            <Item>SETTINGS</Item>
+            <Item onClick={logOut}>LOGOUT</Item>
           </ul>
         </ProfileActionsWrapper>
       ) : null}
