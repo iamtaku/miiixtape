@@ -106,7 +106,6 @@ export const useGetAllPlaylists = (): UseQueryResult<
   CollectionType[],
   AxiosError
 > => {
-  const queryClient = useQueryClient();
   return useQuery<CollectionType[], AxiosError>(
     "playlistAll",
     getAllPlaylists
